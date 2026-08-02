@@ -236,6 +236,11 @@
             text-wrap: pretty;
         }
 
+        .landing-key {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
         .landing-grid {
             display: grid;
             grid-template-columns: 1.1fr 1fr;
@@ -248,6 +253,23 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 0.92rem;
+        }
+
+        body[data-theme="dark"] .landing-hero {
+            background: linear-gradient(
+                125deg,
+                color-mix(in oklab, var(--accent), var(--panel) 82%),
+                color-mix(in oklab, var(--panel-2), black 8%)
+            );
+        }
+
+        .landing-primary-action {
+            margin-bottom: 0.62rem;
+            width: 100%;
+        }
+
+        .landing-content-indent {
+            padding-left: 10px;
         }
 
         .landing-hero p {
@@ -279,6 +301,10 @@
             gap: 0.36rem;
         }
 
+        body[data-theme="dark"] .today-card {
+            background: color-mix(in oklab, var(--panel-2), black 10%);
+        }
+
         .today-card h4 {
             font-family: var(--font-ui);
             font-size: 0.82rem;
@@ -288,11 +314,24 @@
         }
 
         .today-card ul {
-            list-style: none;
+            list-style: disc;
+            padding-left: 1.1rem;
             display: grid;
             gap: 0.3rem;
             font-size: 0.84rem;
             color: var(--muted);
+        }
+
+        body[data-theme="dark"] #landingCelebration,
+        body[data-theme="dark"] .landing-hero p,
+        body[data-theme="dark"] .today-card ul,
+        body[data-theme="dark"] .tag,
+        body[data-theme="dark"] .landing-key {
+            color: var(--text);
+        }
+
+        body[data-theme="dark"] .landing-key {
+            text-decoration-color: color-mix(in oklab, var(--text), transparent 20%);
         }
 
         .tag {
@@ -316,30 +355,118 @@
             align-items: start;
         }
 
+        body.session-view #sessionPanel {
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: 0.72rem;
+            height: calc(100dvh - var(--app-header-height, 84px) - 2.1rem);
+            overflow: hidden;
+        }
+
+        body.session-view .session-scroll-area {
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 0.18rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.session-view .session-scroll-area .step-card {
+            margin-top: 0;
+            flex: 1 0 auto;
+            min-height: 100%;
+        }
+
+        #stepCard > #alternativesBtn {
+            margin-top: 0;
+            min-height: 34px;
+            height: 34px;
+            max-height: 34px;
+            padding: 0 0.62rem;
+            font-size: 0.82rem;
+            line-height: 1;
+        }
+
+        .stance-action + #alternativesBtn {
+            margin-top: 0.1rem;
+        }
+
+        .session-bottom-dock {
+            display: grid;
+            gap: 0.55rem;
+        }
+
+        .session-bottom-dock .session-controls {
+            margin-top: 0;
+        }
+
         .session-headline {
             display: grid;
+            grid-template-columns: minmax(0, 2.75fr) minmax(0, 1.25fr);
+            column-gap: 0.9rem;
+            row-gap: 0;
+            align-items: start;
+        }
+
+        .session-headline-main {
+            display: grid;
             gap: 0.35rem;
+        }
+
+        .session-headline-main > * {
+            min-width: 0;
         }
 
         .kicker {
             color: var(--accent-strong);
             font-family: var(--font-ui);
-            font-size: 0.74rem;
+            font-size: 0.84rem;
             letter-spacing: 0.09em;
             text-transform: uppercase;
             font-weight: 700;
         }
 
         #stepTitle {
-            font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+            font-size: clamp(1.2rem, 2.4vw, 1.5rem);
             line-height: 1.18;
             text-wrap: balance;
         }
 
         #stepSubtitle {
+            display: grid;
+            gap: 0;
+            align-content: start;
             font-size: 0.92rem;
-            line-height: 1.4;
+            line-height: 1.22;
             text-wrap: pretty;
+            text-align: right;
+            justify-items: end;
+        }
+
+        .step-meta-line {
+            display: block;
+        }
+
+        .step-meta-line-secondary {
+            font-size: calc(1em - 1px);
+        }
+
+        .step-meta-label {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .step-meta-value-emphasis {
+            font-weight: 700;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .step-meta-icon {
+            margin-left: 0.22rem;
+            font-size: 0.92em;
+            vertical-align: baseline;
         }
 
         .progress-block {
@@ -383,21 +510,34 @@
             border-radius: var(--radius-md);
             background: var(--panel-2);
             padding: 0.9rem;
-            display: grid;
-            gap: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
         }
 
-        .content-utility {
-            margin-top: 0.5rem;
-            display: flex;
-            justify-content: flex-start;
+        .step-main-content {
+            display: grid;
+            gap: 0.6rem;
+            align-content: start;
+            flex: 1 1 auto;
+            min-height: 0;
         }
+
+
 
         .step-script {
             border-left: 4px solid var(--accent);
             padding-left: 0.7rem;
             display: grid;
             gap: 0.65rem;
+        }
+
+        .step-script-leader {
+            border-left-color: var(--accent);
+        }
+
+        .step-script-response {
+            border-left-color: var(--success);
         }
 
         .step-script .label {
@@ -408,20 +548,59 @@
             text-transform: uppercase;
         }
 
+        .section-label {
+            font-family: var(--font-ui);
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .step-script .response-emphasis {
+            font-weight: 700;
+            font-style: italic;
+        }
+
         .stance-action {
             border: 1px dashed var(--border);
             border-radius: var(--radius-md);
-            padding: 0.7rem;
+            padding: 0.48rem 0.58rem;
             background: var(--panel);
             display: grid;
-            gap: 0.35rem;
+            gap: 0.2rem;
+            margin-top: 0;
+        }
+
+        .stance-action .label {
+            font-family: var(--font-ui);
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .action-item-emphasis {
+            font-style: italic;
+            font-weight: 400;
         }
 
         .reference-list,
         .action-list {
             padding-left: 1.1rem;
             display: grid;
-            gap: 0.25rem;
+            gap: 0.06rem;
+            margin: 0;
+        }
+
+        .action-list li {
+            margin: 0;
+            line-height: 1.16;
+        }
+
+        .action-list {
+            gap: 0.02rem;
         }
 
         .reference-list a {
@@ -445,6 +624,49 @@
             gap: 0.5rem;
             align-items: center;
             flex-wrap: wrap;
+        }
+
+        .session-end-row {
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            margin-top: 5px;
+        }
+
+        .session-end-btn {
+            min-height: 34px;
+            padding: 0.36rem 0.62rem;
+            font-size: 0.82rem;
+            line-height: 1.05;
+        }
+
+        .session-end-row #endSessionBtn {
+            margin-left: auto;
+        }
+
+        .step-nav-row {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-nav-btn {
+            min-height: 60px;
+            padding-top: 0.88rem;
+            padding-bottom: 0.88rem;
+        }
+
+        .step-nav-row .jump-select {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .step-nav-row .step-nav-prev {
+            justify-self: start;
+        }
+
+        .step-nav-row .step-nav-next {
+            justify-self: end;
         }
 
         .jump-select,
@@ -475,17 +697,27 @@
             background: var(--panel);
             border-left: 1px solid var(--border);
             box-shadow: -12px 0 30px rgba(0, 0, 0, 0.25);
-            overflow-y: auto;
             padding: 0.85rem;
             display: grid;
-            align-content: start;
+            grid-template-rows: auto minmax(0, 1fr);
             gap: 0.75rem;
+            overflow: hidden;
         }
 
         .drawer-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: var(--panel);
+            padding: 0.05rem 0 0.45rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .drawer-body {
+            overflow-y: auto;
+            min-height: 0;
         }
 
         .drawer-grid {
@@ -506,12 +738,72 @@
             margin-bottom: 0.45rem;
         }
 
+        .drawer-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .drawer-card-header h4 {
+            margin-bottom: 0;
+        }
+
+        .collapse-btn {
+            min-height: 32px;
+            padding: 0.3rem 0.55rem;
+            font-size: 0.78rem;
+            line-height: 1;
+        }
+
+        .collapse-btn.icon-only {
+            min-width: 32px;
+            padding: 0.3rem 0.45rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .details-toggle-icon {
+            font-size: 0.95rem;
+            line-height: 1;
+        }
+
+        .collapsible-body {
+            display: grid;
+            gap: 0.45rem;
+        }
+
         .small-list {
             list-style: none;
             display: grid;
             gap: 0.28rem;
             color: var(--muted);
             font-size: 0.84rem;
+        }
+
+        .link-list {
+            list-style: none;
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .link-btn {
+            width: 100%;
+            text-align: left;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.52rem 0.65rem;
+            background: var(--panel);
+            color: var(--text);
+            font-family: var(--font-ui);
+            font-size: 0.84rem;
+            cursor: pointer;
+        }
+
+        .link-btn:hover {
+            box-shadow: var(--shadow);
         }
 
         .prefs-grid {
@@ -539,7 +831,7 @@
         .modal {
             width: min(560px, 100%);
             max-height: 80vh;
-            overflow-y: auto;
+            overflow: hidden;
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
@@ -547,12 +839,35 @@
             padding: 0.86rem;
             display: grid;
             gap: 0.75rem;
+            grid-template-rows: auto auto minmax(0, 1fr);
         }
 
         .modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 0.6rem;
+        }
+
+        .detail-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding-bottom: 0.45rem;
+            margin-bottom: 0.15rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.28);
+        }
+
+        .detail-modal-title {
+            min-width: 0;
+        }
+
+        .detail-modal-body {
+            display: grid;
+            gap: 0.75rem;
+            overflow-y: auto;
+            min-height: 0;
         }
 
         .alt-option {
@@ -591,6 +906,12 @@
             color: var(--text);
         }
 
+        body[data-theme="dark"] .warning-box {
+            border-color: color-mix(in oklab, var(--danger), white 14%);
+            background: color-mix(in oklab, var(--danger), black 72%);
+            color: var(--text);
+        }
+
         .warning-box h3,
         .warning-box h4 {
             font-family: var(--font-ui);
@@ -620,12 +941,230 @@
             letter-spacing: 0.01em;
         }
 
+        .liturgical-color {
+            font-weight: 700;
+        }
+
+        .liturgical-color-green {
+            color: #2f7d32;
+        }
+
+        .liturgical-color-red {
+            color: #b4232d;
+        }
+
+        .liturgical-color-violet {
+            color: #7d3c98;
+        }
+
+        .liturgical-color-white {
+            color: #5e6670;
+        }
+
+        .liturgical-color-rose {
+            color: #cf6b87;
+        }
+
+        .liturgical-color-black {
+            color: #1f1f1f;
+        }
+
+        .liturgical-color-gold {
+            color: #b8860b;
+        }
+
         .prayer-block {
             border-left: 3px solid var(--border);
             padding-left: 0.65rem;
             display: grid;
             gap: 0.35rem;
             margin-top: 0.4rem;
+        }
+
+        .detail-link,
+        .prayer-link {
+            color: var(--accent-strong);
+            text-decoration: underline;
+            text-underline-offset: 0.12em;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            background: none;
+            border: 0;
+            text-align: left;
+            padding: 0;
+        }
+
+        .detail-link:hover,
+        .prayer-link:hover {
+            color: var(--accent);
+            text-decoration-thickness: 2px;
+        }
+
+        .detail-link:focus-visible,
+        .prayer-link:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .external-indicator {
+            margin-left: 0.3rem;
+            font-size: 0.8em;
+            opacity: 0.85;
+        }
+
+        .modal-list {
+            list-style: none;
+            display: grid;
+            gap: 0.45rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .schedule-day-list {
+            margin-top: 0.32rem;
+            margin-left: 0.45rem;
+            padding-left: 0.7rem;
+            border-left: 2px solid var(--border);
+            display: grid;
+            gap: 0.25rem;
+            color: var(--text-soft);
+            font-size: 0.86rem;
+        }
+
+        .view-toggle-group {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.7rem;
+        }
+
+        .hymn-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+            margin-bottom: 0.5rem;
+            padding: 0.4rem 0.45rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--panel-alt);
+            overflow-x: auto;
+        }
+
+        .hymn-controls-label {
+            color: var(--muted);
+            font-size: 0.74rem;
+            font-weight: 600;
+            flex: 0 0 auto;
+        }
+
+        .view-toggle-btn {
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.22rem 0.46rem;
+            font-size: 0.72rem;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+
+        .hymn-mode-switch {
+            display: inline-flex;
+            align-items: stretch;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+            flex: 0 0 auto;
+        }
+
+        .hymn-mode-switch .view-toggle-btn {
+            border: 0;
+            border-radius: 0;
+            margin: 0;
+        }
+
+        .hymn-mode-switch .view-toggle-btn + .view-toggle-btn {
+            border-left: 1px solid var(--border);
+        }
+
+        .hymn-mode-switch .view-toggle-btn.is-active {
+            background: var(--accent);
+            color: var(--panel);
+            box-shadow: inset 0 0 0 1px var(--accent-strong);
+        }
+
+        .hymn-mode-switch .view-toggle-btn:not(.is-active) {
+            background: var(--panel);
+            color: var(--text-soft);
+        }
+
+        .hymn-language-switch {
+            display: inline-flex;
+            align-items: stretch;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+            flex: 0 0 auto;
+        }
+
+        .hymn-language-switch .view-toggle-btn {
+            border: 0;
+            border-radius: 0;
+            margin: 0;
+        }
+
+        .hymn-language-switch .view-toggle-btn + .view-toggle-btn {
+            border-left: 1px solid var(--border);
+        }
+
+        .hymn-language-switch .view-toggle-btn.is-active {
+            background: var(--accent);
+            color: var(--panel);
+            box-shadow: inset 0 0 0 1px var(--accent-strong);
+        }
+
+        .hymn-language-switch .view-toggle-btn:not(.is-active) {
+            background: var(--panel);
+            color: var(--text-soft);
+        }
+
+        .hymn-alpha-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+        }
+
+        .hymn-part-hint {
+            color: var(--muted);
+            font-style: italic;
+            font-size: 0.88em;
+        }
+
+        .prayer-summary {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.35;
+            margin-top: 0.12rem;
+        }
+
+        .prayer-detail-summary {
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.4;
+            padding: 0.45rem 0.55rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--panel-2);
+        }
+
+        .prayer-list-item {
+            display: grid;
+            gap: 0.18rem;
         }
 
         .prayer-block .label {
@@ -636,10 +1175,63 @@
             letter-spacing: 0.04em;
         }
 
+        .prayer-block.primary-content .label {
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .prayer-block.primary-content .primary-content-body p,
+        .prayer-block.primary-content .primary-content-body li {
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .prayer-block .label ~ p,
+        .prayer-block .label ~ ul,
+        .prayer-block .label ~ div {
+            margin-left: 0.3rem;
+        }
+
         .prayer-block ul {
             padding-left: 1.1rem;
             display: grid;
             gap: 0.25rem;
+        }
+
+        .compact-details {
+            border-left-width: 2px;
+            padding-left: 0.52rem;
+            gap: 0.18rem;
+            margin-top: 0.22rem;
+        }
+
+        .compact-details p {
+            margin: 0;
+            font-size: 0.84rem;
+            line-height: 1.28;
+            font-family: var(--font-ui);
+            color: var(--text-soft);
+            padding-left: 0.12rem;
+        }
+
+        .compact-details p strong {
+            color: var(--muted);
+            font-size: 0.74rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-right: 0.16rem;
+        }
+
+        .details-collapsible-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .details-collapsible-body {
+            display: grid;
+            gap: 0.18rem;
         }
 
         @media (max-width: 900px) {
@@ -691,7 +1283,7 @@
             }
 
             #stepTitle {
-                font-size: 1.06rem;
+                font-size: 1.16rem;
                 line-height: 1.16;
             }
 
@@ -719,6 +1311,11 @@
 
             .session-controls {
                 grid-template-columns: 1fr;
+            }
+
+            body.session-view #sessionPanel {
+                height: calc(100dvh - var(--app-header-height, 78px) - 1.5rem);
+                gap: 0.62rem;
             }
 
             .session-controls .wide {
@@ -759,24 +1356,25 @@
         <section class="panel" id="landingPanel" aria-labelledby="landingTitle">
             <div class="landing-grid">
                 <div class="landing-hero">
+                    <button class="btn landing-primary-action" id="startMassBtn" type="button">Start Mass</button>
                     <h1 id="landingTitle">Enter the Mass prayerfully, one step at a time</h1>
-                    <p id="landingCelebration">Today's celebration will appear here.</p>
-                    <div class="status-strip">
-                        <span class="tag" id="dataSourceTag">Data source: ...</span>
-                        <span class="tag" id="phaseCountTag">Phases: 0</span>
-                        <span class="tag" id="stepCountTag">Steps: 0</span>
-                    </div>
-                    <div class="today-card" id="todayChurchCard">
-                        <h4>Today at Selected Church</h4>
-                        <ul id="todayChurchList"></ul>
-                    </div>
-                    <div class="warning-box hidden" id="landingWarnings" role="status" aria-live="polite">
-                        <h4>Data warnings</h4>
-                        <ul class="warning-list" id="landingWarningsList"></ul>
+                    <div class="landing-content-indent">
+                        <p id="landingCelebration">Today's celebration will appear here.</p>
+                        <div class="status-strip">
+                            <span class="tag" id="dayClassTag">Day: ...</span>
+                            <span class="tag" id="liturgicalColorTag">Color: ...</span>
+                        </div>
+                        <div class="today-card" id="todayChurchCard">
+                            <h4>Today at Selected Church</h4>
+                            <ul id="todayChurchList"></ul>
+                        </div>
+                        <div class="warning-box hidden" id="landingWarnings" role="status" aria-live="polite">
+                            <h4>Data warnings</h4>
+                            <ul class="warning-list" id="landingWarningsList"></ul>
+                        </div>
                     </div>
                 </div>
                 <div class="landing-actions">
-                    <button class="btn" id="startMassBtn" type="button">Start Mass</button>
                     <button class="btn secondary" id="startPremassBtn" type="button">Start with pre-Mass prayers</button>
                     <button class="ghost-btn" id="openSchedulesBtn" type="button">Open schedules</button>
                 </div>
@@ -796,42 +1394,44 @@
         <section class="panel hidden" id="sessionPanel" aria-live="polite">
             <div class="session-top">
                 <div class="session-headline">
-                    <div class="kicker" id="phaseKicker">Phase 0 of 0 (Step 0 of 0)</div>
-                    <h2 id="stepTitle">Step title</h2>
+                    <div class="session-headline-main">
+                        <div class="kicker" id="phaseKicker">Phase Name</div>
+                        <h2 id="stepTitle">Step title</h2>
+                    </div>
                     <p id="stepSubtitle" style="color: var(--muted);">Step details appear here.</p>
                 </div>
             </div>
 
-            <article class="step-card" id="stepCard"></article>
-
-            <div class="content-utility">
-                <button class="ghost-btn" id="alternativesBtn" type="button">Choose alternate chant/hymn</button>
+            <div class="session-scroll-area">
+                <article class="step-card" id="stepCard"></article>
+                <button class="ghost-btn hidden" id="alternativesBtn" type="button">Choose alternate chant/hymn</button>
             </div>
 
-            <div class="progress-block">
-                <div class="progress-labels">
-                    <span id="elapsedLabel">Elapsed: 00:00</span>
-                    <span id="progressLabel">0%</span>
+            <div class="session-bottom-dock">
+                <div class="progress-block">
+                    <div class="kicker" id="progressKicker">Phase 0 of 0 (Step 0 of 0)</div>
+                    <div class="progress-labels">
+                        <span id="elapsedLabel">Elapsed: 00:00</span>
+                        <span id="progressLabel">0%</span>
+                    </div>
+                    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
                 </div>
-                <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
 
-            <div class="session-controls">
-                <div class="control-row">
-                    <button class="btn secondary" id="backBtn" type="button">Previous Step</button>
-                    <button class="btn" id="nextBtn" type="button">Next Step</button>
+                <div class="session-controls">
+                    <div class="control-row step-nav-row wide">
+                        <button class="btn secondary step-nav-prev step-nav-btn" id="backBtn" type="button">Previous Step</button>
+                        <label for="jumpSelect" class="sr-only">Jump to step</label>
+                        <select id="jumpSelect" class="jump-select" aria-label="Jump to step"></select>
+                        <button class="btn step-nav-next step-nav-btn" id="nextBtn" type="button">Next Step</button>
+                    </div>
+                    <div class="control-row wide session-end-row">
+                        <button class="ghost-btn session-end-btn" id="startOverBtn" type="button">Start Over</button>
+                        <button class="ghost-btn session-end-btn" id="endSessionBtn" type="button" style="color: var(--danger);">End Session</button>
+                    </div>
+                    <p class="nav-hint" id="navHint">Step navigation moves one step at a time.</p>
                 </div>
-                <div class="control-row">
-                    <label for="jumpSelect" class="sr-only">Jump to step</label>
-                    <select id="jumpSelect" class="jump-select" aria-label="Jump to step"></select>
-                </div>
-                <div class="control-row wide">
-                    <button class="ghost-btn" id="startOverBtn" type="button">Start Over</button>
-                    <button class="ghost-btn" id="endSessionBtn" type="button" style="color: var(--danger);">End Session</button>
-                </div>
-                <p class="nav-hint" id="navHint">Step navigation moves one step at a time.</p>
             </div>
         </section>
     </main>
@@ -840,83 +1440,82 @@
         <aside class="drawer">
             <div class="drawer-header">
                 <h3>Menu and References</h3>
-                <button class="icon-btn" id="closeMenuBtn" type="button" aria-label="Close menu">Close</button>
+                <button class="ghost-btn" id="closeMenuBtn" type="button" aria-label="Close menu">Close</button>
             </div>
 
-            <div class="drawer-grid">
-                <div class="drawer-card">
-                    <h4>Schedules of Mass</h4>
-                    <ul class="small-list" id="schedulesList"></ul>
-                </div>
+            <div class="drawer-body">
+                <div class="drawer-grid">
+                    <div class="drawer-card">
+                        <h4>References</h4>
+                        <ul class="link-list" id="referencesList"></ul>
+                    </div>
 
-                <div class="drawer-card">
-                    <h4>Churches</h4>
-                    <ul class="small-list" id="churchesList"></ul>
-                </div>
+                    <div class="drawer-card hidden" id="warningsCard">
+                        <h4>Data Warnings</h4>
+                        <ul class="small-list" id="warningsList"></ul>
+                    </div>
 
-                <div class="drawer-card">
-                    <h4>Prayers</h4>
-                    <ul class="small-list" id="prayersList"></ul>
-                </div>
+                    <div class="drawer-card">
+                        <h4>Preferences</h4>
+                        <div class="prefs-grid">
+                            <label>
+                                Theme
+                                <select class="select" id="themeSelect">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="8bit">8-bit</option>
+                                </select>
+                            </label>
+                            <label>
+                                Default church
+                                <select class="select" id="churchSelect"></select>
+                            </label>
+                            <label>
+                                Occasion profile
+                                <select class="select" id="occasionSelect">
+                                    <option value="auto">Auto</option>
+                                    <option value="marian-solemnity">Marian solemnity</option>
+                                    <option value="national-healing">National healing</option>
+                                    <option value="peace-vigil">Peace vigil</option>
+                                </select>
+                            </label>
+                            <label>
+                                Text mode
+                                <select class="select" id="textModeSelect">
+                                    <option value="full">Full</option>
+                                    <option value="short">Short</option>
+                                </select>
+                            </label>
+                            <label>
+                                Text spacing
+                                <select class="select" id="lineBreakModeSelect">
+                                    <option value="author">Author line breaks</option>
+                                    <option value="smart">Smart formatting</option>
+                                </select>
+                            </label>
+                            <label class="toggle-row">
+                                <span>Show duration</span>
+                                <input class="toggle" id="showDurationToggle" type="checkbox">
+                            </label>
+                            <label class="toggle-row">
+                                <span>Show full lyrics</span>
+                                <input class="toggle" id="showLyricsToggle" type="checkbox">
+                            </label>
+                            <label class="toggle-row">
+                                <span>Enable auto-progress</span>
+                                <input class="toggle" id="autoProgressToggle" type="checkbox">
+                            </label>
+                        </div>
+                    </div>
 
-                <div class="drawer-card">
-                    <h4>Mass Days</h4>
-                    <ul class="small-list" id="massDaysList"></ul>
-                </div>
-
-                <div class="drawer-card hidden" id="warningsCard">
-                    <h4>Data Warnings</h4>
-                    <ul class="small-list" id="warningsList"></ul>
-                </div>
-
-                <div class="drawer-card" id="diagnosticsCard">
-                    <h4>Diagnostics</h4>
-                    <ul class="diagnostic-list" id="diagnosticsList"></ul>
-                </div>
-
-                <div class="drawer-card">
-                    <h4>Preferences</h4>
-                    <div class="prefs-grid">
-                        <label>
-                            Theme
-                            <select class="select" id="themeSelect">
-                                <option value="light">Light</option>
-                                <option value="dark">Dark</option>
-                                <option value="8bit">8-bit</option>
-                            </select>
-                        </label>
-                        <label>
-                            Default church
-                            <select class="select" id="churchSelect"></select>
-                        </label>
-                        <label>
-                            Occasion profile
-                            <select class="select" id="occasionSelect">
-                                <option value="auto">Auto</option>
-                                <option value="marian-solemnity">Marian solemnity</option>
-                                <option value="national-healing">National healing</option>
-                                <option value="peace-vigil">Peace vigil</option>
-                            </select>
-                        </label>
-                        <label>
-                            Text mode
-                            <select class="select" id="textModeSelect">
-                                <option value="full">Full</option>
-                                <option value="short">Short</option>
-                            </select>
-                        </label>
-                        <label class="toggle-row">
-                            <span>Show duration</span>
-                            <input class="toggle" id="showDurationToggle" type="checkbox">
-                        </label>
-                        <label class="toggle-row">
-                            <span>Show full lyrics</span>
-                            <input class="toggle" id="showLyricsToggle" type="checkbox">
-                        </label>
-                        <label class="toggle-row">
-                            <span>Enable auto-progress</span>
-                            <input class="toggle" id="autoProgressToggle" type="checkbox">
-                        </label>
+                    <div class="drawer-card" id="diagnosticsCard">
+                        <div class="drawer-card-header">
+                            <h4>Diagnostics</h4>
+                            <button class="ghost-btn collapse-btn icon-only" id="diagnosticsToggleBtn" type="button" aria-expanded="false" aria-controls="diagnosticsContent" data-label-collapsed="Show diagnostics" data-label-expanded="Hide diagnostics" aria-label="Show diagnostics" title="Show diagnostics"><span class="details-toggle-icon" aria-hidden="true">▾</span><span class="sr-only">Show diagnostics</span></button>
+                        </div>
+                        <div class="collapsible-body hidden" id="diagnosticsContent">
+                            <ul class="diagnostic-list" id="diagnosticsList"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -944,41 +1543,17 @@
         </div>
     </div>
 
-    <script id="embedded-mass-jsonl" type="application/x-ndjson">
-{"type":"appConfig","appName":"Mass Companion","version":"0.2.0","defaultTheme":"light","defaultChurchId":"galleria","showDurationByDefault":true,"showFullLyricsByDefault":true,"enableAutoProgressByDefault":false}
-{"type":"massDay","id":"ordinary-time-18-2026-08-02","date":"2026-08-02","celebration":"18th Sunday in Ordinary Time","liturgicalColor":"green"}
-{"type":"massDay","id":"ordinary-time-19-2026-08-09","date":"2026-08-09","celebration":"19th Sunday in Ordinary Time","liturgicalColor":"green"}
-{"type":"massDay","id":"assumption-2026-08-15","date":"2026-08-15","celebration":"Solemnity of the Assumption of the Blessed Virgin Mary","liturgicalColor":"white"}
-{"type":"church","id":"galleria","name":"Galleria"}
-{"type":"church","id":"sm-megamall","name":"SM Megamall"}
-{"type":"church","id":"sharilla-elsa-mall","name":"Sharilla Elsa Mall"}
-{"type":"church","id":"greenhills","name":"Greenhills"}
-{"type":"church","id":"lourdes-mandaluyong","name":"Lourdes Mandaluyong"}
-{"type":"church","id":"edsa-shrine","name":"National Shrine of Mary, Queen of Peace (EDSA Shrine)"}
-{"type":"schedule","id":"sched-galleria-sun-0900","churchId":"galleria","day":"Sunday","startTime":"09:00","language":"English","celebrationId":"ordinary-time-18-2026-08-02"}
-{"type":"schedule","id":"sched-galleria-sun-1730","churchId":"galleria","day":"Sunday","startTime":"17:30","language":"English","celebrationId":"ordinary-time-19-2026-08-09"}
-{"type":"schedule","id":"sched-sm-sun-1100","churchId":"sm-megamall","day":"Sunday","startTime":"11:00","language":"English","celebrationId":"ordinary-time-18-2026-08-02"}
-{"type":"schedule","id":"sched-greenhills-sun-1000","churchId":"greenhills","day":"Sunday","startTime":"10:00","language":"English","celebrationId":"ordinary-time-19-2026-08-09"}
-{"type":"schedule","id":"sched-lourdes-sat-1800","churchId":"lourdes-mandaluyong","day":"Saturday","startTime":"18:00","language":"English","celebrationId":"assumption-2026-08-15"}
-{"type":"prayer","id":"rosary-opening","title":"Rosary Opening Prayer","contentText":"In the name of the Father, and of the Son, and of the Holy Spirit. Amen. I believe in God, the Father almighty, Creator of heaven and earth."}
-{"type":"prayer","id":"angelus","title":"Angelus","contentText":"The Angel of the Lord declared unto Mary; and she conceived of the Holy Spirit. Hail Mary, full of grace, the Lord is with thee."}
-{"type":"prayer","id":"act-of-contrition","title":"Act of Contrition","contentText":"My God, I am sorry for my sins with all my heart. In choosing to do wrong and failing to do good, I have sinned against you."}
-{"type":"prayer","id":"morning-offering","title":"Morning Offering","contentText":"O Jesus, through the Immaculate Heart of Mary, I offer you my prayers, works, joys, and sufferings of this day."}
-{"type":"phase","id":"introductory-rites","order":1,"title":"Introductory Rites"}
-{"type":"phase","id":"liturgy-of-the-word","order":2,"title":"Liturgy of the Word"}
-{"type":"phase","id":"liturgy-of-the-eucharist","order":3,"title":"Liturgy of the Eucharist"}
-{"type":"phase","id":"concluding-rites","order":4,"title":"Concluding Rites"}
-{"type":"step","id":"entrance-chant","phaseId":"introductory-rites","order":1,"title":"Entrance Chant","stepType":"hymn","stance":"stand","lyrics":"Sing to the Lord a new song; sing to the Lord, all you lands. Proclaim his marvelous deeds to all the nations.","actions":["Join the procession prayerfully","Make a reverent bow toward the altar"],"estimatedSeconds":180,"allowAutoProgress":true,"alternatives":[{"id":"alt-entrance-1","title":"Gather Us In","lyrics":"Here in this place new light is streaming, now is the darkness vanished away."},{"id":"alt-entrance-2","title":"All Are Welcome","lyrics":"Let us build a house where love can dwell and all can safely live."}]}
-{"type":"step","id":"sign-of-the-cross","phaseId":"introductory-rites","order":2,"title":"Sign of the Cross and Greeting","stepType":"script","stance":"stand","leaderText":"In the name of the Father, and of the Son, and of the Holy Spirit.","responseText":"Amen.","contentText":"The priest greets the people and invites everyone into prayer.","actions":["Make the sign of the cross","Respond clearly with the assembly"],"estimatedSeconds":45,"allowAutoProgress":false}
-{"type":"step","id":"first-reading","phaseId":"liturgy-of-the-word","order":3,"title":"First Reading","stepType":"reading","stance":"sit","contentText":"A reading from the Book of Ecclesiastes. Vanity of vanities, says Qoheleth, vanity of vanities! All things are vanity.","references":[{"label":"Ecclesiastes 1:2; 2:21-23","url":"https://bible.usccb.org/bible/readings/080226.cfm"}],"estimatedSeconds":210,"allowAutoProgress":true}
-{"type":"step","id":"gospel-acclamation","phaseId":"liturgy-of-the-word","order":4,"title":"Gospel Acclamation","stepType":"hymn","stance":"stand","lyrics":"Alleluia, alleluia. Blessed are the poor in spirit; the kingdom of heaven is theirs.","actions":["Stand and sing with the assembly","Trace small cross on forehead, lips, and heart"],"estimatedSeconds":90,"allowAutoProgress":true}
-{"type":"step","id":"offertory","phaseId":"liturgy-of-the-eucharist","order":5,"title":"Preparation of the Gifts","stepType":"action","stance":"sit","contentText":"Bread and wine are brought to the altar as symbols of the Church's offering of thanksgiving and self-giving.","actions":["Prepare offering","Pray silently for intentions"],"estimatedSeconds":180,"allowAutoProgress":true}
-{"type":"step","id":"holy-holy","phaseId":"liturgy-of-the-eucharist","order":6,"title":"Holy, Holy, Holy","stepType":"hymn","stance":"stand","lyrics":"Holy, Holy, Holy Lord God of hosts. Heaven and earth are full of your glory. Hosanna in the highest.","estimatedSeconds":90,"allowAutoProgress":true,"alternatives":[{"id":"alt-holy-1","title":"Mass of Creation Sanctus","lyrics":"Holy, holy, holy Lord, God of power and might..."}]}
-{"type":"step","id":"communion","phaseId":"liturgy-of-the-eucharist","order":7,"title":"Communion Rite","stepType":"prayer","stance":"kneel","contentText":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","actions":["Approach for communion reverently","Spend a brief moment in silent thanksgiving"],"estimatedSeconds":240,"allowAutoProgress":false}
-{"type":"step","id":"dismissal","phaseId":"concluding-rites","order":8,"title":"Dismissal","stepType":"script","stance":"stand","leaderText":"Go forth, the Mass is ended.","responseText":"Thanks be to God.","contentText":"The assembly is sent forth to live the Gospel in daily life.","actions":["Make the sign of the cross","Remain for the recessional if customary"],"estimatedSeconds":60,"allowAutoProgress":false}
-    </script>
+    <div class="modal-shell hidden" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+        <div class="modal">
+            <div class="detail-modal-header">
+                <h3 id="detailModalTitle" class="detail-modal-title">Details</h3>
+                <button class="ghost-btn" type="button" id="detailCloseBtn">Close</button>
+            </div>
+            <div id="detailModalBody" class="detail-modal-body"></div>
+        </div>
+    </div>
 
-    <script>
+    <script id="embedded-mass-jsonl">
         const STORAGE_KEY = 'wwm-prefs-v1';
         const STEP_MASS_PART_MAP = {
             'entrance-chant': 'entrance',
@@ -1001,6 +1576,7 @@
                 schedules: [],
                 prayers: [],
                 songs: [],
+                songTexts: [],
                 songAssignments: [],
                 prayerAssignments: [],
                 phases: [],
@@ -1012,6 +1588,7 @@
                 showLyrics: true,
                 defaultChurchId: '',
                 textMode: 'full',
+                lineBreakMode: 'author',
                 occasion: 'auto',
                 autoProgress: false
             },
@@ -1025,6 +1602,13 @@
             },
             ui: {
                 activeModal: null,
+                diagnosticsExpanded: false,
+                hymnViewMode: 'alphabetical',
+                hymnLanguageFilter: 'both',
+                prayerViewMode: 'alphabetical',
+                prayerLanguageFilter: 'both',
+                massDaysSortOrder: 'asc',
+                massDaysDateFilter: 'current-future',
                 lastFocusedElement: null
             },
             confirmAction: null
@@ -1035,20 +1619,21 @@
         function cacheElements() {
             [
                 'headerCelebration', 'headerDate', 'menuButton',
-                'landingPanel', 'landingCelebration', 'dataSourceTag', 'phaseCountTag', 'stepCountTag',
+                'landingPanel', 'landingCelebration', 'dayClassTag', 'liturgicalColorTag',
                 'todayChurchCard', 'todayChurchList',
                 'landingWarnings', 'landingWarningsList',
                 'startMassBtn', 'startPremassBtn', 'openSchedulesBtn',
                 'premassPanel', 'premassIntro', 'premassPrayerList', 'continueToMassBtn', 'backToLandingFromPremassBtn',
-                'sessionPanel', 'phaseKicker', 'stepTitle', 'stepSubtitle', 'elapsedLabel', 'progressLabel',
+                'sessionPanel', 'phaseKicker', 'progressKicker', 'stepTitle', 'stepSubtitle', 'elapsedLabel', 'progressLabel',
                 'progressFill', 'stepCard', 'jumpSelect', 'backBtn', 'nextBtn', 'alternativesBtn', 'startOverBtn',
                 'endSessionBtn', 'navHint',
-                'menuOverlay', 'closeMenuBtn', 'schedulesList', 'churchesList', 'prayersList', 'massDaysList',
+                'menuOverlay', 'closeMenuBtn', 'referencesList',
                 'warningsCard', 'warningsList',
-                'diagnosticsCard', 'diagnosticsList',
-                'themeSelect', 'churchSelect', 'occasionSelect', 'textModeSelect', 'showDurationToggle', 'showLyricsToggle', 'autoProgressToggle',
+                'diagnosticsCard', 'diagnosticsContent', 'diagnosticsList', 'diagnosticsToggleBtn',
+                'themeSelect', 'churchSelect', 'occasionSelect', 'textModeSelect', 'lineBreakModeSelect', 'showDurationToggle', 'showLyricsToggle', 'autoProgressToggle',
                 'confirmModal', 'confirmMessage', 'confirmCancelBtn', 'confirmOkBtn',
-                'altModal', 'altList', 'altCloseBtn'
+                'altModal', 'altList', 'altCloseBtn',
+                'detailModal', 'detailModalTitle', 'detailModalBody', 'detailCloseBtn'
             ].forEach(id => {
                 el[id] = document.getElementById(id);
             });
@@ -1113,6 +1698,7 @@
                 schedules: [],
                 prayers: [],
                 songs: [],
+                songTexts: [],
                 songAssignments: [],
                 prayerAssignments: [],
                 phases: [],
@@ -1159,6 +1745,12 @@
                             warnings.push('A song record is missing id or title.');
                         }
                         idx.songs.push(record);
+                        break;
+                    case 'songText':
+                        if (!record.id || !record.songId) {
+                            warnings.push('A songText record is missing id or songId.');
+                        }
+                        idx.songTexts.push(record);
                         break;
                     case 'songAssignment':
                         if (!record.id || !record.massPart || !record.churchId) {
@@ -1346,10 +1938,20 @@
             el.landingPanel.classList.toggle('hidden', view !== 'landing');
             el.premassPanel.classList.toggle('hidden', view !== 'premass');
             el.sessionPanel.classList.toggle('hidden', view !== 'session');
+            document.body.classList.toggle('session-view', view === 'session');
+            updateLayoutMetrics();
+        }
+
+        function updateLayoutMetrics() {
+            const header = document.querySelector('.app-header');
+            const headerHeight = header ? header.offsetHeight : 0;
+            document.documentElement.style.setProperty('--app-header-height', `${headerHeight}px`);
         }
 
         function openMenu() {
             state.ui.lastFocusedElement = document.activeElement;
+            state.ui.diagnosticsExpanded = false;
+            renderDiagnostics();
             el.menuOverlay.classList.remove('hidden');
             state.ui.activeModal = el.menuOverlay;
             el.closeMenuBtn.focus();
@@ -1462,6 +2064,46 @@
             closeModal(el.altModal);
         }
 
+        function setCollapseButtonState(btn, isExpanded) {
+            if (!btn) return;
+            const collapsedLabel = btn.getAttribute('data-label-collapsed') || 'Show details';
+            const expandedLabel = btn.getAttribute('data-label-expanded') || 'Hide details';
+            const activeLabel = isExpanded ? expandedLabel : collapsedLabel;
+            const icon = isExpanded ? '▴' : '▾';
+            btn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+            btn.setAttribute('aria-label', activeLabel);
+            btn.setAttribute('title', activeLabel);
+            btn.innerHTML = `<span class="details-toggle-icon" aria-hidden="true">${icon}</span><span class="sr-only">${escapeHtml(activeLabel)}</span>`;
+        }
+
+        function openDetailModal(title, bodyHtml, onOpen) {
+            el.detailModalTitle.textContent = title || 'Details';
+            el.detailModalBody.innerHTML = bodyHtml || '<p style="color: var(--muted);">No details available.</p>';
+
+            el.detailModalBody.querySelectorAll('.details-collapsible-toggle').forEach(btn => {
+                const container = btn.closest('.details-collapsible');
+                const content = container?.querySelector('.details-collapsible-body');
+                const startsExpanded = content ? !content.classList.contains('hidden') : btn.getAttribute('aria-expanded') === 'true';
+                setCollapseButtonState(btn, startsExpanded);
+                btn.addEventListener('click', () => {
+                    const localContainer = btn.closest('.details-collapsible');
+                    const content = localContainer?.querySelector('.details-collapsible-body');
+                    if (!content) return;
+                    const isHidden = content.classList.toggle('hidden');
+                    setCollapseButtonState(btn, !isHidden);
+                });
+            });
+
+            if (typeof onOpen === 'function') {
+                onOpen(el.detailModalBody);
+            }
+            openModal(el.detailModal, el.detailCloseBtn);
+        }
+
+        function closeDetailModal() {
+            closeModal(el.detailModal);
+        }
+
         function escapeHtml(value) {
             return String(value)
                 .replace(/&/g, '&amp;')
@@ -1469,6 +2111,42 @@
                 .replace(/>/g, '&gt;')
                 .replace(/\"/g, '&quot;')
                 .replace(/'/g, '&#039;');
+        }
+
+        function toTitleCaseLabel(value) {
+            return String(value || '')
+                .trim()
+                .replace(/[_-]+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+        function getLiturgicalColorClass(colorLabel) {
+            const key = String(colorLabel || '').toLowerCase().trim();
+            if (!key) return '';
+            if (key.includes('green')) return 'liturgical-color-green';
+            if (key.includes('red')) return 'liturgical-color-red';
+            if (key.includes('violet') || key.includes('purple')) return 'liturgical-color-violet';
+            if (key.includes('white')) return 'liturgical-color-white';
+            if (key.includes('rose') || key.includes('pink')) return 'liturgical-color-rose';
+            if (key.includes('black')) return 'liturgical-color-black';
+            if (key.includes('gold')) return 'liturgical-color-gold';
+            return '';
+        }
+
+        function formatMassDayMetaHtml(rankValue, liturgicalColorValue) {
+            const rankLabel = toTitleCaseLabel(rankValue);
+            const colorLabel = toTitleCaseLabel(liturgicalColorValue);
+            if (!rankLabel && !colorLabel) return '';
+
+            const rankHtml = rankLabel ? escapeHtml(rankLabel) : '';
+            const colorClass = getLiturgicalColorClass(colorLabel);
+            const colorHtml = colorLabel
+                ? `<span class="liturgical-color ${colorClass}">${escapeHtml(colorLabel)}</span>`
+                : '';
+
+            if (rankHtml && colorHtml) return `${rankHtml} | ${colorHtml}`;
+            return rankHtml || colorHtml;
         }
 
         function getTextField(record, baseField) {
@@ -1494,6 +2172,7 @@
             el.churchSelect.value = state.prefs.defaultChurchId || '';
             el.occasionSelect.value = state.prefs.occasion || 'auto';
             el.textModeSelect.value = state.prefs.textMode || 'full';
+            el.lineBreakModeSelect.value = state.prefs.lineBreakMode || 'author';
             renderHeader();
             renderSession();
         }
@@ -1516,6 +2195,7 @@
                 showLyrics: state.index.appConfig?.showFullLyricsByDefault !== false,
                 defaultChurchId: state.index.appConfig?.defaultChurchId || (state.index.churches[0]?.id || ''),
                 textMode: state.index.appConfig?.defaultTextMode || 'full',
+                lineBreakMode: 'author',
                 occasion: 'auto',
                 autoProgress: !!state.index.appConfig?.enableAutoProgressByDefault
             };
@@ -1524,6 +2204,10 @@
                 ...defaults,
                 ...(stored || {})
             };
+
+            if (!state.index.churches.some(ch => ch.id === state.prefs.defaultChurchId)) {
+                state.prefs.defaultChurchId = state.index.churches[0]?.id || '';
+            }
         }
 
         function renderHeader() {
@@ -1534,6 +2218,13 @@
 
         function renderLanding() {
             const massDay = getTodaysMassDay();
+            const toDisplayLabel = (value, fallback) => {
+                if (!value) return fallback;
+                return String(value)
+                    .replace(/[-_]/g, ' ')
+                    .replace(/\b\w/g, char => char.toUpperCase());
+            };
+
             if (massDay) {
                 const readings = massDay.readings || {};
                 const readingSummary = [readings.first, readings.psalm, readings.second, readings.gospel]
@@ -1568,15 +2259,14 @@
                     : '';
 
                 const details = [
-                    `${formatHumanDate()} - ${massDay.celebration}`,
-                    [massDay.rank, massDay.liturgicalColor].filter(Boolean).join(' | '),
-                    massDay.theme ? `Theme: ${massDay.theme}` : '',
-                    readingSummary ? `Readings: ${readingSummary}` : '',
-                    massDay.massImpact ? `Mass notes: ${massDay.massImpact}` : '',
-                    massDay.specialDevotion ? `Special devotion: ${massDay.specialDevotion}` : ''
+                    `${escapeHtml(formatHumanDate())} - ${escapeHtml(massDay.celebration || '')}`,
+                    massDay.theme ? `<span class="landing-key">Theme:</span> ${escapeHtml(massDay.theme)}` : '',
+                    readingSummary ? `<span class="landing-key">Readings:</span> ${escapeHtml(readingSummary)}` : '',
+                    massDay.massImpact ? `<span class="landing-key">Mass notes:</span> ${escapeHtml(massDay.massImpact)}` : '',
+                    massDay.specialDevotion ? `<span class="landing-key">Special devotion:</span> ${escapeHtml(massDay.specialDevotion)}` : ''
                 ].filter(Boolean);
 
-                el.landingCelebration.innerHTML = details.map(line => escapeHtml(line)).join('<br>');
+                el.landingCelebration.innerHTML = details.join('<br>');
 
                 const churchLines = [
                     church?.name ? `<li><strong>Church:</strong> ${escapeHtml(church.name)}</li>` : '',
@@ -1595,14 +2285,16 @@
                     el.todayChurchCard.classList.add('hidden');
                     el.todayChurchList.innerHTML = '';
                 }
+
+                el.dayClassTag.textContent = toDisplayLabel(massDay.rank || inferDayClass(), 'Day');
+                el.liturgicalColorTag.textContent = toDisplayLabel(massDay.liturgicalColor, 'Color');
             } else {
                 el.landingCelebration.textContent = `${formatHumanDate()} - Celebration not configured`;
                 el.todayChurchCard.classList.add('hidden');
                 el.todayChurchList.innerHTML = '';
+                el.dayClassTag.textContent = toDisplayLabel(inferDayClass(), 'Day');
+                el.liturgicalColorTag.textContent = 'Color';
             }
-            el.dataSourceTag.textContent = `Data source: ${state.source}`;
-            el.phaseCountTag.textContent = `Phases: ${state.index.phases.length}`;
-            el.stepCountTag.textContent = `Steps: ${state.index.steps.length}`;
             renderWarnings();
             renderDiagnostics();
         }
@@ -1643,25 +2335,114 @@
             el.diagnosticsList.innerHTML = diagnostics
                 .map(item => `<li>${escapeHtml(item)}</li>`)
                 .join('');
+            if (el.diagnosticsContent) {
+                el.diagnosticsContent.classList.toggle('hidden', !state.ui.diagnosticsExpanded);
+            }
+            if (el.diagnosticsToggleBtn) {
+                setCollapseButtonState(el.diagnosticsToggleBtn, state.ui.diagnosticsExpanded);
+            }
         }
 
-        function renderPrayerReferences(references) {
-            if (!Array.isArray(references) || references.length === 0) return '';
-            const items = references
-                .map(ref => `<li><a href="${escapeHtml(ref.url || '#')}" target="_blank" rel="noreferrer">${escapeHtml(ref.label || ref.url || 'Reference')}</a></li>`)
-                .join('');
-            return `<div class="prayer-block"><div class="label">References</div><ul>${items}</ul></div>`;
+        function normalizeAuthorLineBreaks(text) {
+            const normalized = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const cleaned = normalized
+                .split('\n')
+                .filter(line => !/^[-=]{6,}\s*$/.test(line.trim()))
+                .join('\n');
+
+            return cleaned.replace(/\n{3,}/g, '\n\n').trim();
+        }
+
+        function buildSmartFormattedText(text) {
+            const normalized = normalizeAuthorLineBreaks(text);
+            if (!normalized.trim()) return '';
+
+            const cleaned = normalized
+                .split('\n')
+                .map(line => line.trimEnd())
+                .join('\n')
+                .replace(/\n{3,}/g, '\n\n');
+
+            if (cleaned.includes('\n')) {
+                return cleaned;
+            }
+
+            return cleaned
+                .replace(/([.!?])\s+(?=[A-Z0-9])/g, '$1\n')
+                .replace(/;\s+(?=[A-Z0-9])/g, ';\n');
+        }
+
+        function formatPrayerText(text) {
+            if (!text) return '';
+            const mode = state.prefs.lineBreakMode || 'author';
+            const value = mode === 'smart' ? buildSmartFormattedText(text) : normalizeAuthorLineBreaks(text);
+            return escapeHtml(value).replace(/\n/g, '<br>');
+        }
+
+        function renderPrayerInfo(prayer) {
+            const infoRows = [];
+            const partOfMass = prayer.liturgicalContext?.partOfMass || prayer.partOfMass || '';
+            const timing = prayer.liturgicalContext?.timingNote || prayer.timing || '';
+            const sourceName = prayer.source?.name || prayer.sourceName || '';
+            const sourceUrl = prayer.source?.url || '';
+            const churchScope = Array.isArray(prayer.churchScope) ? prayer.churchScope.filter(Boolean) : [];
+            const references = Array.isArray(prayer.references) ? prayer.references.filter(ref => ref && (ref.url || ref.label)) : [];
+
+            const normalizeUrl = (value) => String(value || '').trim().replace(/\/$/, '');
+            const sourceUrlNorm = normalizeUrl(sourceUrl);
+
+            if (partOfMass) infoRows.push(`<p><strong>Part of Mass:</strong> ${escapeHtml(partOfMass)}</p>`);
+            if (timing) infoRows.push(`<p><strong>Timing:</strong> ${escapeHtml(timing)}</p>`);
+            if (churchScope.length) infoRows.push(`<p><strong>Church Scope:</strong> ${escapeHtml(churchScope.join(', '))}</p>`);
+
+            if (sourceUrl) {
+                infoRows.push(`<p><strong>Source:</strong> <a class="detail-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceName || sourceUrl)}<span class="external-indicator" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>`);
+            } else if (sourceName) {
+                infoRows.push(`<p><strong>Source:</strong> ${escapeHtml(sourceName)}</p>`);
+            }
+
+            const nonDuplicateReferences = references.filter(ref => normalizeUrl(ref.url) && normalizeUrl(ref.url) !== sourceUrlNorm);
+
+            if (nonDuplicateReferences.length > 0) {
+                const referenceLinks = nonDuplicateReferences
+                    .map(ref => {
+                        const href = escapeHtml(ref.url || '#');
+                        const label = escapeHtml(ref.label || ref.url || 'Reference');
+                        return `<a class="detail-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}<span class="external-indicator" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>`;
+                    })
+                    .join(', ');
+                infoRows.push(`<p><span class="label">References</span> ${referenceLinks}</p>`);
+            }
+
+            if (infoRows.length === 0) return '';
+            return `
+                <div class="prayer-block compact-details details-collapsible">
+                    <div class="details-collapsible-header">
+                        <div class="label">Details</div>
+                        <button class="ghost-btn collapse-btn icon-only details-collapsible-toggle" type="button" aria-expanded="false" data-label-collapsed="Show details" data-label-expanded="Hide details" aria-label="Show details" title="Show details"><span class="details-toggle-icon" aria-hidden="true">▾</span><span class="sr-only">Show details</span></button>
+                    </div>
+                    <div class="details-collapsible-body hidden">${infoRows.join('')}</div>
+                </div>
+            `;
         }
 
         function renderPrayerBody(prayer) {
+            const fullText = getTextField(prayer, 'contentText');
+            if (fullText) {
+                return `<p>${formatPrayerText(fullText)}</p>`;
+            }
+
             const blocks = Array.isArray(prayer.blocks) ? prayer.blocks : [];
             if (blocks.length === 0) {
-                return `<p>${escapeHtml(getTextField(prayer, 'contentText') || '')}</p>`;
+                const fallbackText = getTextField(prayer, 'contentText') || '';
+                return fallbackText
+                    ? `<p>${formatPrayerText(fallbackText)}</p>`
+                    : '<p>No prayer text provided.</p>';
             }
 
             return blocks.map(block => {
                 const label = escapeHtml(block.label || block.type || 'Prayer');
-                const text = block.text ? `<p>${escapeHtml(block.text)}</p>` : '';
+                const text = block.text ? `<p>${formatPrayerText(block.text)}</p>` : '';
                 const response = block.response ? `<p><strong>Response:</strong> ${escapeHtml(block.response)}</p>` : '';
                 const intentions = Array.isArray(block.intentions) && block.intentions.length
                     ? `<ul>${block.intentions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
@@ -1676,6 +2457,488 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function buildPrayerSummary(prayer) {
+            const text = prayer.descriptionShort || prayer.contentTextShort || prayer.contentText || getTextField(prayer, 'contentText') || '';
+            if (!text) return 'Open to view details.';
+            const compact = text.replace(/\s+/g, ' ').trim();
+            return compact;
+        }
+
+        function openPrayerDetail(prayerId) {
+            const prayer = state.index.prayers.find(p => p.id === prayerId);
+            if (!prayer) return;
+            const summary = prayer.descriptionShort || prayer.contentTextShort || '';
+            const prayerBody = renderPrayerBody(prayer);
+            const body = `
+                ${summary ? `<div class="prayer-detail-summary">${escapeHtml(summary)}</div>` : ''}
+                <div class="prayer-block primary-content"><div class="label">Prayer</div><div class="primary-content-body">${prayerBody}</div></div>
+                ${renderPrayerInfo(prayer)}
+            `;
+            openDetailModal(prayer.title || 'Prayer', body);
+        }
+
+        function renderSongTextSections(songText, showSectionLabels = false) {
+            if (!songText || !Array.isArray(songText.sections) || songText.sections.length === 0) {
+                return '';
+            }
+
+            return songText.sections.map(section => {
+                const label = section.role || section.id || 'Section';
+                const text = section.text || section.lyrics || section.response || '';
+                if (!showSectionLabels) {
+                    return `<p>${formatPrayerText(text || 'No lyrics provided.')}</p>`;
+                }
+
+                return `
+                    <div class="prayer-block">
+                        <div class="label">${escapeHtml(label)}</div>
+                        <p>${formatPrayerText(text || 'No text provided.')}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openSongDetail(songId) {
+            const song = state.index.songs.find(item => item.id === songId);
+            if (!song) return;
+            const songText = state.index.songTexts.find(item => item.songId === songId) || null;
+            const liturgicalPartsText = Array.isArray(song.liturgicalParts) && song.liturgicalParts.length ? song.liturgicalParts.join(' | ') : '';
+            const fallbackText = getTextField(song, 'lyrics') || getTextField(song, 'contentText') || getTextField(song, 'summary');
+            const summary = song.summary || '';
+
+            const detailRows = [];
+            if (song.byline) detailRows.push(`<p><strong>By:</strong> ${escapeHtml(song.byline)}</p>`);
+            if (song.language) detailRows.push(`<p><strong>Language:</strong> ${escapeHtml(song.language)}</p>`);
+            if (liturgicalPartsText) detailRows.push(`<p><strong>Mass parts:</strong> ${escapeHtml(liturgicalPartsText)}</p>`);
+            if (song.sourceUrl) {
+                detailRows.push(`<p><strong>Source:</strong> <a class="detail-link" href="${escapeHtml(song.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(song.sourceName || song.sourceUrl)}<span class="external-indicator" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>`);
+            }
+
+            const detailsBlock = detailRows.length
+                ? `
+                    <div class="prayer-block compact-details details-collapsible">
+                        <div class="details-collapsible-header">
+                            <div class="label">Details</div>
+                            <button class="ghost-btn collapse-btn icon-only details-collapsible-toggle" type="button" aria-expanded="false" data-label-collapsed="Show details" data-label-expanded="Hide details" aria-label="Show details" title="Show details"><span class="details-toggle-icon" aria-hidden="true">▾</span><span class="sr-only">Show details</span></button>
+                        </div>
+                        <div class="details-collapsible-body hidden">${detailRows.join('')}</div>
+                    </div>
+                `
+                : '';
+
+            const body = `
+                ${summary ? `<div class="prayer-detail-summary">${escapeHtml(summary)}</div>` : ''}
+                ${songText ? `<div class="prayer-block primary-content"><div class="label">Lyrics</div><div class="primary-content-body">${renderSongTextSections(songText)}</div></div>` : ''}
+                ${!songText && fallbackText ? `<div class="prayer-block primary-content"><div class="label">Lyrics</div><div class="primary-content-body"><p>${formatPrayerText(fallbackText)}</p></div></div>` : ''}
+                ${detailsBlock}
+            `;
+
+            openDetailModal(song.title || 'Hymn', body);
+        }
+
+        function openMassDayDetail(massDayId) {
+            const massDay = state.index.massDays.find(d => d.id === massDayId);
+            if (!massDay) return;
+
+            const readings = massDay.readings || {};
+            const readingItems = [
+                readings.first ? `<li><strong>First:</strong> ${escapeHtml(readings.first)}</li>` : '',
+                readings.psalm ? `<li><strong>Psalm:</strong> ${escapeHtml(readings.psalm)}</li>` : '',
+                readings.second ? `<li><strong>Second:</strong> ${escapeHtml(readings.second)}</li>` : '',
+                readings.gospel ? `<li><strong>Gospel:</strong> ${escapeHtml(readings.gospel)}</li>` : ''
+            ].filter(Boolean).join('');
+
+            const localNotes = Array.isArray(massDay.localNotes) && massDay.localNotes.length
+                ? `<ul class="prayer-block ul">${massDay.localNotes.map(note => `<li>${escapeHtml(note.note || '')}</li>`).join('')}</ul>`
+                : '';
+
+            const metaHtml = formatMassDayMetaHtml(massDay.rank, massDay.liturgicalColor);
+
+            const body = `
+                ${metaHtml ? `<p class="prayer-meta">${metaHtml}</p>` : ''}
+                <div class="prayer-block">
+                    <div class="label">Celebration</div>
+                    <p>${escapeHtml(massDay.celebration || 'Unnamed celebration')}</p>
+                </div>
+                ${massDay.theme ? `<div class="prayer-block"><div class="label">Theme</div><p>${escapeHtml(massDay.theme)}</p></div>` : ''}
+                ${massDay.massImpact ? `<div class="prayer-block"><div class="label">Mass Impact</div><p>${escapeHtml(massDay.massImpact)}</p></div>` : ''}
+                ${readingItems ? `<div class="prayer-block"><div class="label">Readings</div><ul>${readingItems}</ul></div>` : ''}
+                ${massDay.specialDevotion ? `<div class="prayer-block"><div class="label">Special Devotion</div><p>${escapeHtml(massDay.specialDevotion)}</p></div>` : ''}
+                ${localNotes ? `<div class="prayer-block"><div class="label">Local Notes</div>${localNotes}</div>` : ''}
+            `;
+
+            openDetailModal(massDay.celebration || 'Mass Day', body);
+        }
+
+        const hymnPartOrder = [
+            'entrance',
+            'kyrie',
+            'gloria',
+            'gospel-acclamation',
+            'offertory',
+            'sanctus',
+            'memorial-acclamation',
+            'great-amen',
+            'lords-prayer',
+            'agnus-dei',
+            'communion',
+            'recessional'
+        ];
+
+        const hymnPartLabelMap = {
+            entrance: 'Entrance',
+            kyrie: 'Penitential / Kyrie',
+            gloria: 'Gloria',
+            'gospel-acclamation': 'Gospel Acclamation',
+            offertory: 'Offertory',
+            sanctus: 'Sanctus',
+            'memorial-acclamation': 'Memorial Acclamation',
+            'great-amen': 'Great Amen',
+            'lords-prayer': 'Lord\'s Prayer',
+            'agnus-dei': 'Lamb of God',
+            communion: 'Communion',
+            recessional: 'Recessional'
+        };
+
+        function getSongMassParts(song) {
+            const explicitParts = Array.isArray(song?.liturgicalParts) ? song.liturgicalParts.filter(Boolean) : [];
+            if (explicitParts.length > 0) return explicitParts;
+
+            const tags = Array.isArray(song?.tags) ? song.tags.map(tag => String(tag).toLowerCase()) : [];
+            return hymnPartOrder.filter(part => tags.includes(part));
+        }
+
+        function getSongMassPartHint(song) {
+            const part = getSongMassParts(song)[0];
+            if (!part) return '';
+            const partHintLabels = {
+                entrance: 'Opening',
+                kyrie: 'Penitential / Kyrie',
+                gloria: 'Gloria',
+                'gospel-acclamation': 'Gospel Acclamation',
+                offertory: 'Offertory',
+                sanctus: 'Sanctus',
+                'memorial-acclamation': 'Memorial Acclamation',
+                'great-amen': 'Great Amen',
+                'lords-prayer': 'Lord\'s Prayer',
+                'agnus-dei': 'Lamb of God',
+                communion: 'Communion',
+                recessional: 'Recessional'
+            };
+            return partHintLabels[part] || hymnPartLabelMap[part] || '';
+        }
+
+        function matchesHymnLanguageFilter(song, filterValue) {
+            const language = String(song?.language || '').toLowerCase();
+            const normalizedFilter = String(filterValue || 'both').toLowerCase();
+            if (normalizedFilter === 'both') return true;
+            if (normalizedFilter === 'english') return language.includes('english');
+            if (normalizedFilter === 'tagalog') return language.includes('tagalog');
+            return true;
+        }
+
+        function getFilteredHymns() {
+            const filterValue = state.ui.hymnLanguageFilter || 'both';
+            return state.index.songs.filter(song => matchesHymnLanguageFilter(song, filterValue));
+        }
+
+        function buildHymnAlphabeticalList() {
+            const hymns = getFilteredHymns()
+                .slice()
+                .sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+
+            return hymns.length
+                ? `<ul class="modal-list">${hymns.map(song => {
+                    const hint = getSongMassPartHint(song);
+                    const hintHtml = hint ? ` <span class="hymn-part-hint">[${escapeHtml(hint)}]</span>` : '';
+                    return `<li class="hymn-alpha-item"><button type="button" class="prayer-link detail-link" data-song-id="${escapeHtml(song.id)}">${escapeHtml(song.title || 'Untitled hymn')}</button>${hintHtml}</li>`;
+                }).join('')}</ul>`
+                : '<p style="color: var(--muted);">No hymns configured.</p>';
+        }
+
+        function buildHymnGroupedList() {
+            const buckets = new Map(hymnPartOrder.map(part => [part, []]));
+            const uncategorized = [];
+
+            getFilteredHymns().forEach(song => {
+                const parts = getSongMassParts(song);
+                if (parts.length === 0) {
+                    uncategorized.push(song);
+                    return;
+                }
+                parts.forEach(part => {
+                    if (!buckets.has(part)) buckets.set(part, []);
+                    buckets.get(part).push(song);
+                });
+            });
+
+            const groups = hymnPartOrder
+                .filter(part => (buckets.get(part) || []).length > 0)
+                .map(part => ({ part, songs: buckets.get(part) || [] }));
+
+            if (uncategorized.length > 0) {
+                groups.push({ part: 'other', songs: uncategorized });
+            }
+
+            if (groups.length === 0) {
+                return '<p style="color: var(--muted);">No hymns configured.</p>';
+            }
+
+            return `<ul class="modal-list">${groups.map(group => {
+                const label = hymnPartLabelMap[group.part] || 'Other';
+                const uniqueSongs = Array.from(new Map(group.songs.map(song => [song.id, song])).values())
+                    .sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+                const songList = uniqueSongs.map(song => `<li><button type="button" class="prayer-link detail-link" data-song-id="${escapeHtml(song.id)}">${escapeHtml(song.title || 'Untitled hymn')}</button></li>`).join('');
+                return `<li><strong>${escapeHtml(label)}</strong><ul class="schedule-day-list">${songList}</ul></li>`;
+            }).join('')}</ul>`;
+        }
+
+        function renderHymnsDetailBody(container) {
+            const mode = state.ui.hymnViewMode || 'alphabetical';
+            const languageFilter = state.ui.hymnLanguageFilter || 'both';
+            const controls = `
+                <div class="hymn-controls-row">
+                    <span class="hymn-controls-label">View</span>
+                    <div class="hymn-mode-switch" role="group" aria-label="Hymn view mode">
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'alphabetical' ? 'is-active' : ''}" aria-pressed="${mode === 'alphabetical' ? 'true' : 'false'}" data-hymn-mode="alphabetical">Alphabetical</button>
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'grouped' ? 'is-active' : ''}" aria-pressed="${mode === 'grouped' ? 'true' : 'false'}" data-hymn-mode="grouped">By Category</button>
+                    </div>
+                    <span class="hymn-controls-label">Language</span>
+                    <div class="hymn-language-switch" role="group" aria-label="Hymn language filter">
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'english' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'english' ? 'true' : 'false'}" data-hymn-language="english">English</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'tagalog' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'tagalog' ? 'true' : 'false'}" data-hymn-language="tagalog">Tagalog</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'both' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'both' ? 'true' : 'false'}" data-hymn-language="both">Both</button>
+                    </div>
+                </div>
+            `;
+            const list = mode === 'grouped' ? buildHymnGroupedList() : buildHymnAlphabeticalList();
+            container.innerHTML = `${controls}${list}`;
+            container.querySelectorAll('button[data-song-id]').forEach(node => {
+                node.addEventListener('click', () => openSongDetail(node.getAttribute('data-song-id')));
+            });
+            container.querySelectorAll('button[data-hymn-mode]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.hymnViewMode = node.getAttribute('data-hymn-mode') || 'alphabetical';
+                    renderHymnsDetailBody(container);
+                });
+            });
+            container.querySelectorAll('button[data-hymn-language]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.hymnLanguageFilter = node.getAttribute('data-hymn-language') || 'both';
+                    renderHymnsDetailBody(container);
+                });
+            });
+        }
+
+        function matchesPrayerLanguageFilter(prayer, filterValue) {
+            const language = String(prayer?.language || '').toLowerCase();
+            const normalizedFilter = String(filterValue || 'both').toLowerCase();
+            if (normalizedFilter === 'both') return true;
+            if (normalizedFilter === 'english') return language.includes('english');
+            if (normalizedFilter === 'tagalog') return language.includes('tagalog');
+            return true;
+        }
+
+        function getFilteredPrayers() {
+            const filterValue = state.ui.prayerLanguageFilter || 'both';
+            return state.index.prayers.filter(prayer => matchesPrayerLanguageFilter(prayer, filterValue));
+        }
+
+        function getPrayerCategoryKey(prayer) {
+            const liturgicalPart = String(prayer?.liturgicalContext?.partOfMass || prayer?.partOfMass || '').trim().toLowerCase();
+            if (liturgicalPart && liturgicalPart !== 'none' && liturgicalPart !== 'n/a') {
+                return `mass:${liturgicalPart}`;
+            }
+            const category = String(prayer?.category || '').trim().toLowerCase();
+            if (category) return `category:${category}`;
+            return 'category:other';
+        }
+
+        function getPrayerCategoryLabel(categoryKey) {
+            if (!categoryKey) return 'Other';
+            if (categoryKey.startsWith('mass:')) {
+                const part = categoryKey.slice(5);
+                const partLabels = {
+                    'introductory-rites': 'Introductory Rites',
+                    'liturgy-of-the-word': 'Liturgy of the Word',
+                    'liturgy-of-the-eucharist': 'Liturgy of the Eucharist',
+                    'communion-rite': 'Communion Rite',
+                    'concluding-rites': 'Concluding Rites'
+                };
+                return partLabels[part] || part.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            }
+            const raw = categoryKey.replace(/^category:/, '');
+            if (raw === 'other') return 'Other';
+            return raw.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        function buildPrayerAlphabeticalList() {
+            const prayers = getFilteredPrayers()
+                .slice()
+                .sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+
+            return prayers.length
+                ? `<ul class="modal-list">${prayers.map(prayer => {
+                    const categoryHint = getPrayerCategoryLabel(getPrayerCategoryKey(prayer));
+                    return `<li class="hymn-alpha-item"><button type="button" class="prayer-link detail-link" data-prayer-id="${escapeHtml(prayer.id)}">${escapeHtml(prayer.title || 'Untitled prayer')}</button>${categoryHint ? ` <span class="hymn-part-hint">[${escapeHtml(categoryHint)}]</span>` : ''}</li>`;
+                }).join('')}</ul>`
+                : '<p style="color: var(--muted);">No prayers match the selected filter.</p>';
+        }
+
+        function buildPrayerGroupedList() {
+            const buckets = new Map();
+            getFilteredPrayers().forEach(prayer => {
+                const key = getPrayerCategoryKey(prayer);
+                if (!buckets.has(key)) buckets.set(key, []);
+                buckets.get(key).push(prayer);
+            });
+
+            const preferredMassOrder = [
+                'mass:introductory-rites',
+                'mass:liturgy-of-the-word',
+                'mass:liturgy-of-the-eucharist',
+                'mass:communion-rite',
+                'mass:concluding-rites'
+            ];
+
+            const allKeys = Array.from(buckets.keys());
+            const massKeys = preferredMassOrder.filter(key => buckets.has(key));
+            const categoryKeys = allKeys
+                .filter(key => !key.startsWith('mass:'))
+                .sort((a, b) => getPrayerCategoryLabel(a).localeCompare(getPrayerCategoryLabel(b)));
+            const orderedKeys = [...massKeys, ...categoryKeys];
+
+            if (orderedKeys.length === 0) {
+                return '<p style="color: var(--muted);">No prayers match the selected filter.</p>';
+            }
+
+            return `<ul class="modal-list">${orderedKeys.map(key => {
+                const label = getPrayerCategoryLabel(key);
+                const prayers = (buckets.get(key) || []).slice().sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+                const prayerList = prayers.map(prayer => `<li><button type="button" class="prayer-link detail-link" data-prayer-id="${escapeHtml(prayer.id)}">${escapeHtml(prayer.title || 'Untitled prayer')}</button><div class="prayer-summary">${escapeHtml(buildPrayerSummary(prayer))}</div></li>`).join('');
+                return `<li><strong>${escapeHtml(label)}</strong><ul class="schedule-day-list">${prayerList}</ul></li>`;
+            }).join('')}</ul>`;
+        }
+
+        function renderPrayersDetailBody(container) {
+            const mode = state.ui.prayerViewMode || 'alphabetical';
+            const languageFilter = state.ui.prayerLanguageFilter || 'both';
+            const controls = `
+                <div class="hymn-controls-row">
+                    <span class="hymn-controls-label">View</span>
+                    <div class="hymn-mode-switch" role="group" aria-label="Prayer view mode">
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'alphabetical' ? 'is-active' : ''}" aria-pressed="${mode === 'alphabetical' ? 'true' : 'false'}" data-prayer-mode="alphabetical">Alphabetical</button>
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'grouped' ? 'is-active' : ''}" aria-pressed="${mode === 'grouped' ? 'true' : 'false'}" data-prayer-mode="grouped">By Category</button>
+                    </div>
+                    <span class="hymn-controls-label">Language</span>
+                    <div class="hymn-language-switch" role="group" aria-label="Prayer language filter">
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'english' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'english' ? 'true' : 'false'}" data-prayer-language="english">English</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'tagalog' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'tagalog' ? 'true' : 'false'}" data-prayer-language="tagalog">Tagalog</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'both' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'both' ? 'true' : 'false'}" data-prayer-language="both">Both</button>
+                    </div>
+                </div>
+            `;
+
+            const list = mode === 'grouped' ? buildPrayerGroupedList() : buildPrayerAlphabeticalList();
+            container.innerHTML = `${controls}${list}`;
+
+            container.querySelectorAll('button[data-prayer-id]').forEach(node => {
+                node.addEventListener('click', () => openPrayerDetail(node.getAttribute('data-prayer-id')));
+            });
+            container.querySelectorAll('button[data-prayer-mode]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.prayerViewMode = node.getAttribute('data-prayer-mode') || 'alphabetical';
+                    renderPrayersDetailBody(container);
+                });
+            });
+            container.querySelectorAll('button[data-prayer-language]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.prayerLanguageFilter = node.getAttribute('data-prayer-language') || 'both';
+                    renderPrayersDetailBody(container);
+                });
+            });
+        }
+
+        function getSortedMassDays() {
+            const sortOrder = state.ui.massDaysSortOrder || 'asc';
+            const direction = sortOrder === 'desc' ? -1 : 1;
+
+            return state.index.massDays.slice().sort((a, b) => {
+                const aDate = String(a?.date || '');
+                const bDate = String(b?.date || '');
+                const dateCompare = aDate.localeCompare(bDate);
+                if (dateCompare !== 0) return dateCompare * direction;
+
+                const aTitle = String(a?.celebration || '');
+                const bTitle = String(b?.celebration || '');
+                return aTitle.localeCompare(bTitle) * direction;
+            });
+        }
+
+        function getFilteredMassDays() {
+            const filterValue = state.ui.massDaysDateFilter || 'current-future';
+            const sortedMassDays = getSortedMassDays();
+            if (filterValue === 'all') {
+                return sortedMassDays;
+            }
+
+            const todayIso = getTodayIsoDate();
+            return sortedMassDays.filter(day => {
+                const dayIso = String(day?.date || '').trim();
+                if (!dayIso) return false;
+                return dayIso >= todayIso;
+            });
+        }
+
+        function renderMassDaysDetailBody(container) {
+            const sortOrder = state.ui.massDaysSortOrder || 'asc';
+            const filterValue = state.ui.massDaysDateFilter || 'current-future';
+            const controls = `
+                <div class="hymn-controls-row">
+                    <span class="hymn-controls-label">Sort</span>
+                    <div class="hymn-mode-switch" role="group" aria-label="Mass day sort order">
+                        <button type="button" class="link-btn view-toggle-btn ${sortOrder === 'asc' ? 'is-active' : ''}" aria-pressed="${sortOrder === 'asc' ? 'true' : 'false'}" data-mass-days-sort="asc">Asc</button>
+                        <button type="button" class="link-btn view-toggle-btn ${sortOrder === 'desc' ? 'is-active' : ''}" aria-pressed="${sortOrder === 'desc' ? 'true' : 'false'}" data-mass-days-sort="desc">Desc</button>
+                    </div>
+                    <span class="hymn-controls-label">Range</span>
+                    <div class="hymn-mode-switch" role="group" aria-label="Mass day date range filter">
+                        <button type="button" class="link-btn view-toggle-btn ${filterValue === 'current-future' ? 'is-active' : ''}" aria-pressed="${filterValue === 'current-future' ? 'true' : 'false'}" data-mass-days-filter="current-future">Current + Future</button>
+                        <button type="button" class="link-btn view-toggle-btn ${filterValue === 'all' ? 'is-active' : ''}" aria-pressed="${filterValue === 'all' ? 'true' : 'false'}" data-mass-days-filter="all">Show All</button>
+                    </div>
+                </div>
+            `;
+
+            const massDays = getFilteredMassDays();
+            const list = massDays.length
+                ? `<ul class="modal-list">${massDays.map(d => {
+                    const metaHtml = formatMassDayMetaHtml(d.rank, d.liturgicalColor);
+                    const titleHtml = `${escapeHtml(d.date || '-')} - ${escapeHtml(d.celebration || 'Unnamed celebration')}`;
+                    const suffixHtml = metaHtml ? ` <span class="hymn-part-hint">[${metaHtml}]</span>` : '';
+                    return `<li class="hymn-alpha-item"><button type="button" class="prayer-link detail-link" data-mass-day-id="${escapeHtml(d.id)}">${titleHtml}</button>${suffixHtml}</li>`;
+                }).join('')}</ul>`
+                : '<p style="color: var(--muted);">No mass days match the selected filter.</p>';
+
+            container.innerHTML = `${controls}${list}`;
+
+            container.querySelectorAll('button[data-mass-day-id]').forEach(node => {
+                node.addEventListener('click', () => openMassDayDetail(node.getAttribute('data-mass-day-id')));
+            });
+
+            container.querySelectorAll('button[data-mass-days-sort]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.massDaysSortOrder = node.getAttribute('data-mass-days-sort') || 'asc';
+                    renderMassDaysDetailBody(container);
+                });
+            });
+
+            container.querySelectorAll('button[data-mass-days-filter]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.massDaysDateFilter = node.getAttribute('data-mass-days-filter') || 'current-future';
+                    renderMassDaysDetailBody(container);
+                });
+            });
         }
 
         function renderPremass() {
@@ -1718,14 +2981,19 @@
                 return;
             }
 
-            el.premassPrayerList.innerHTML = prayersToRender.map(prayer => `
+            el.premassPrayerList.innerHTML = prayersToRender.map(prayer => {
+                const meta = [prayer.category, prayer.language, prayer.recitationMode].filter(Boolean).join(' | ');
+                return `
                 <article class="step-card" style="margin-top: 0;">
-                    <h3>${escapeHtml(prayer.title || 'Prayer')}</h3>
-                    <p class="prayer-meta">${escapeHtml([prayer.category, prayer.language, prayer.recitationMode].filter(Boolean).join(' | '))}</p>
-                    ${renderPrayerBody(prayer)}
-                    ${renderPrayerReferences(prayer.references)}
+                    <h3><button type="button" class="prayer-link detail-link" data-prayer-id="${escapeHtml(prayer.id)}">${escapeHtml(prayer.title || 'Prayer')}</button></h3>
+                    ${meta ? `<p class="prayer-meta">${escapeHtml(meta)}</p>` : ''}
+                    <p>${escapeHtml(buildPrayerSummary(prayer))}</p>
                 </article>
-            `).join('');
+            `;
+            }).join('');
+            el.premassPrayerList.querySelectorAll('button[data-prayer-id]').forEach(node => {
+                node.addEventListener('click', () => openPrayerDetail(node.getAttribute('data-prayer-id')));
+            });
             renderDiagnostics();
         }
 
@@ -1742,12 +3010,37 @@
             return alternatives.find(alt => alt.sourceSongId === defaultSongId) || null;
         }
 
-        function buildStepSubtitle(step, phase) {
-            const parts = [];
-            if (phase?.title) parts.push(phase.title);
-            if (step?.stance) parts.push(`Stance: ${step.stance}`);
-            if (step?.type) parts.push(`Type: ${step.type}`);
-            return parts.join(' | ');
+        function buildStepMeta(step) {
+            const getStanceIcon = stanceText => {
+                const normalized = String(stanceText || '').toLowerCase();
+                if (normalized.includes('stand')) return '🧍';
+                if (normalized.includes('sit')) return '🪑';
+                if (normalized.includes('kneel')) return '🙏';
+                return '';
+            };
+
+            const formatStepMetaLine = (value, emphasizeValue = false) => {
+                const safeValue = escapeHtml(String(value || ''));
+                const valueClass = emphasizeValue ? 'step-meta-value-emphasis' : '';
+                const icon = emphasizeValue ? getStanceIcon(value) : '';
+                const iconHtml = icon
+                    ? `<span class="step-meta-icon" aria-hidden="true">${icon}</span>`
+                    : '';
+                return `<span class="${valueClass}">${safeValue}</span>${iconHtml}`;
+            };
+
+            const stanceLine = step?.stance ? formatStepMetaLine(step.stance, true) : '';
+            const typeLabelMap = {
+                action: 'Guided action',
+                prayer: 'Prayer text',
+                reading: 'Scripture reading',
+                hymn: 'Hymn or chant',
+                script: 'Priest and people responses'
+            };
+            const typeLine = step?.type
+                ? formatStepMetaLine(typeLabelMap[String(step.type).toLowerCase()] || step.type)
+                : '';
+            return { stanceLine, typeLine };
         }
 
         function buildTypeSpecificBody(step, selectedAlt) {
@@ -1755,34 +3048,75 @@
             const stepContent = getTextField(step, 'contentText');
             const stepLyrics = getTextField(step, 'lyrics');
             const chosenLyrics = selectedAlt ? getTextField(selectedAlt, 'lyrics') : stepLyrics;
+            const renderLabeledBody = (label, value, fallback) =>
+                `<div><div class="section-label">${label}</div><p>${formatPrayerText(value || fallback)}</p></div>`;
 
             if (stepType === 'hymn') {
                 if (!state.prefs.showLyrics) {
                     return '<p>Lyrics are hidden by preference.</p>';
                 }
-                return `<div><div class="label">Hymn Lyrics</div><p>${escapeHtml(chosenLyrics || 'No lyrics configured for this hymn.')}</p></div>`;
+                return renderLabeledBody('Hymn Lyrics', chosenLyrics, 'No lyrics configured for this hymn.');
             }
 
             if (stepType === 'reading') {
-                return `<div><div class="label">Reading</div><p>${escapeHtml(stepContent || 'No reading text configured.')}</p></div>`;
+                return renderLabeledBody('Reading', stepContent, 'No reading text configured.');
             }
 
             if (stepType === 'prayer') {
-                return `<div><div class="label">Prayer</div><p>${escapeHtml(stepContent || 'No prayer text configured.')}</p></div>`;
+                return renderLabeledBody('Prayer', stepContent, 'No prayer text configured.');
             }
 
             if (stepType === 'script') {
                 if (step.leaderText || step.responseText || stepContent) {
-                    return `<div><div class="label">Script</div><p>${escapeHtml(stepContent || 'Follow the leader and response below.')}</p></div>`;
+                    return renderLabeledBody('Script', stepContent, 'Follow the leader and response below.');
                 }
                 return '<p>No script text configured.</p>';
             }
 
             if (stepType === 'action') {
-                return `<div><div class="label">Action Guidance</div><p>${escapeHtml(stepContent || 'Follow the action cues below.')}</p></div>`;
+                return renderLabeledBody('Action Guidance', stepContent, 'Follow the action cues below.');
             }
 
-            return `<div><div class="label">Content</div><p>${escapeHtml(stepContent || stepLyrics || 'No content text configured.')}</p></div>`;
+            return renderLabeledBody('Content', stepContent || stepLyrics, 'No content text configured.');
+        }
+
+        function splitDialogUnits(textValue) {
+            const raw = String(textValue || '').trim();
+            if (!raw) return [];
+            return raw
+                .split(/(?<=[.!?])\s+|\n+/)
+                .map(item => item.trim())
+                .filter(Boolean);
+        }
+
+        function buildInterleavedDialogueHtml(step, leaderText, responseText) {
+            if (step?.id !== 'holy-gospel') return '';
+
+            const leaderUnits = splitDialogUnits(leaderText);
+            const responseUnits = splitDialogUnits(responseText);
+            if (leaderUnits.length === 0 || responseUnits.length === 0) return '';
+
+            const maxLen = Math.max(leaderUnits.length, responseUnits.length);
+            const blocks = [];
+
+            for (let i = 0; i < maxLen; i += 1) {
+                if (leaderUnits[i]) {
+                    blocks.push(`
+                        <div class="step-script step-script-leader">
+                            <div><div class="label">Leader</div><p>${formatPrayerText(leaderUnits[i])}</p></div>
+                        </div>
+                    `);
+                }
+                if (responseUnits[i]) {
+                    blocks.push(`
+                        <div class="step-script step-script-response">
+                            <div><div class="label">Response</div><p class="response-emphasis">${formatPrayerText(responseUnits[i])}</p></div>
+                        </div>
+                    `);
+                }
+            }
+
+            return blocks.join('');
         }
 
         function renderSession() {
@@ -1792,6 +3126,7 @@
                 el.stepTitle.textContent = 'No step data configured';
                 el.stepSubtitle.textContent = 'Please check your JSONL records.';
                 el.stepCard.innerHTML = '<p style="color: var(--muted);">No renderable step found.</p>';
+                el.alternativesBtn.classList.add('hidden');
                 el.navHint.textContent = 'No steps loaded. Please check your data.';
                 el.backBtn.disabled = true;
                 el.nextBtn.disabled = true;
@@ -1806,9 +3141,14 @@
             const selectedAlt = getSelectedAltForStep(step);
             const currentStepNumber = state.session.currentStepIndex + 1;
 
-            el.phaseKicker.textContent = `Phase ${phase?.order || '-'} of ${state.index.phases.length} (Step ${currentStepNumber} of ${totalSteps})`;
+            el.phaseKicker.textContent = phase?.title || 'Mass Phase';
+            el.progressKicker.textContent = `Phase ${phase?.order || '-'} of ${state.index.phases.length} (Step ${currentStepNumber} of ${totalSteps})`;
             el.stepTitle.textContent = step.title || 'Untitled step';
-            el.stepSubtitle.textContent = buildStepSubtitle(step, phase);
+            const meta = buildStepMeta(step);
+            const metaLines = [meta.stanceLine, meta.typeLine].filter(Boolean);
+            el.stepSubtitle.innerHTML = metaLines.length
+                ? metaLines.map((line, index) => `<span class="step-meta-line${index === 1 ? ' step-meta-line-secondary' : ''}">${line}</span>`).join('')
+                : '<span class="step-meta-line">Step details appear here.</span>';
             el.progressLabel.textContent = `${progress}%`;
             el.progressFill.style.width = `${progress}%`;
             el.progressFill.parentElement.setAttribute('aria-valuenow', String(progress));
@@ -1824,14 +3164,22 @@
             const referenceItems = (step.references || [])
                 .map(ref => `<li><a href="${escapeHtml(ref.url || '#')}" target="_blank" rel="noreferrer">${escapeHtml(ref.label || ref.url || 'Reference')}</a></li>`)
                 .join('');
+            const stepType = String(step.type || '').toLowerCase();
 
             const leaderText = getTextField(step, 'leaderText');
             const responseText = getTextField(step, 'responseText');
-            const scriptBlock = (leaderText || responseText)
+            const interleavedDialogueHtml = buildInterleavedDialogueHtml(step, leaderText, responseText);
+            const leaderBlock = leaderText
                 ? `
-                    <div class="step-script">
-                        ${leaderText ? `<div><div class="label">Leader</div><p>${escapeHtml(leaderText)}</p></div>` : ''}
-                        ${responseText ? `<div><div class="label">Response</div><p>${escapeHtml(responseText)}</p></div>` : ''}
+                    <div class="step-script step-script-leader">
+                        <div><div class="label">Leader</div><p>${formatPrayerText(leaderText)}</p></div>
+                    </div>
+                `
+                : '';
+            const responseBlock = responseText
+                ? `
+                    <div class="step-script step-script-response">
+                        <div><div class="label">Response</div><p class="response-emphasis">${formatPrayerText(responseText)}</p></div>
                     </div>
                 `
                 : '';
@@ -1843,33 +3191,51 @@
                 : '';
 
             el.stepCard.innerHTML = `
-                ${altSummary}
-                ${assignmentSummary}
-                ${scriptBlock}
-                ${buildTypeSpecificBody(step, selectedAlt)}
+                <div class="step-main-content">
+                    ${altSummary}
+                    ${assignmentSummary}
+                    ${interleavedDialogueHtml || leaderBlock}
+                    ${buildTypeSpecificBody(step, selectedAlt)}
+                    ${interleavedDialogueHtml ? '' : responseBlock}
+                </div>
                 <section class="stance-action">
-                    <p><strong>Stance:</strong> ${escapeHtml(step.stance || 'Not specified')}</p>
-                    ${actionItems ? `<div><strong>Actions</strong><ul class="action-list">${actionItems}</ul></div>` : '<p><strong>Actions:</strong> None listed.</p>'}
-                    ${referenceItems ? `<div><strong>References</strong><ul class="reference-list">${referenceItems}</ul></div>` : ''}
+                    ${actionItems ? `<div><div class="label">Actions</div><ul class="action-list action-item-emphasis">${actionItems}</ul></div>` : '<p><span class="label">Actions</span> <span class="action-item-emphasis">None listed.</span></p>'}
+                    ${referenceItems ? `<div><div class="label">References</div><ul class="reference-list">${referenceItems}</ul></div>` : ''}
                 </section>
             `;
 
-            const hasAlternatives = getStepAlternatives(step).length > 0;
+            const hasAlternatives = stepType === 'hymn' && getStepAlternatives(step).length > 0;
             el.alternativesBtn.disabled = !hasAlternatives;
-            el.alternativesBtn.textContent = hasAlternatives ? 'Choose alternate chant/hymn' : 'No alternates for this step';
+            el.alternativesBtn.textContent = 'Choose alternate chant/hymn';
+            el.alternativesBtn.classList.toggle('hidden', !hasAlternatives);
+            if (el.alternativesBtn.parentElement !== el.stepCard) {
+                el.stepCard.appendChild(el.alternativesBtn);
+            }
             const atFirstStep = state.session.currentStepIndex === 0;
             const atFinalStep = state.session.currentStepIndex >= totalSteps - 1;
             el.backBtn.disabled = atFirstStep;
             el.nextBtn.disabled = totalSteps === 0;
 
             if (totalSteps === 0) {
+                el.navHint.classList.remove('hidden');
                 el.navHint.textContent = 'No steps loaded. Please check your data.';
+                el.backBtn.removeAttribute('title');
+                el.nextBtn.removeAttribute('title');
             } else if (atFirstStep) {
+                el.navHint.classList.remove('hidden');
                 el.navHint.textContent = 'You are at the first step.';
+                el.backBtn.removeAttribute('title');
+                el.nextBtn.removeAttribute('title');
             } else if (atFinalStep) {
+                el.navHint.classList.remove('hidden');
                 el.navHint.textContent = 'You are at the final step. Next Step asks for end confirmation.';
+                el.backBtn.removeAttribute('title');
+                el.nextBtn.removeAttribute('title');
             } else {
-                el.navHint.textContent = 'Step navigation moves one step at a time.';
+                el.navHint.textContent = '';
+                el.navHint.classList.add('hidden');
+                el.backBtn.setAttribute('title', 'Go to previous step');
+                el.nextBtn.setAttribute('title', 'Go to next step');
             }
 
             renderJumpSelect();
@@ -1890,26 +3256,127 @@
 
         function renderDrawerLists() {
             const churchById = new Map(state.index.churches.map(ch => [ch.id, ch.name]));
+            const churchRecordById = new Map(state.index.churches.map(ch => [ch.id, ch]));
 
-            el.schedulesList.innerHTML = state.index.schedules.length
-                ? state.index.schedules.map(s => `<li>${escapeHtml(`${s.day || '-'} ${s.startTime || '-'} - ${churchById.get(s.churchId) || s.churchId || 'Unknown church'}`)}</li>`).join('')
-                : '<li>No schedules configured.</li>';
+            const parseMinutes = (timeValue) => {
+                if (!timeValue || !/^\d{2}:\d{2}$/.test(timeValue)) return Number.MAX_SAFE_INTEGER;
+                const [hh, mm] = timeValue.split(':').map(Number);
+                return (hh * 60) + mm;
+            };
 
-            el.churchesList.innerHTML = state.index.churches.length
-                ? state.index.churches.map(c => `<li>${escapeHtml(c.name || c.id || 'Unnamed church')}</li>`).join('')
-                : '<li>No churches configured.</li>';
+            const churchLinkMap = {
+                'edsa-shrine': 'https://www.facebook.com/EDSAShrineOfficial/',
+                'sm-megamall-chapel': 'https://www.facebook.com/@SMMegamallChapel/',
+                'shangri-la-padre-pio': 'https://www.facebook.com/PadrePioPH/',
+                'greenhills-holy-family': 'https://www.ortigasmalls.com/whats-vibin/1/view/373',
+                'lourdes-mandaluyong': 'https://www.facebook.com/nsollqc/'
+            };
 
-            el.prayersList.innerHTML = state.index.prayers.length
-                ? state.index.prayers.map(p => `<li>${escapeHtml(p.title || 'Untitled prayer')}</li>`).join('')
-                : '<li>No prayers configured.</li>';
+            const churchLocationLabelMap = {
+                'edsa-shrine': 'EDSA corner Ortigas Avenue',
+                'sm-megamall-chapel': 'SM Megamall',
+                'shangri-la-padre-pio': 'Shangri-La Plaza Mall',
+                'greenhills-holy-family': 'Greenhills Shopping Center',
+                'lourdes-mandaluyong': 'Mandaluyong'
+            };
 
-            el.massDaysList.innerHTML = state.index.massDays.length
-                ? state.index.massDays.map(d => {
-                    const meta = [d.rank, d.liturgicalColor].filter(Boolean).join(' | ');
-                    const suffix = meta ? ` (${meta})` : '';
-                    return `<li>${escapeHtml(`${d.date || '-'} - ${d.celebration || 'Unnamed celebration'}${suffix}`)}</li>`;
-                }).join('')
-                : '<li>No mass days configured.</li>';
+            const churchDisplayNameMap = {
+                'edsa-shrine': 'EDSA Shrine',
+                'sm-megamall-chapel': 'Chapel of the Eucharistic Lord',
+                'shangri-la-padre-pio': 'Saint Padre Pio Chapel',
+                'greenhills-holy-family': 'Chapel of the Holy Family',
+                'lourdes-mandaluyong': 'National Shrine of Our Lady of Lourdes'
+            };
+
+            const preferredChurchOrder = [
+                'edsa-shrine',
+                'sm-megamall-chapel',
+                'shangri-la-padre-pio',
+                'greenhills-holy-family',
+                'lourdes-mandaluyong'
+            ];
+
+            const openDetailFromMenu = (kind) => {
+                if (kind === 'schedules') {
+                    const grouped = new Map();
+                    for (const sched of state.index.schedules) {
+                        const churchId = sched.churchId || 'unknown';
+                        if (!grouped.has(churchId)) grouped.set(churchId, new Map());
+                        const dayKey = sched.day || 'Unspecified';
+                        const dayMap = grouped.get(churchId);
+                        if (!dayMap.has(dayKey)) dayMap.set(dayKey, []);
+                        dayMap.get(dayKey).push(sched.startTime || '-');
+                    }
+
+                    const body = state.index.schedules.length
+                        ? `<ul class="modal-list">${Array.from(grouped.entries()).map(([churchId, dayMap]) => {
+                            const churchName = churchById.get(churchId) || churchId || 'Unknown church';
+                            const dayLines = Array.from(dayMap.entries())
+                                .map(([day, times]) => {
+                                    const uniqueTimes = Array.from(new Set(times)).sort((a, b) => parseMinutes(a) - parseMinutes(b));
+                                    return `<li>${escapeHtml(`${day} - ${uniqueTimes.join(', ')}`)}</li>`;
+                                })
+                                .join('');
+                            return `<li><strong>${escapeHtml(churchName)}</strong><ul class="schedule-day-list">${dayLines}</ul></li>`;
+                        }).join('')}</ul>`
+                        : '<p style="color: var(--muted);">No schedules configured.</p>';
+                    openDetailModal('Schedules of Mass', body);
+                    return;
+                }
+                if (kind === 'churches') {
+                    const preferredChurches = preferredChurchOrder
+                        .map(id => churchRecordById.get(id))
+                        .filter(Boolean);
+                    const body = preferredChurches.length
+                        ? `<ul class="modal-list">${preferredChurches.map(c => {
+                            const location = churchLocationLabelMap[c.id] || c.location || '';
+                            const displayName = churchDisplayNameMap[c.id] || c.name || c.id || 'Unnamed church';
+                            const churchLabel = location ? `${displayName} (${location})` : displayName;
+                            const href = churchLinkMap[c.id];
+                            if (href) {
+                                return `<li><a class="detail-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(churchLabel)}<span class="external-indicator" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></li>`;
+                            }
+                            return `<li>${escapeHtml(churchLabel)}</li>`;
+                        }).join('')}</ul>`
+                        : '<p style="color: var(--muted);">No churches configured.</p>';
+                    openDetailModal('Churches', body);
+                    return;
+                }
+                if (kind === 'prayers') {
+                    openDetailModal('Prayers', '<div id="prayersDetailBody"></div>', (container) => {
+                        const bodyContainer = container.querySelector('#prayersDetailBody') || container;
+                        renderPrayersDetailBody(bodyContainer);
+                    });
+                    return;
+                }
+                if (kind === 'hymns') {
+                    openDetailModal('Hymns', '<div id="hymnsDetailBody"></div>', (container) => {
+                        const bodyContainer = container.querySelector('#hymnsDetailBody') || container;
+                        renderHymnsDetailBody(bodyContainer);
+                    });
+                    return;
+                }
+                if (kind === 'massDays') {
+                    state.ui.massDaysSortOrder = 'asc';
+                    state.ui.massDaysDateFilter = 'current-future';
+                    openDetailModal('Mass Days', '<div id="massDaysDetailBody"></div>', (container) => {
+                        const bodyContainer = container.querySelector('#massDaysDetailBody') || container;
+                        renderMassDaysDetailBody(bodyContainer);
+                    });
+                }
+            };
+
+            el.referencesList.innerHTML = [
+                '<li><button type="button" class="link-btn" data-detail-kind="schedules">View Schedule of Mass</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="churches">View Churches</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="prayers">View Prayers</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="hymns">View Hymns</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="massDays">View Mass Days</button></li>'
+            ].join('');
+
+            el.referencesList.querySelectorAll('button[data-detail-kind]').forEach(btn => {
+                btn.addEventListener('click', () => openDetailFromMenu(btn.getAttribute('data-detail-kind')));
+            });
 
             el.churchSelect.innerHTML = state.index.churches
                 .map(ch => `<option value="${escapeHtml(ch.id)}">${escapeHtml(ch.name || ch.id)}</option>`)
@@ -1996,6 +3463,7 @@
         }
 
         function bindEvents() {
+            window.addEventListener('resize', updateLayoutMetrics);
             el.menuButton.addEventListener('click', openMenu);
             el.closeMenuBtn.addEventListener('click', closeMenu);
             el.menuOverlay.addEventListener('click', event => {
@@ -2013,6 +3481,8 @@
             el.continueToMassBtn.addEventListener('click', startSession);
             el.openSchedulesBtn.addEventListener('click', () => {
                 openMenu();
+                const scheduleBtn = el.referencesList.querySelector('button[data-detail-kind="schedules"]');
+                if (scheduleBtn) scheduleBtn.click();
             });
 
             el.backBtn.addEventListener('click', previousStep);
@@ -2046,6 +3516,13 @@
             });
 
             el.altCloseBtn.addEventListener('click', closeAltModal);
+            el.detailCloseBtn.addEventListener('click', closeDetailModal);
+            if (el.diagnosticsToggleBtn) {
+                el.diagnosticsToggleBtn.addEventListener('click', () => {
+                    state.ui.diagnosticsExpanded = !state.ui.diagnosticsExpanded;
+                    renderDiagnostics();
+                });
+            }
 
             el.themeSelect.addEventListener('change', () => {
                 state.prefs.theme = el.themeSelect.value;
@@ -2068,6 +3545,12 @@
             });
             el.textModeSelect.addEventListener('change', () => {
                 state.prefs.textMode = el.textModeSelect.value;
+                renderPremass();
+                renderSession();
+                savePreferences();
+            });
+            el.lineBreakModeSelect.addEventListener('change', () => {
+                state.prefs.lineBreakMode = el.lineBreakModeSelect.value || 'author';
                 renderPremass();
                 renderSession();
                 savePreferences();
@@ -2095,12 +3578,14 @@
                     closeMenu();
                     closeConfirm();
                     closeAltModal();
+                    closeDetailModal();
                 }
             });
         }
 
         async function initApp() {
             cacheElements();
+            updateLayoutMetrics();
             bindEvents();
 
             const { source, records, warnings: parseWarnings } = await loadMassJsonl();
