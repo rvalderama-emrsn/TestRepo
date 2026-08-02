@@ -479,13 +479,36 @@
             padding: 0.58rem 0.65rem;
         }
 
-        .progress-labels {
+        .progress-header-row {
             display: flex;
             justify-content: space-between;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        #elapsedLabel {
             color: var(--muted);
             font-size: 0.8rem;
             font-family: var(--font-ui);
             font-variant-numeric: tabular-nums;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .progress-meter-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.46rem;
+        }
+
+        #progressLabel {
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-family: var(--font-ui);
+            font-variant-numeric: tabular-nums;
+            min-width: 2.3ch;
+            text-align: right;
         }
 
         .progress-track {
@@ -627,8 +650,10 @@
         }
 
         .session-end-row {
-            justify-content: space-between;
-            flex-wrap: nowrap;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.5rem;
             margin-top: 5px;
         }
 
@@ -643,11 +668,28 @@
             margin-left: auto;
         }
 
+        .session-end-toggle-btn {
+            width: 100%;
+            min-height: 18px;
+            height: 18px;
+            padding: 0;
+            margin: 0;
+            font-size: 0.7rem;
+            line-height: 1;
+            border-radius: var(--radius-md);
+        }
+
         .step-nav-row {
             display: grid;
             grid-template-columns: auto minmax(0, 1fr) auto;
-            align-items: center;
+            align-items: start;
             gap: 0.5rem;
+        }
+
+        .jump-cell {
+            display: grid;
+            gap: 0.12rem;
+            min-width: 0;
         }
 
         .step-nav-btn {
@@ -891,10 +933,12 @@
         }
 
         .nav-hint {
-            grid-column: 1 / -1;
             color: var(--muted);
             font-size: 0.8rem;
             font-family: var(--font-ui);
+            text-align: center;
+            margin: 0;
+            min-width: 0;
         }
 
         .warning-box {
@@ -1305,7 +1349,8 @@
                 gap: 0.42rem;
             }
 
-            .progress-labels {
+            #elapsedLabel,
+            #progressLabel {
                 font-size: 0.76rem;
             }
 
@@ -1409,28 +1454,33 @@
 
             <div class="session-bottom-dock">
                 <div class="progress-block">
-                    <div class="kicker" id="progressKicker">Phase 0 of 0 (Step 0 of 0)</div>
-                    <div class="progress-labels">
+                    <div class="progress-header-row">
+                        <div class="kicker" id="progressKicker">Phase 0 of 0 (Step 0 of 0)</div>
                         <span id="elapsedLabel">Elapsed: 00:00</span>
-                        <span id="progressLabel">0%</span>
                     </div>
-                    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress">
-                        <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-meter-row">
+                        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span id="progressLabel">0%</span>
                     </div>
                 </div>
 
                 <div class="session-controls">
                     <div class="control-row step-nav-row wide">
                         <button class="btn secondary step-nav-prev step-nav-btn" id="backBtn" type="button">Previous Step</button>
-                        <label for="jumpSelect" class="sr-only">Jump to step</label>
-                        <select id="jumpSelect" class="jump-select" aria-label="Jump to step"></select>
+                        <div class="jump-cell">
+                            <label for="jumpSelect" class="sr-only">Jump to step</label>
+                            <select id="jumpSelect" class="jump-select" aria-label="Jump to step"></select>
+                            <button class="ghost-btn session-end-toggle-btn" id="endActionsToggleBtn" type="button" aria-expanded="false" aria-controls="endActionsRow" aria-label="Show end actions" title="Show end actions">▾</button>
+                        </div>
                         <button class="btn step-nav-next step-nav-btn" id="nextBtn" type="button">Next Step</button>
                     </div>
-                    <div class="control-row wide session-end-row">
+                    <div class="control-row wide session-end-row hidden" id="endActionsRow">
                         <button class="ghost-btn session-end-btn" id="startOverBtn" type="button">Start Over</button>
+                        <p class="nav-hint hidden" id="navHint">Step navigation moves one step at a time.</p>
                         <button class="ghost-btn session-end-btn" id="endSessionBtn" type="button" style="color: var(--danger);">End Session</button>
                     </div>
-                    <p class="nav-hint" id="navHint">Step navigation moves one step at a time.</p>
                 </div>
             </div>
         </section>
@@ -1609,7 +1659,8 @@
                 prayerLanguageFilter: 'both',
                 massDaysSortOrder: 'asc',
                 massDaysDateFilter: 'current-future',
-                lastFocusedElement: null
+                lastFocusedElement: null,
+                endActionsExpanded: false
             },
             confirmAction: null
         };
@@ -1626,7 +1677,7 @@
                 'premassPanel', 'premassIntro', 'premassPrayerList', 'continueToMassBtn', 'backToLandingFromPremassBtn',
                 'sessionPanel', 'phaseKicker', 'progressKicker', 'stepTitle', 'stepSubtitle', 'elapsedLabel', 'progressLabel',
                 'progressFill', 'stepCard', 'jumpSelect', 'backBtn', 'nextBtn', 'alternativesBtn', 'startOverBtn',
-                'endSessionBtn', 'navHint',
+                'endSessionBtn', 'navHint', 'endActionsToggleBtn', 'endActionsRow',
                 'menuOverlay', 'closeMenuBtn', 'referencesList',
                 'warningsCard', 'warningsList',
                 'diagnosticsCard', 'diagnosticsContent', 'diagnosticsList', 'diagnosticsToggleBtn',
@@ -2702,13 +2753,13 @@
                 <div class="hymn-controls-row">
                     <span class="hymn-controls-label">View</span>
                     <div class="hymn-mode-switch" role="group" aria-label="Hymn view mode">
-                        <button type="button" class="link-btn view-toggle-btn ${mode === 'alphabetical' ? 'is-active' : ''}" aria-pressed="${mode === 'alphabetical' ? 'true' : 'false'}" data-hymn-mode="alphabetical">Alphabetical</button>
-                        <button type="button" class="link-btn view-toggle-btn ${mode === 'grouped' ? 'is-active' : ''}" aria-pressed="${mode === 'grouped' ? 'true' : 'false'}" data-hymn-mode="grouped">By Category</button>
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'alphabetical' ? 'is-active' : ''}" aria-pressed="${mode === 'alphabetical' ? 'true' : 'false'}" data-hymn-mode="alphabetical">Alpha...</button>
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'grouped' ? 'is-active' : ''}" aria-pressed="${mode === 'grouped' ? 'true' : 'false'}" data-hymn-mode="grouped">Cat...</button>
                     </div>
                     <span class="hymn-controls-label">Language</span>
                     <div class="hymn-language-switch" role="group" aria-label="Hymn language filter">
-                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'english' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'english' ? 'true' : 'false'}" data-hymn-language="english">English</button>
-                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'tagalog' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'tagalog' ? 'true' : 'false'}" data-hymn-language="tagalog">Tagalog</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'english' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'english' ? 'true' : 'false'}" data-hymn-language="english">En</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'tagalog' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'tagalog' ? 'true' : 'false'}" data-hymn-language="tagalog">Fil</button>
                         <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'both' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'both' ? 'true' : 'false'}" data-hymn-language="both">Both</button>
                     </div>
                 </div>
@@ -2829,13 +2880,13 @@
                 <div class="hymn-controls-row">
                     <span class="hymn-controls-label">View</span>
                     <div class="hymn-mode-switch" role="group" aria-label="Prayer view mode">
-                        <button type="button" class="link-btn view-toggle-btn ${mode === 'alphabetical' ? 'is-active' : ''}" aria-pressed="${mode === 'alphabetical' ? 'true' : 'false'}" data-prayer-mode="alphabetical">Alphabetical</button>
-                        <button type="button" class="link-btn view-toggle-btn ${mode === 'grouped' ? 'is-active' : ''}" aria-pressed="${mode === 'grouped' ? 'true' : 'false'}" data-prayer-mode="grouped">By Category</button>
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'alphabetical' ? 'is-active' : ''}" aria-pressed="${mode === 'alphabetical' ? 'true' : 'false'}" data-prayer-mode="alphabetical">Alpha...</button>
+                        <button type="button" class="link-btn view-toggle-btn ${mode === 'grouped' ? 'is-active' : ''}" aria-pressed="${mode === 'grouped' ? 'true' : 'false'}" data-prayer-mode="grouped">Cat...</button>
                     </div>
                     <span class="hymn-controls-label">Language</span>
                     <div class="hymn-language-switch" role="group" aria-label="Prayer language filter">
-                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'english' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'english' ? 'true' : 'false'}" data-prayer-language="english">English</button>
-                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'tagalog' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'tagalog' ? 'true' : 'false'}" data-prayer-language="tagalog">Tagalog</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'english' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'english' ? 'true' : 'false'}" data-prayer-language="english">En</button>
+                        <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'tagalog' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'tagalog' ? 'true' : 'false'}" data-prayer-language="tagalog">Fil</button>
                         <button type="button" class="link-btn view-toggle-btn ${languageFilter === 'both' ? 'is-active' : ''}" aria-pressed="${languageFilter === 'both' ? 'true' : 'false'}" data-prayer-language="both">Both</button>
                     </div>
                 </div>
@@ -2905,7 +2956,7 @@
                     <span class="hymn-controls-label">Range</span>
                     <div class="hymn-mode-switch" role="group" aria-label="Mass day date range filter">
                         <button type="button" class="link-btn view-toggle-btn ${filterValue === 'current-future' ? 'is-active' : ''}" aria-pressed="${filterValue === 'current-future' ? 'true' : 'false'}" data-mass-days-filter="current-future">Current + Future</button>
-                        <button type="button" class="link-btn view-toggle-btn ${filterValue === 'all' ? 'is-active' : ''}" aria-pressed="${filterValue === 'all' ? 'true' : 'false'}" data-mass-days-filter="all">Show All</button>
+                        <button type="button" class="link-btn view-toggle-btn ${filterValue === 'all' ? 'is-active' : ''}" aria-pressed="${filterValue === 'all' ? 'true' : 'false'}" data-mass-days-filter="all">All</button>
                     </div>
                 </div>
             `;
@@ -3238,6 +3289,13 @@
                 el.nextBtn.setAttribute('title', 'Go to next step');
             }
 
+            const endActionsExpanded = !!state.ui.endActionsExpanded;
+            el.endActionsRow.classList.toggle('hidden', !endActionsExpanded);
+            el.endActionsToggleBtn.textContent = endActionsExpanded ? '▴' : '▾';
+            el.endActionsToggleBtn.setAttribute('aria-expanded', endActionsExpanded ? 'true' : 'false');
+            el.endActionsToggleBtn.setAttribute('aria-label', endActionsExpanded ? 'Hide end actions' : 'Show end actions');
+            el.endActionsToggleBtn.setAttribute('title', endActionsExpanded ? 'Hide end actions' : 'Show end actions');
+
             renderJumpSelect();
             scheduleAutoAdvanceIfEligible(step);
             renderDiagnostics();
@@ -3407,6 +3465,7 @@
             state.session.startedAt = Date.now();
             state.session.currentStepIndex = 0;
             state.session.navigationEvents = 0;
+            state.ui.endActionsExpanded = false;
             showView('session');
             renderSession();
             state.session.elapsedTimerId = setInterval(() => {
@@ -3491,6 +3550,11 @@
                 moveToStep(Number(el.jumpSelect.value));
             });
             el.alternativesBtn.addEventListener('click', openAltModal);
+
+            el.endActionsToggleBtn.addEventListener('click', () => {
+                state.ui.endActionsExpanded = !state.ui.endActionsExpanded;
+                renderSession();
+            });
 
             el.startOverBtn.addEventListener('click', () => {
                 showConfirm('Start over from the first step?', () => {
