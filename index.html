@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Wizard Mass</title>
+    <style>
+        :root {
+            --bg: #f4f1ea;
+            --panel: #fffdf8;
+            --panel-2: #f7f2e8;
+            --text: #2f2a24;
+            --muted: #716659;
+            --accent: #8e5f24;
+            --accent-strong: #6f4310;
+            --border: #ddcfbb;
+            --success: #2f7d32;
+            --danger: #8b1d1d;
+            --shadow: 0 10px 30px rgba(46, 35, 24, 0.12);
+            --font-body: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+            --font-ui: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", sans-serif;
+        }
+
+        body[data-theme="dark"] {
+            --bg: #181613;
+            --panel: #23201c;
+            --panel-2: #2c2721;
+            --text: #efe7d8;
+            --muted: #baae9b;
+            --accent: #d9a15d;
+            --accent-strong: #efbb79;
+            --border: #4b4033;
+            --success: #7ecb81;
+            --danger: #f18c8c;
+            --shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
+        }
+
+        body[data-theme="8bit"] {
+            --bg: #fff7d6;
+            --panel: #fffef6;
+            --panel-2: #efe9cd;
+            --text: #1f1f1f;
+            --muted: #444;
+            --accent: #c44f1f;
+            --accent-strong: #8f3411;
+            --border: #1f1f1f;
+            --success: #1e7a1e;
+            --danger: #8f1e1e;
+            --shadow: 6px 6px 0 #1f1f1f;
+            --font-body: "Courier New", Courier, monospace;
+            --font-ui: "Courier New", Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 15% 20%, rgba(142, 95, 36, 0.12), transparent 40%),
+                radial-gradient(circle at 85% 0%, rgba(183, 145, 95, 0.18), transparent 45%),
+                var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            background: color-mix(in oklab, var(--panel), transparent 12%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0.9rem 1rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .brand {
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+            font-weight: 700;
+        }
+
+        .header-meta {
+            text-align: center;
+            min-width: 0;
+        }
+
+        .header-meta .celebration {
+            font-family: var(--font-ui);
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-meta .date {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .icon-btn,
+        .btn,
+        .ghost-btn {
+            font-family: var(--font-ui);
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 1.05rem;
+        }
+
+        .icon-btn:hover,
+        .btn:hover,
+        .ghost-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:disabled,
+        .ghost-btn:disabled,
+        .icon-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            border-color: transparent;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .btn.secondary {
+            background: var(--panel);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .ghost-btn {
+            background: transparent;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .app-main {
+            max-width: 1040px;
+            margin: 1.3rem auto 2.5rem;
+            padding: 0 1rem;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 1.2rem;
+        }
+
+        .panel h1,
+        .panel h2,
+        .panel h3 {
+            font-family: var(--font-ui);
+            line-height: 1.2;
+        }
+
+        .landing-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .landing-hero {
+            background: linear-gradient(125deg, color-mix(in oklab, var(--accent), #fff 75%), var(--panel));
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.1rem;
+        }
+
+        .landing-hero p {
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+
+        .landing-actions {
+            display: grid;
+            gap: 0.65rem;
+            align-content: start;
+        }
+
+        .status-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.9rem;
+        }
+
+        .tag {
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            padding: 0.3rem 0.65rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            background: var(--panel-2);
+            font-family: var(--font-ui);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .session-top {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.9rem;
+            align-items: start;
+        }
+
+        .session-headline {
+            display: grid;
+            gap: 0.45rem;
+        }
+
+        .kicker {
+            color: var(--accent-strong);
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .progress-block {
+            min-width: 240px;
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 0.8rem;
+            font-family: var(--font-ui);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+            transition: width 0.3s ease;
+        }
+
+        .step-card {
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--panel-2);
+            padding: 1rem;
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .step-script {
+            border-left: 4px solid var(--accent);
+            padding-left: 0.7rem;
+            display: grid;
+            gap: 0.65rem;
+        }
+
+        .step-script .label {
+            font-family: var(--font-ui);
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .stance-action {
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 0.8rem;
+            background: var(--panel);
+            display: grid;
+            gap: 0.45rem;
+        }
+
+        .reference-list,
+        .action-list {
+            padding-left: 1.1rem;
+            display: grid;
+            gap: 0.25rem;
+        }
+
+        .reference-list a {
+            color: var(--accent-strong);
+            word-break: break-word;
+        }
+
+        .session-controls {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.65rem;
+        }
+
+        .session-controls .wide {
+            grid-column: span 2;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .jump-select,
+        .select,
+        .toggle {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel);
+            color: var(--text);
+            padding: 0.55rem 0.6rem;
+            font-family: var(--font-ui);
+            font-size: 0.92rem;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 35;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .drawer {
+            width: min(500px, 100%);
+            height: 100%;
+            background: var(--panel);
+            border-left: 1px solid var(--border);
+            box-shadow: -12px 0 30px rgba(0, 0, 0, 0.25);
+            overflow-y: auto;
+            padding: 1rem;
+            display: grid;
+            align-content: start;
+            gap: 1rem;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-grid {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .drawer-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            background: var(--panel-2);
+        }
+
+        .drawer-card h4 {
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .small-list {
+            list-style: none;
+            display: grid;
+            gap: 0.35rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .prefs-grid {
+            display: grid;
+            gap: 0.55rem;
+        }
+
+        .toggle-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-shell {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+        }
+
+        .modal {
+            width: min(560px, 100%);
+            max-height: 80vh;
+            overflow-y: auto;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.6rem;
+        }
+
+        .alt-option {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.7rem;
+            background: var(--panel-2);
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .nav-hint {
+            grid-column: 1 / -1;
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-family: var(--font-ui);
+        }
+
+        .warning-box {
+            margin-top: 0.9rem;
+            border: 1px solid color-mix(in oklab, var(--danger), white 55%);
+            background: color-mix(in oklab, var(--danger), white 94%);
+            border-radius: 12px;
+            padding: 0.75rem;
+            color: var(--text);
+        }
+
+        .warning-box h3,
+        .warning-box h4 {
+            font-family: var(--font-ui);
+            margin-bottom: 0.45rem;
+        }
+
+        .warning-list {
+            padding-left: 1.1rem;
+            display: grid;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .diagnostic-list {
+            list-style: none;
+            display: grid;
+            gap: 0.35rem;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-family: var(--font-ui);
+        }
+
+        .prayer-meta {
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-family: var(--font-ui);
+        }
+
+        .prayer-block {
+            border-left: 3px solid var(--border);
+            padding-left: 0.65rem;
+            display: grid;
+            gap: 0.35rem;
+            margin-top: 0.4rem;
+        }
+
+        .prayer-block .label {
+            color: var(--muted);
+            font-family: var(--font-ui);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .prayer-block ul {
+            padding-left: 1.1rem;
+            display: grid;
+            gap: 0.25rem;
+        }
+
+        @media (max-width: 900px) {
+            .landing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .session-top {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-block {
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-inner {
+                grid-template-columns: auto 1fr auto;
+                padding: 0.7rem 0.8rem;
+            }
+
+            .brand {
+                font-size: 0.85rem;
+            }
+
+            .session-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .session-controls .wide {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="brand">Web Wizard Mass</div>
+            <div class="header-meta">
+                <div class="celebration" id="headerCelebration">Loading celebration...</div>
+                <div class="date" id="headerDate">Loading date...</div>
+            </div>
+            <button class="icon-btn" id="menuButton" type="button" aria-label="Open menu">Menu</button>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="panel" id="landingPanel" aria-labelledby="landingTitle">
+            <div class="landing-grid">
+                <div class="landing-hero">
+                    <h1 id="landingTitle">Enter the Mass prayerfully, one step at a time</h1>
+                    <p id="landingCelebration">Today's celebration will appear here.</p>
+                    <div class="status-strip">
+                        <span class="tag" id="dataSourceTag">Data source: ...</span>
+                        <span class="tag" id="phaseCountTag">Phases: 0</span>
+                        <span class="tag" id="stepCountTag">Steps: 0</span>
+                    </div>
+                    <div class="warning-box hidden" id="landingWarnings" role="status" aria-live="polite">
+                        <h4>Data warnings</h4>
+                        <ul class="warning-list" id="landingWarningsList"></ul>
+                    </div>
+                </div>
+                <div class="landing-actions">
+                    <button class="btn" id="startMassBtn" type="button">Start Mass</button>
+                    <button class="btn secondary" id="startPremassBtn" type="button">Start with pre-Mass prayers</button>
+                    <button class="ghost-btn" id="openSchedulesBtn" type="button">Open schedules</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel hidden" id="premassPanel" aria-labelledby="premassTitle">
+            <h2 id="premassTitle">Pre-Mass Prayers</h2>
+            <p id="premassIntro" style="color: var(--muted); margin-top: 0.45rem;">Prepare your heart before the celebration by reading one of these prayers.</p>
+            <div id="premassPrayerList" style="margin-top: 0.9rem; display: grid; gap: 0.65rem;"></div>
+            <div style="margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                <button class="btn" id="continueToMassBtn" type="button">Continue to Mass</button>
+                <button class="ghost-btn" id="backToLandingFromPremassBtn" type="button">Back to landing</button>
+            </div>
+        </section>
+
+        <section class="panel hidden" id="sessionPanel" aria-live="polite">
+            <div class="session-top">
+                <div class="session-headline">
+                    <div class="kicker" id="phaseKicker">Phase</div>
+                    <div class="kicker" id="stepKicker">Step 0 of 0</div>
+                    <h2 id="stepTitle">Step title</h2>
+                    <p id="stepSubtitle" style="color: var(--muted);">Step details appear here.</p>
+                </div>
+                <div class="progress-block">
+                    <div class="progress-labels">
+                        <span id="elapsedLabel">Elapsed: 00:00</span>
+                        <span id="progressLabel">0%</span>
+                    </div>
+                    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <article class="step-card" id="stepCard"></article>
+
+            <div class="session-controls">
+                <div class="control-row">
+                    <button class="btn secondary" id="backBtn" type="button">Previous Step</button>
+                    <button class="btn" id="nextBtn" type="button">Next Step</button>
+                </div>
+                <div class="control-row">
+                    <label for="jumpSelect" class="sr-only">Jump to step</label>
+                    <select id="jumpSelect" class="jump-select" aria-label="Jump to step"></select>
+                </div>
+                <button class="ghost-btn wide" id="alternativesBtn" type="button">Choose alternate chant/hymn</button>
+                <div class="control-row wide">
+                    <button class="ghost-btn" id="startOverBtn" type="button">Start Over</button>
+                    <button class="ghost-btn" id="endSessionBtn" type="button" style="color: var(--danger);">End Session</button>
+                </div>
+                <p class="nav-hint" id="navHint">Step navigation moves one step at a time.</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="overlay hidden" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Menu and references">
+        <aside class="drawer">
+            <div class="drawer-header">
+                <h3>Menu and References</h3>
+                <button class="icon-btn" id="closeMenuBtn" type="button" aria-label="Close menu">Close</button>
+            </div>
+
+            <div class="drawer-grid">
+                <div class="drawer-card">
+                    <h4>Schedules of Mass</h4>
+                    <ul class="small-list" id="schedulesList"></ul>
+                </div>
+
+                <div class="drawer-card">
+                    <h4>Churches</h4>
+                    <ul class="small-list" id="churchesList"></ul>
+                </div>
+
+                <div class="drawer-card">
+                    <h4>Prayers</h4>
+                    <ul class="small-list" id="prayersList"></ul>
+                </div>
+
+                <div class="drawer-card">
+                    <h4>Mass Days</h4>
+                    <ul class="small-list" id="massDaysList"></ul>
+                </div>
+
+                <div class="drawer-card hidden" id="warningsCard">
+                    <h4>Data Warnings</h4>
+                    <ul class="small-list" id="warningsList"></ul>
+                </div>
+
+                <div class="drawer-card" id="diagnosticsCard">
+                    <h4>Diagnostics</h4>
+                    <ul class="diagnostic-list" id="diagnosticsList"></ul>
+                </div>
+
+                <div class="drawer-card">
+                    <h4>Preferences</h4>
+                    <div class="prefs-grid">
+                        <label>
+                            Theme
+                            <select class="select" id="themeSelect">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="8bit">8-bit</option>
+                            </select>
+                        </label>
+                        <label>
+                            Default church
+                            <select class="select" id="churchSelect"></select>
+                        </label>
+                        <label>
+                            Occasion profile
+                            <select class="select" id="occasionSelect">
+                                <option value="auto">Auto</option>
+                                <option value="marian-solemnity">Marian solemnity</option>
+                                <option value="national-healing">National healing</option>
+                                <option value="peace-vigil">Peace vigil</option>
+                            </select>
+                        </label>
+                        <label class="toggle-row">
+                            <span>Show duration</span>
+                            <input class="toggle" id="showDurationToggle" type="checkbox">
+                        </label>
+                        <label class="toggle-row">
+                            <span>Show full lyrics</span>
+                            <input class="toggle" id="showLyricsToggle" type="checkbox">
+                        </label>
+                        <label class="toggle-row">
+                            <span>Enable auto-progress</span>
+                            <input class="toggle" id="autoProgressToggle" type="checkbox">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="modal-shell hidden" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="modal">
+            <h3 id="confirmTitle">Confirm action</h3>
+            <p id="confirmMessage">Are you sure?</p>
+            <div class="modal-actions">
+                <button class="ghost-btn" type="button" id="confirmCancelBtn">Cancel</button>
+                <button class="btn" type="button" id="confirmOkBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-shell hidden" id="altModal" role="dialog" aria-modal="true" aria-labelledby="altModalTitle">
+        <div class="modal">
+            <h3 id="altModalTitle">Alternate hymn or chant</h3>
+            <div id="altList"></div>
+            <div class="modal-actions">
+                <button class="ghost-btn" type="button" id="altCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script id="embedded-mass-jsonl" type="application/x-ndjson">
+{"type":"appConfig","appName":"Web Wizard Mass","version":"0.2.0","defaultTheme":"light","defaultChurchId":"galleria","showDurationByDefault":true,"showFullLyricsByDefault":true,"enableAutoProgressByDefault":false}
+{"type":"massDay","id":"ordinary-time-18-2026-08-02","date":"2026-08-02","celebration":"18th Sunday in Ordinary Time","liturgicalColor":"green"}
+{"type":"massDay","id":"ordinary-time-19-2026-08-09","date":"2026-08-09","celebration":"19th Sunday in Ordinary Time","liturgicalColor":"green"}
+{"type":"massDay","id":"assumption-2026-08-15","date":"2026-08-15","celebration":"Solemnity of the Assumption of the Blessed Virgin Mary","liturgicalColor":"white"}
+{"type":"church","id":"galleria","name":"Galleria"}
+{"type":"church","id":"sm-megamall","name":"SM Megamall"}
+{"type":"church","id":"sharilla-elsa-mall","name":"Sharilla Elsa Mall"}
+{"type":"church","id":"greenhills","name":"Greenhills"}
+{"type":"church","id":"lourdes-mandaluyong","name":"Lourdes Mandaluyong"}
+{"type":"church","id":"edsa-shrine","name":"National Shrine of Mary, Queen of Peace (EDSA Shrine)"}
+{"type":"schedule","id":"sched-galleria-sun-0900","churchId":"galleria","day":"Sunday","startTime":"09:00","language":"English","celebrationId":"ordinary-time-18-2026-08-02"}
+{"type":"schedule","id":"sched-galleria-sun-1730","churchId":"galleria","day":"Sunday","startTime":"17:30","language":"English","celebrationId":"ordinary-time-19-2026-08-09"}
+{"type":"schedule","id":"sched-sm-sun-1100","churchId":"sm-megamall","day":"Sunday","startTime":"11:00","language":"English","celebrationId":"ordinary-time-18-2026-08-02"}
+{"type":"schedule","id":"sched-greenhills-sun-1000","churchId":"greenhills","day":"Sunday","startTime":"10:00","language":"English","celebrationId":"ordinary-time-19-2026-08-09"}
+{"type":"schedule","id":"sched-lourdes-sat-1800","churchId":"lourdes-mandaluyong","day":"Saturday","startTime":"18:00","language":"English","celebrationId":"assumption-2026-08-15"}
+{"type":"prayer","id":"rosary-opening","title":"Rosary Opening Prayer","contentText":"In the name of the Father, and of the Son, and of the Holy Spirit. Amen. I believe in God, the Father almighty, Creator of heaven and earth."}
+{"type":"prayer","id":"angelus","title":"Angelus","contentText":"The Angel of the Lord declared unto Mary; and she conceived of the Holy Spirit. Hail Mary, full of grace, the Lord is with thee."}
+{"type":"prayer","id":"act-of-contrition","title":"Act of Contrition","contentText":"My God, I am sorry for my sins with all my heart. In choosing to do wrong and failing to do good, I have sinned against you."}
+{"type":"prayer","id":"morning-offering","title":"Morning Offering","contentText":"O Jesus, through the Immaculate Heart of Mary, I offer you my prayers, works, joys, and sufferings of this day."}
+{"type":"phase","id":"introductory-rites","order":1,"title":"Introductory Rites"}
+{"type":"phase","id":"liturgy-of-the-word","order":2,"title":"Liturgy of the Word"}
+{"type":"phase","id":"liturgy-of-the-eucharist","order":3,"title":"Liturgy of the Eucharist"}
+{"type":"phase","id":"concluding-rites","order":4,"title":"Concluding Rites"}
+{"type":"step","id":"entrance-chant","phaseId":"introductory-rites","order":1,"title":"Entrance Chant","stepType":"hymn","stance":"stand","lyrics":"Sing to the Lord a new song; sing to the Lord, all you lands. Proclaim his marvelous deeds to all the nations.","actions":["Join the procession prayerfully","Make a reverent bow toward the altar"],"estimatedSeconds":180,"allowAutoProgress":true,"alternatives":[{"id":"alt-entrance-1","title":"Gather Us In","lyrics":"Here in this place new light is streaming, now is the darkness vanished away."},{"id":"alt-entrance-2","title":"All Are Welcome","lyrics":"Let us build a house where love can dwell and all can safely live."}]}
+{"type":"step","id":"sign-of-the-cross","phaseId":"introductory-rites","order":2,"title":"Sign of the Cross and Greeting","stepType":"script","stance":"stand","leaderText":"In the name of the Father, and of the Son, and of the Holy Spirit.","responseText":"Amen.","contentText":"The priest greets the people and invites everyone into prayer.","actions":["Make the sign of the cross","Respond clearly with the assembly"],"estimatedSeconds":45,"allowAutoProgress":false}
+{"type":"step","id":"first-reading","phaseId":"liturgy-of-the-word","order":3,"title":"First Reading","stepType":"reading","stance":"sit","contentText":"A reading from the Book of Ecclesiastes. Vanity of vanities, says Qoheleth, vanity of vanities! All things are vanity.","references":[{"label":"Ecclesiastes 1:2; 2:21-23","url":"https://bible.usccb.org/bible/readings/080226.cfm"}],"estimatedSeconds":210,"allowAutoProgress":true}
+{"type":"step","id":"gospel-acclamation","phaseId":"liturgy-of-the-word","order":4,"title":"Gospel Acclamation","stepType":"hymn","stance":"stand","lyrics":"Alleluia, alleluia. Blessed are the poor in spirit; the kingdom of heaven is theirs.","actions":["Stand and sing with the assembly","Trace small cross on forehead, lips, and heart"],"estimatedSeconds":90,"allowAutoProgress":true}
+{"type":"step","id":"offertory","phaseId":"liturgy-of-the-eucharist","order":5,"title":"Preparation of the Gifts","stepType":"action","stance":"sit","contentText":"Bread and wine are brought to the altar as symbols of the Church's offering of thanksgiving and self-giving.","actions":["Prepare offering","Pray silently for intentions"],"estimatedSeconds":180,"allowAutoProgress":true}
+{"type":"step","id":"holy-holy","phaseId":"liturgy-of-the-eucharist","order":6,"title":"Holy, Holy, Holy","stepType":"hymn","stance":"stand","lyrics":"Holy, Holy, Holy Lord God of hosts. Heaven and earth are full of your glory. Hosanna in the highest.","estimatedSeconds":90,"allowAutoProgress":true,"alternatives":[{"id":"alt-holy-1","title":"Mass of Creation Sanctus","lyrics":"Holy, holy, holy Lord, God of power and might..."}]}
+{"type":"step","id":"communion","phaseId":"liturgy-of-the-eucharist","order":7,"title":"Communion Rite","stepType":"prayer","stance":"kneel","contentText":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","actions":["Approach for communion reverently","Spend a brief moment in silent thanksgiving"],"estimatedSeconds":240,"allowAutoProgress":false}
+{"type":"step","id":"dismissal","phaseId":"concluding-rites","order":8,"title":"Dismissal","stepType":"script","stance":"stand","leaderText":"Go forth, the Mass is ended.","responseText":"Thanks be to God.","contentText":"The assembly is sent forth to live the Gospel in daily life.","actions":["Make the sign of the cross","Remain for the recessional if customary"],"estimatedSeconds":60,"allowAutoProgress":false}
+    </script>
+
+    <script>
+        const STORAGE_KEY = 'wwm-prefs-v1';
+        const STEP_MASS_PART_MAP = {
+            'entrance-chant': 'entrance',
+            'gospel-acclamation': 'gospel-acclamation',
+            'offertory': 'offertory',
+            'holy-holy': 'sanctus',
+            'communion': 'communion',
+            'dismissal': 'recessional'
+        };
+
+        const state = {
+            view: 'landing',
+            records: [],
+            source: 'embedded',
+            validationWarnings: [],
+            index: {
+                appConfig: null,
+                massDays: [],
+                churches: [],
+                schedules: [],
+                prayers: [],
+                songs: [],
+                songAssignments: [],
+                prayerAssignments: [],
+                phases: [],
+                steps: []
+            },
+            prefs: {
+                theme: 'light',
+                showDuration: true,
+                showLyrics: true,
+                defaultChurchId: '',
+                occasion: 'auto',
+                autoProgress: false
+            },
+            session: {
+                startedAt: null,
+                currentStepIndex: 0,
+                selectedAlternatives: {},
+                elapsedTimerId: null,
+                autoAdvanceTimerId: null,
+                navigationEvents: 0
+            },
+            ui: {
+                activeModal: null,
+                lastFocusedElement: null
+            },
+            confirmAction: null
+        };
+
+        const el = {};
+
+        function cacheElements() {
+            [
+                'headerCelebration', 'headerDate', 'menuButton',
+                'landingPanel', 'landingCelebration', 'dataSourceTag', 'phaseCountTag', 'stepCountTag',
+                'landingWarnings', 'landingWarningsList',
+                'startMassBtn', 'startPremassBtn', 'openSchedulesBtn',
+                'premassPanel', 'premassIntro', 'premassPrayerList', 'continueToMassBtn', 'backToLandingFromPremassBtn',
+                'sessionPanel', 'phaseKicker', 'stepKicker', 'stepTitle', 'stepSubtitle', 'elapsedLabel', 'progressLabel',
+                'progressFill', 'stepCard', 'jumpSelect', 'backBtn', 'nextBtn', 'alternativesBtn', 'startOverBtn',
+                'endSessionBtn', 'navHint',
+                'menuOverlay', 'closeMenuBtn', 'schedulesList', 'churchesList', 'prayersList', 'massDaysList',
+                'warningsCard', 'warningsList',
+                'diagnosticsCard', 'diagnosticsList',
+                'themeSelect', 'churchSelect', 'occasionSelect', 'showDurationToggle', 'showLyricsToggle', 'autoProgressToggle',
+                'confirmModal', 'confirmMessage', 'confirmCancelBtn', 'confirmOkBtn',
+                'altModal', 'altList', 'altCloseBtn'
+            ].forEach(id => {
+                el[id] = document.getElementById(id);
+            });
+        }
+
+        function parseJsonlRecords(jsonlText, sourceLabel) {
+            const warnings = [];
+            const records = [];
+
+            jsonlText
+                .split('\n')
+                .map((line, idx) => ({ line: line.trim(), lineNo: idx + 1 }))
+                .filter(entry => entry.line.length > 0)
+                .forEach(entry => {
+                    try {
+                        const parsed = JSON.parse(entry.line);
+                        records.push(parsed);
+                    } catch (error) {
+                        warnings.push(`[${sourceLabel}] Invalid JSON on line ${entry.lineNo}`);
+                    }
+                });
+
+            return { records, warnings };
+        }
+
+        async function loadMassJsonl() {
+            const embeddedJsonl = document.getElementById('embedded-mass-jsonl').textContent;
+            const warnings = [];
+
+            try {
+                const response = await fetch('./mass-data.jsonl', { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error('External JSONL unavailable');
+                }
+
+                const externalJsonl = await response.text();
+                const externalParsed = parseJsonlRecords(externalJsonl, 'external');
+                warnings.push(...externalParsed.warnings);
+                const externalRecords = externalParsed.records;
+                if (externalRecords.length > 0) {
+                    return { source: 'external', records: externalRecords, warnings };
+                }
+            } catch (error) {
+                // External file is optional. Embedded data remains the baseline.
+            }
+
+            const embeddedParsed = parseJsonlRecords(embeddedJsonl, 'embedded');
+            warnings.push(...embeddedParsed.warnings);
+
+            return {
+                source: 'embedded',
+                records: embeddedParsed.records,
+                warnings
+            };
+        }
+
+        function normalizeAndIndex(records) {
+            const idx = {
+                appConfig: null,
+                massDays: [],
+                churches: [],
+                schedules: [],
+                prayers: [],
+                songs: [],
+                songAssignments: [],
+                prayerAssignments: [],
+                phases: [],
+                steps: []
+            };
+            const warnings = [];
+
+            records.forEach((record, recordIndex) => {
+                if (!record || typeof record !== 'object' || Array.isArray(record)) {
+                    warnings.push(`Record ${recordIndex + 1} is not a valid object.`);
+                    return;
+                }
+
+                switch (record.type) {
+                    case 'appConfig':
+                        idx.appConfig = record;
+                        break;
+                    case 'massDay':
+                        if (!record.id || !record.date) {
+                            warnings.push('A massDay record is missing id or date.');
+                        }
+                        idx.massDays.push(record);
+                        break;
+                    case 'church':
+                        if (!record.id || !record.name) {
+                            warnings.push('A church record is missing id or name.');
+                        }
+                        idx.churches.push(record);
+                        break;
+                    case 'schedule':
+                        if (!record.id || !record.churchId) {
+                            warnings.push('A schedule record is missing id or churchId.');
+                        }
+                        idx.schedules.push(record);
+                        break;
+                    case 'prayer':
+                        if (!record.id || !record.title) {
+                            warnings.push('A prayer record is missing id or title.');
+                        }
+                        idx.prayers.push(record);
+                        break;
+                    case 'song':
+                        if (!record.id || !record.title) {
+                            warnings.push('A song record is missing id or title.');
+                        }
+                        idx.songs.push(record);
+                        break;
+                    case 'songAssignment':
+                        if (!record.id || !record.massPart || !record.churchId) {
+                            warnings.push('A songAssignment record is missing id, massPart, or churchId.');
+                        }
+                        idx.songAssignments.push(record);
+                        break;
+                    case 'prayerAssignment':
+                        if (!record.id || !record.prayerId || !record.churchId) {
+                            warnings.push('A prayerAssignment record is missing id, prayerId, or churchId.');
+                        }
+                        idx.prayerAssignments.push(record);
+                        break;
+                    case 'phase':
+                        if (!record.id) {
+                            warnings.push('A phase record is missing id and will be skipped.');
+                            break;
+                        }
+                        idx.phases.push(record);
+                        break;
+                    case 'step':
+                        if (!record.id || !record.phaseId) {
+                            warnings.push('A step record is missing id or phaseId and will be skipped.');
+                            break;
+                        }
+                        const normalizedType = record.typeValue || record.stepType || record.kind || 'action';
+                        idx.steps.push({
+                            ...record,
+                            type: normalizedType
+                        });
+                        if (!record.typeValue && !record.stepType && !record.kind) {
+                            warnings.push(`Step ${record.id} has no explicit type key; defaulted to action.`);
+                        }
+                        break;
+                    default:
+                        warnings.push(`Unknown record type '${String(record.type)}' ignored.`);
+                        break;
+                }
+            });
+
+            idx.phases.sort((a, b) => (a.order || 0) - (b.order || 0));
+            const phaseOrder = new Map(idx.phases.map((p, i) => [p.id, i]));
+            idx.steps.sort((a, b) => {
+                const pA = phaseOrder.get(a.phaseId) ?? Number.MAX_SAFE_INTEGER;
+                const pB = phaseOrder.get(b.phaseId) ?? Number.MAX_SAFE_INTEGER;
+                if (pA !== pB) return pA - pB;
+                return (a.order || 0) - (b.order || 0);
+            });
+
+            return { idx, warnings };
+        }
+
+        function getTodayIsoDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getTodaysMassDay() {
+            const today = getTodayIsoDate();
+            return state.index.massDays.find(d => d.date === today) || state.index.massDays[0] || null;
+        }
+
+        function inferDayClass() {
+            const dayOfWeek = new Date().getDay();
+            return dayOfWeek === 0 ? 'sunday' : 'weekday';
+        }
+
+        function inferSeasonFromMassDay(massDay) {
+            const label = `${massDay?.id || ''} ${massDay?.celebration || ''}`.toLowerCase();
+            if (label.includes('ordinary')) return 'ordinary-time';
+            if (label.includes('lent')) return 'lent';
+            if (label.includes('advent')) return 'advent';
+            if (label.includes('easter')) return 'easter';
+            if (label.includes('christmas')) return 'christmas';
+            return '';
+        }
+
+        function inferOccasionFromMassDay(massDay) {
+            const label = `${massDay?.id || ''} ${massDay?.celebration || ''}`.toLowerCase();
+            if (label.includes('assumption') || label.includes('mary')) return 'marian-solemnity';
+            if (label.includes('peace') || label.includes('healing')) return 'peace-vigil';
+            return '';
+        }
+
+        function getActiveOccasion() {
+            if (state.prefs.occasion && state.prefs.occasion !== 'auto') {
+                return state.prefs.occasion;
+            }
+            return inferOccasionFromMassDay(getTodaysMassDay());
+        }
+
+        function resolveSongAssignmentForStep(step) {
+            const massPart = STEP_MASS_PART_MAP[step?.id];
+            if (!massPart) return null;
+
+            const churchId = state.prefs.defaultChurchId || state.index.churches[0]?.id || '';
+            const occasion = getActiveOccasion();
+            const dayClass = inferDayClass();
+            const season = inferSeasonFromMassDay(getTodaysMassDay());
+
+            const candidates = state.index.songAssignments.filter(assignment => {
+                if (assignment.churchId !== churchId) return false;
+                if (assignment.massPart !== massPart) return false;
+
+                const ctx = assignment.context || {};
+                if (ctx.occasion && ctx.occasion !== occasion) return false;
+                if (ctx.dayClass && ctx.dayClass !== dayClass) return false;
+                if (ctx.season && ctx.season !== season) return false;
+
+                return true;
+            });
+
+            if (!candidates.length) return null;
+
+            candidates.sort((a, b) => {
+                const priorityDiff = Number(b.priority || 0) - Number(a.priority || 0);
+                if (priorityDiff !== 0) return priorityDiff;
+                return Object.keys(b.context || {}).length - Object.keys(a.context || {}).length;
+            });
+
+            return candidates[0];
+        }
+
+        function buildDynamicAlternatives(step) {
+            const assignment = resolveSongAssignmentForStep(step);
+            if (!assignment || !Array.isArray(assignment.songIds)) return [];
+
+            const songsById = new Map(state.index.songs.map(song => [song.id, song]));
+            return assignment.songIds
+                .map(songId => {
+                    const song = songsById.get(songId);
+                    if (!song) return null;
+                    const descriptor = [song.category, song.language].filter(Boolean).join(' | ');
+                    return {
+                        id: `song-${song.id}`,
+                        sourceSongId: song.id,
+                        title: song.title,
+                        lyrics: song.lyrics || '',
+                        description: descriptor
+                    };
+                })
+                .filter(Boolean);
+        }
+
+        function getStepAlternatives(step) {
+            const dynamicAlternatives = buildDynamicAlternatives(step);
+            if (dynamicAlternatives.length > 0) return dynamicAlternatives;
+            return step?.alternatives || [];
+        }
+
+        function formatHumanDate() {
+            return new Intl.DateTimeFormat('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }).format(new Date());
+        }
+
+        function getCurrentStep() {
+            return state.index.steps[state.session.currentStepIndex] || null;
+        }
+
+        function getCurrentPhase(step) {
+            if (!step) return null;
+            return state.index.phases.find(p => p.id === step.phaseId) || null;
+        }
+
+        function formatElapsed(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
+        function getElapsedSeconds() {
+            if (!state.session.startedAt) return 0;
+            return Math.max(0, Math.floor((Date.now() - state.session.startedAt) / 1000));
+        }
+
+        function showView(view) {
+            state.view = view;
+            el.landingPanel.classList.toggle('hidden', view !== 'landing');
+            el.premassPanel.classList.toggle('hidden', view !== 'premass');
+            el.sessionPanel.classList.toggle('hidden', view !== 'session');
+        }
+
+        function openMenu() {
+            state.ui.lastFocusedElement = document.activeElement;
+            el.menuOverlay.classList.remove('hidden');
+            state.ui.activeModal = el.menuOverlay;
+            el.closeMenuBtn.focus();
+        }
+
+        function closeMenu() {
+            el.menuOverlay.classList.add('hidden');
+            if (state.ui.activeModal === el.menuOverlay) {
+                state.ui.activeModal = null;
+            }
+            if (state.ui.lastFocusedElement && typeof state.ui.lastFocusedElement.focus === 'function') {
+                state.ui.lastFocusedElement.focus();
+            }
+        }
+
+        function getFocusableElements(container) {
+            return Array.from(
+                container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+            ).filter(node => !node.hasAttribute('disabled') && !node.getAttribute('aria-hidden'));
+        }
+
+        function openModal(modalElement, initialFocusElement) {
+            state.ui.lastFocusedElement = document.activeElement;
+            modalElement.classList.remove('hidden');
+            state.ui.activeModal = modalElement;
+            const target = initialFocusElement || getFocusableElements(modalElement)[0];
+            if (target && typeof target.focus === 'function') {
+                target.focus();
+            }
+        }
+
+        function closeModal(modalElement) {
+            modalElement.classList.add('hidden');
+            if (state.ui.activeModal === modalElement) {
+                state.ui.activeModal = null;
+            }
+            if (state.ui.lastFocusedElement && typeof state.ui.lastFocusedElement.focus === 'function') {
+                state.ui.lastFocusedElement.focus();
+            }
+        }
+
+        function trapFocusInActiveModal(event) {
+            if (event.key !== 'Tab' || !state.ui.activeModal) {
+                return;
+            }
+
+            const focusable = getFocusableElements(state.ui.activeModal);
+            if (focusable.length === 0) {
+                event.preventDefault();
+                return;
+            }
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        }
+
+        function showConfirm(message, onConfirm) {
+            state.confirmAction = onConfirm;
+            el.confirmMessage.textContent = message;
+            openModal(el.confirmModal, el.confirmCancelBtn);
+        }
+
+        function closeConfirm() {
+            state.confirmAction = null;
+            closeModal(el.confirmModal);
+        }
+
+        function openAltModal() {
+            const step = getCurrentStep();
+            const alternatives = getStepAlternatives(step);
+
+            if (!step || alternatives.length === 0) {
+                return;
+            }
+
+            el.altList.innerHTML = alternatives.map(alt => {
+                const safeTitle = escapeHtml(alt.title || 'Alternative');
+                const safeDescription = escapeHtml(alt.description || '');
+                const safeLyrics = escapeHtml(alt.lyrics || 'No lyrics provided.');
+                return `
+                    <div class="alt-option">
+                        <h4>${safeTitle}</h4>
+                        ${safeDescription ? `<p style="color: var(--muted);">${safeDescription}</p>` : ''}
+                        <p style="color: var(--muted);">${safeLyrics}</p>
+                        <button class="btn secondary" type="button" data-alt-id="${escapeHtml(alt.id)}">Use this</button>
+                    </div>
+                `;
+            }).join('');
+
+            el.altList.querySelectorAll('button[data-alt-id]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.session.selectedAlternatives[step.id] = btn.getAttribute('data-alt-id');
+                    closeAltModal();
+                    renderSession();
+                });
+            });
+
+            openModal(el.altModal, el.altCloseBtn);
+        }
+
+        function closeAltModal() {
+            closeModal(el.altModal);
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function applyPreferences() {
+            document.body.setAttribute('data-theme', state.prefs.theme || 'light');
+            el.themeSelect.value = state.prefs.theme;
+            el.showDurationToggle.checked = !!state.prefs.showDuration;
+            el.showLyricsToggle.checked = !!state.prefs.showLyrics;
+            el.autoProgressToggle.checked = !!state.prefs.autoProgress;
+            el.churchSelect.value = state.prefs.defaultChurchId || '';
+            el.occasionSelect.value = state.prefs.occasion || 'auto';
+            renderHeader();
+            renderSession();
+        }
+
+        function savePreferences() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state.prefs));
+        }
+
+        function loadPreferences() {
+            let stored = null;
+            try {
+                stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            } catch (error) {
+                stored = null;
+            }
+
+            const defaults = {
+                theme: state.index.appConfig?.defaultTheme || 'light',
+                showDuration: state.index.appConfig?.showDurationByDefault !== false,
+                showLyrics: state.index.appConfig?.showFullLyricsByDefault !== false,
+                defaultChurchId: state.index.appConfig?.defaultChurchId || (state.index.churches[0]?.id || ''),
+                occasion: 'auto',
+                autoProgress: !!state.index.appConfig?.enableAutoProgressByDefault
+            };
+
+            state.prefs = {
+                ...defaults,
+                ...(stored || {})
+            };
+        }
+
+        function renderHeader() {
+            const massDay = getTodaysMassDay();
+            el.headerDate.textContent = formatHumanDate();
+            el.headerCelebration.textContent = massDay?.celebration || 'Mass day not configured';
+        }
+
+        function renderLanding() {
+            const massDay = getTodaysMassDay();
+            if (massDay) {
+                const readings = massDay.readings || {};
+                const readingSummary = [readings.first, readings.psalm, readings.second, readings.gospel]
+                    .filter(Boolean)
+                    .join(' | ');
+                const churchId = state.prefs.defaultChurchId || state.index.churches[0]?.id || '';
+                const localNotes = Array.isArray(massDay.localNotes)
+                    ? massDay.localNotes
+                        .filter(note => !note.churchId || note.churchId === churchId)
+                        .map(note => note.note)
+                        .filter(Boolean)
+                    : [];
+
+                const details = [
+                    `${formatHumanDate()} - ${massDay.celebration}`,
+                    [massDay.rank, massDay.liturgicalColor].filter(Boolean).join(' | '),
+                    massDay.theme ? `Theme: ${massDay.theme}` : '',
+                    readingSummary ? `Readings: ${readingSummary}` : '',
+                    massDay.massImpact ? `Mass notes: ${massDay.massImpact}` : '',
+                    localNotes.length ? `Local notes: ${localNotes.join(' | ')}` : ''
+                ].filter(Boolean);
+
+                el.landingCelebration.innerHTML = details.map(line => escapeHtml(line)).join('<br>');
+            } else {
+                el.landingCelebration.textContent = `${formatHumanDate()} - Celebration not configured`;
+            }
+            el.dataSourceTag.textContent = `Data source: ${state.source}`;
+            el.phaseCountTag.textContent = `Phases: ${state.index.phases.length}`;
+            el.stepCountTag.textContent = `Steps: ${state.index.steps.length}`;
+            renderWarnings();
+            renderDiagnostics();
+        }
+
+        function renderWarnings() {
+            if (!state.validationWarnings.length) {
+                el.landingWarnings.classList.add('hidden');
+                el.warningsCard.classList.add('hidden');
+                el.landingWarningsList.innerHTML = '';
+                el.warningsList.innerHTML = '';
+                return;
+            }
+
+            el.landingWarnings.classList.remove('hidden');
+            el.warningsCard.classList.remove('hidden');
+            const previewWarnings = state.validationWarnings.slice(0, 5);
+            el.landingWarningsList.innerHTML = previewWarnings.map(w => `<li>${escapeHtml(w)}</li>`).join('');
+            el.warningsList.innerHTML = state.validationWarnings.map(w => `<li>${escapeHtml(w)}</li>`).join('');
+        }
+
+        function renderDiagnostics() {
+            const currentStep = getCurrentStep();
+            const diagnostics = [
+                `Source: ${state.source}`,
+                `View: ${state.view}`,
+                `Records loaded: ${state.records.length}`,
+                `Warnings: ${state.validationWarnings.length}`,
+                `Steps: ${state.index.steps.length}`,
+                `Songs: ${state.index.songs.length}`,
+                `Song assignments: ${state.index.songAssignments.length}`,
+                `Occasion: ${getActiveOccasion() || 'none'}`,
+                `Current step: ${currentStep ? currentStep.id : 'none'}`,
+                `Elapsed seconds: ${getElapsedSeconds()}`,
+                `Auto-progress: ${state.prefs.autoProgress ? 'enabled' : 'disabled'}`,
+                `Navigation events: ${state.session.navigationEvents}`
+            ];
+
+            el.diagnosticsList.innerHTML = diagnostics
+                .map(item => `<li>${escapeHtml(item)}</li>`)
+                .join('');
+        }
+
+        function renderPrayerReferences(references) {
+            if (!Array.isArray(references) || references.length === 0) return '';
+            const items = references
+                .map(ref => `<li><a href="${escapeHtml(ref.url || '#')}" target="_blank" rel="noreferrer">${escapeHtml(ref.label || ref.url || 'Reference')}</a></li>`)
+                .join('');
+            return `<div class="prayer-block"><div class="label">References</div><ul>${items}</ul></div>`;
+        }
+
+        function renderPrayerBody(prayer) {
+            const blocks = Array.isArray(prayer.blocks) ? prayer.blocks : [];
+            if (blocks.length === 0) {
+                return `<p>${escapeHtml(prayer.contentText || '')}</p>`;
+            }
+
+            return blocks.map(block => {
+                const label = escapeHtml(block.label || block.type || 'Prayer');
+                const text = block.text ? `<p>${escapeHtml(block.text)}</p>` : '';
+                const response = block.response ? `<p><strong>Response:</strong> ${escapeHtml(block.response)}</p>` : '';
+                const intentions = Array.isArray(block.intentions) && block.intentions.length
+                    ? `<ul>${block.intentions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+                    : '';
+
+                return `
+                    <div class="prayer-block">
+                        <div class="label">${label}</div>
+                        ${text}
+                        ${response}
+                        ${intentions}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderPremass() {
+            const churchId = state.prefs.defaultChurchId || state.index.churches[0]?.id || '';
+            const activeOccasion = getActiveOccasion();
+            const dayClass = inferDayClass();
+            const churchName = state.index.churches.find(ch => ch.id === churchId)?.name || churchId;
+            el.premassIntro.textContent = `Prepare your heart before the celebration. Showing prayers for ${churchName} (${activeOccasion || 'default'}, ${dayClass}).`;
+            const assigned = state.index.prayerAssignments
+                .filter(assignment => {
+                    if (assignment.churchId !== churchId) return false;
+                    const contextOccasion = assignment.context?.occasion;
+                    const contextDayClass = assignment.context?.dayClass;
+                    if (contextOccasion && contextOccasion !== activeOccasion) return false;
+                    if (contextDayClass && contextDayClass !== dayClass) return false;
+                    return true;
+                })
+                .sort((a, b) => Number(b.priority || 0) - Number(a.priority || 0));
+
+            const prayersById = new Map(state.index.prayers.map(prayer => [prayer.id, prayer]));
+            const assignedPrayers = assigned
+                .map(assignment => prayersById.get(assignment.prayerId))
+                .filter(Boolean);
+
+            const fallbackPrayers = state.index.prayers.filter(prayer => {
+                if (prayer.churchId) {
+                    return prayer.churchId === churchId;
+                }
+                if (Array.isArray(prayer.churchScope) && prayer.churchScope.length > 0) {
+                    return prayer.churchScope.includes(churchId);
+                }
+                return true;
+            });
+
+            const prayersToRender = assignedPrayers.length > 0 ? assignedPrayers : fallbackPrayers;
+
+            if (prayersToRender.length === 0) {
+                el.premassPrayerList.innerHTML = '<p style="color: var(--muted);">No pre-Mass prayers configured.</p>';
+                renderDiagnostics();
+                return;
+            }
+
+            el.premassPrayerList.innerHTML = prayersToRender.map(prayer => `
+                <article class="step-card" style="margin-top: 0;">
+                    <h3>${escapeHtml(prayer.title || 'Prayer')}</h3>
+                    <p class="prayer-meta">${escapeHtml([prayer.category, prayer.language, prayer.recitationMode].filter(Boolean).join(' | '))}</p>
+                    ${renderPrayerBody(prayer)}
+                    ${renderPrayerReferences(prayer.references)}
+                </article>
+            `).join('');
+            renderDiagnostics();
+        }
+
+        function getSelectedAltForStep(step) {
+            const selectedAltId = state.session.selectedAlternatives[step.id];
+            const alternatives = getStepAlternatives(step);
+            if (selectedAltId) {
+                return alternatives.find(alt => alt.id === selectedAltId) || null;
+            }
+
+            const assignment = resolveSongAssignmentForStep(step);
+            const defaultSongId = assignment?.defaultSongId;
+            if (!defaultSongId) return null;
+            return alternatives.find(alt => alt.sourceSongId === defaultSongId) || null;
+        }
+
+        function buildStepSubtitle(step, phase) {
+            const parts = [];
+            if (phase?.title) parts.push(phase.title);
+            if (step?.stance) parts.push(`Stance: ${step.stance}`);
+            if (step?.type) parts.push(`Type: ${step.type}`);
+            return parts.join(' | ');
+        }
+
+        function buildTypeSpecificBody(step, selectedAlt) {
+            const stepType = String(step.type || '').toLowerCase();
+            const stepContent = step.contentText || '';
+            const stepLyrics = step.lyrics || '';
+            const chosenLyrics = selectedAlt?.lyrics || stepLyrics;
+
+            if (stepType === 'hymn') {
+                if (!state.prefs.showLyrics) {
+                    return '<p>Lyrics are hidden by preference.</p>';
+                }
+                return `<div><div class="label">Hymn Lyrics</div><p>${escapeHtml(chosenLyrics || 'No lyrics configured for this hymn.')}</p></div>`;
+            }
+
+            if (stepType === 'reading') {
+                return `<div><div class="label">Reading</div><p>${escapeHtml(stepContent || 'No reading text configured.')}</p></div>`;
+            }
+
+            if (stepType === 'prayer') {
+                return `<div><div class="label">Prayer</div><p>${escapeHtml(stepContent || 'No prayer text configured.')}</p></div>`;
+            }
+
+            if (stepType === 'script') {
+                if (step.leaderText || step.responseText || stepContent) {
+                    return `<div><div class="label">Script</div><p>${escapeHtml(stepContent || 'Follow the leader and response below.')}</p></div>`;
+                }
+                return '<p>No script text configured.</p>';
+            }
+
+            if (stepType === 'action') {
+                return `<div><div class="label">Action Guidance</div><p>${escapeHtml(stepContent || 'Follow the action cues below.')}</p></div>`;
+            }
+
+            return `<div><div class="label">Content</div><p>${escapeHtml(stepContent || stepLyrics || 'No content text configured.')}</p></div>`;
+        }
+
+        function renderSession() {
+            const step = getCurrentStep();
+
+            if (!step) {
+                el.stepTitle.textContent = 'No step data configured';
+                el.stepSubtitle.textContent = 'Please check your JSONL records.';
+                el.stepCard.innerHTML = '<p style="color: var(--muted);">No renderable step found.</p>';
+                el.navHint.textContent = 'No steps loaded. Please check your data.';
+                el.backBtn.disabled = true;
+                el.nextBtn.disabled = true;
+                renderDiagnostics();
+                return;
+            }
+
+            const phase = getCurrentPhase(step);
+            const totalSteps = state.index.steps.length;
+            const progress = totalSteps > 0 ? Math.round(((state.session.currentStepIndex + 1) / totalSteps) * 100) : 0;
+            const elapsed = getElapsedSeconds();
+            const selectedAlt = getSelectedAltForStep(step);
+            const currentStepNumber = state.session.currentStepIndex + 1;
+
+            el.phaseKicker.textContent = `Phase ${phase?.order || '-'} of ${state.index.phases.length}`;
+            el.stepKicker.textContent = `Step ${currentStepNumber} of ${totalSteps}`;
+            el.stepTitle.textContent = step.title || 'Untitled step';
+            el.stepSubtitle.textContent = buildStepSubtitle(step, phase);
+            el.progressLabel.textContent = `${progress}%`;
+            el.progressFill.style.width = `${progress}%`;
+            el.progressFill.parentElement.setAttribute('aria-valuenow', String(progress));
+            el.progressFill.parentElement.setAttribute('aria-valuetext', `Step ${currentStepNumber} of ${totalSteps}`);
+
+            if (state.prefs.showDuration) {
+                el.elapsedLabel.textContent = `Elapsed: ${formatElapsed(elapsed)}`;
+            } else {
+                el.elapsedLabel.textContent = 'Elapsed: hidden';
+            }
+
+            const actionItems = (step.actions || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
+            const referenceItems = (step.references || [])
+                .map(ref => `<li><a href="${escapeHtml(ref.url || '#')}" target="_blank" rel="noreferrer">${escapeHtml(ref.label || ref.url || 'Reference')}</a></li>`)
+                .join('');
+
+            const scriptBlock = (step.leaderText || step.responseText)
+                ? `
+                    <div class="step-script">
+                        ${step.leaderText ? `<div><div class="label">Leader</div><p>${escapeHtml(step.leaderText)}</p></div>` : ''}
+                        ${step.responseText ? `<div><div class="label">Response</div><p>${escapeHtml(step.responseText)}</p></div>` : ''}
+                    </div>
+                `
+                : '';
+
+            const altSummary = selectedAlt ? `<p><strong>Alternate in use:</strong> ${escapeHtml(selectedAlt.title || 'Alternative')}</p>` : '';
+            const assignment = resolveSongAssignmentForStep(step);
+            const assignmentSummary = assignment
+                ? `<p><strong>Assigned for this context:</strong> ${escapeHtml(assignment.id)}${assignment.selectionMode ? ` (${escapeHtml(assignment.selectionMode)})` : ''}</p>`
+                : '';
+
+            el.stepCard.innerHTML = `
+                ${altSummary}
+                ${assignmentSummary}
+                ${scriptBlock}
+                ${buildTypeSpecificBody(step, selectedAlt)}
+                <section class="stance-action">
+                    <p><strong>Stance:</strong> ${escapeHtml(step.stance || 'Not specified')}</p>
+                    ${actionItems ? `<div><strong>Actions</strong><ul class="action-list">${actionItems}</ul></div>` : '<p><strong>Actions:</strong> None listed.</p>'}
+                    ${referenceItems ? `<div><strong>References</strong><ul class="reference-list">${referenceItems}</ul></div>` : ''}
+                </section>
+            `;
+
+            const hasAlternatives = getStepAlternatives(step).length > 0;
+            el.alternativesBtn.disabled = !hasAlternatives;
+            el.alternativesBtn.textContent = hasAlternatives ? 'Choose alternate chant/hymn' : 'No alternates for this step';
+            const atFirstStep = state.session.currentStepIndex === 0;
+            const atFinalStep = state.session.currentStepIndex >= totalSteps - 1;
+            el.backBtn.disabled = atFirstStep;
+            el.nextBtn.disabled = totalSteps === 0;
+
+            if (totalSteps === 0) {
+                el.navHint.textContent = 'No steps loaded. Please check your data.';
+            } else if (atFirstStep) {
+                el.navHint.textContent = 'You are at the first step.';
+            } else if (atFinalStep) {
+                el.navHint.textContent = 'You are at the final step. Next Step asks for end confirmation.';
+            } else {
+                el.navHint.textContent = 'Step navigation moves one step at a time.';
+            }
+
+            renderJumpSelect();
+            scheduleAutoAdvanceIfEligible(step);
+            renderDiagnostics();
+        }
+
+        function renderJumpSelect() {
+            el.jumpSelect.innerHTML = state.index.steps
+                .map((step, index) => {
+                    const phase = getCurrentPhase(step);
+                    const label = `${index + 1}. ${phase?.title || 'Phase'} - ${step.title || 'Untitled'}`;
+                    return `<option value="${index}">${escapeHtml(label)}</option>`;
+                })
+                .join('');
+            el.jumpSelect.value = String(state.session.currentStepIndex);
+        }
+
+        function renderDrawerLists() {
+            const churchById = new Map(state.index.churches.map(ch => [ch.id, ch.name]));
+
+            el.schedulesList.innerHTML = state.index.schedules.length
+                ? state.index.schedules.map(s => `<li>${escapeHtml(`${s.day || '-'} ${s.startTime || '-'} - ${churchById.get(s.churchId) || s.churchId || 'Unknown church'}`)}</li>`).join('')
+                : '<li>No schedules configured.</li>';
+
+            el.churchesList.innerHTML = state.index.churches.length
+                ? state.index.churches.map(c => `<li>${escapeHtml(c.name || c.id || 'Unnamed church')}</li>`).join('')
+                : '<li>No churches configured.</li>';
+
+            el.prayersList.innerHTML = state.index.prayers.length
+                ? state.index.prayers.map(p => `<li>${escapeHtml(p.title || 'Untitled prayer')}</li>`).join('')
+                : '<li>No prayers configured.</li>';
+
+            el.massDaysList.innerHTML = state.index.massDays.length
+                ? state.index.massDays.map(d => {
+                    const meta = [d.rank, d.liturgicalColor].filter(Boolean).join(' | ');
+                    const suffix = meta ? ` (${meta})` : '';
+                    return `<li>${escapeHtml(`${d.date || '-'} - ${d.celebration || 'Unnamed celebration'}${suffix}`)}</li>`;
+                }).join('')
+                : '<li>No mass days configured.</li>';
+
+            el.churchSelect.innerHTML = state.index.churches
+                .map(ch => `<option value="${escapeHtml(ch.id)}">${escapeHtml(ch.name || ch.id)}</option>`)
+                .join('');
+
+            renderDiagnostics();
+        }
+
+        function clearTimers() {
+            if (state.session.elapsedTimerId) {
+                clearInterval(state.session.elapsedTimerId);
+                state.session.elapsedTimerId = null;
+            }
+            if (state.session.autoAdvanceTimerId) {
+                clearTimeout(state.session.autoAdvanceTimerId);
+                state.session.autoAdvanceTimerId = null;
+            }
+        }
+
+        function startSession() {
+            clearTimers();
+            if (state.index.steps.length === 0) {
+                showConfirm('No steps are configured. Return to landing and review data warnings?', () => {
+                    showView('landing');
+                });
+                return;
+            }
+            state.session.startedAt = Date.now();
+            state.session.currentStepIndex = 0;
+            state.session.navigationEvents = 0;
+            showView('session');
+            renderSession();
+            state.session.elapsedTimerId = setInterval(() => {
+                if (state.view === 'session') {
+                    renderSession();
+                }
+            }, 1000);
+        }
+
+        function moveToStep(index) {
+            const clamped = Math.max(0, Math.min(state.index.steps.length - 1, index));
+            state.session.currentStepIndex = clamped;
+            state.session.navigationEvents += 1;
+            renderSession();
+        }
+
+        function nextStep() {
+            if (state.session.currentStepIndex >= state.index.steps.length - 1) {
+                showConfirm('You are at the final step. End the session now?', () => {
+                    endSessionToLanding();
+                });
+                return;
+            }
+            moveToStep(state.session.currentStepIndex + 1);
+        }
+
+        function previousStep() {
+            moveToStep(state.session.currentStepIndex - 1);
+        }
+
+        function endSessionToLanding() {
+            clearTimers();
+            state.session.startedAt = null;
+            state.session.currentStepIndex = 0;
+            showView('landing');
+            renderLanding();
+            renderDiagnostics();
+        }
+
+        function scheduleAutoAdvanceIfEligible(step) {
+            if (state.session.autoAdvanceTimerId) {
+                clearTimeout(state.session.autoAdvanceTimerId);
+                state.session.autoAdvanceTimerId = null;
+            }
+
+            const canAuto = state.prefs.autoProgress && step.allowAutoProgress && Number(step.estimatedSeconds) > 0;
+            if (!canAuto) return;
+
+            state.session.autoAdvanceTimerId = setTimeout(() => {
+                if (state.view === 'session' && getCurrentStep()?.id === step.id) {
+                    nextStep();
+                }
+            }, Number(step.estimatedSeconds) * 1000);
+        }
+
+        function bindEvents() {
+            el.menuButton.addEventListener('click', openMenu);
+            el.closeMenuBtn.addEventListener('click', closeMenu);
+            el.menuOverlay.addEventListener('click', event => {
+                if (event.target === el.menuOverlay) {
+                    closeMenu();
+                }
+            });
+
+            el.startMassBtn.addEventListener('click', startSession);
+            el.startPremassBtn.addEventListener('click', () => {
+                showView('premass');
+                renderPremass();
+            });
+            el.backToLandingFromPremassBtn.addEventListener('click', () => showView('landing'));
+            el.continueToMassBtn.addEventListener('click', startSession);
+            el.openSchedulesBtn.addEventListener('click', () => {
+                openMenu();
+            });
+
+            el.backBtn.addEventListener('click', previousStep);
+            el.nextBtn.addEventListener('click', nextStep);
+            el.jumpSelect.addEventListener('change', () => {
+                moveToStep(Number(el.jumpSelect.value));
+            });
+            el.alternativesBtn.addEventListener('click', openAltModal);
+
+            el.startOverBtn.addEventListener('click', () => {
+                showConfirm('Start over from the first step?', () => {
+                    state.session.currentStepIndex = 0;
+                    state.session.startedAt = Date.now();
+                    renderSession();
+                });
+            });
+
+            el.endSessionBtn.addEventListener('click', () => {
+                showConfirm('End this session and return to landing?', () => {
+                    endSessionToLanding();
+                });
+            });
+
+            el.confirmCancelBtn.addEventListener('click', closeConfirm);
+            el.confirmOkBtn.addEventListener('click', () => {
+                const action = state.confirmAction;
+                closeConfirm();
+                if (typeof action === 'function') {
+                    action();
+                }
+            });
+
+            el.altCloseBtn.addEventListener('click', closeAltModal);
+
+            el.themeSelect.addEventListener('change', () => {
+                state.prefs.theme = el.themeSelect.value;
+                applyPreferences();
+                savePreferences();
+            });
+            el.churchSelect.addEventListener('change', () => {
+                state.prefs.defaultChurchId = el.churchSelect.value;
+                state.session.selectedAlternatives = {};
+                renderPremass();
+                renderSession();
+                savePreferences();
+            });
+            el.occasionSelect.addEventListener('change', () => {
+                state.prefs.occasion = el.occasionSelect.value;
+                state.session.selectedAlternatives = {};
+                renderPremass();
+                renderSession();
+                savePreferences();
+            });
+            el.showDurationToggle.addEventListener('change', () => {
+                state.prefs.showDuration = el.showDurationToggle.checked;
+                renderSession();
+                savePreferences();
+            });
+            el.showLyricsToggle.addEventListener('change', () => {
+                state.prefs.showLyrics = el.showLyricsToggle.checked;
+                renderSession();
+                savePreferences();
+            });
+            el.autoProgressToggle.addEventListener('change', () => {
+                state.prefs.autoProgress = el.autoProgressToggle.checked;
+                renderSession();
+                savePreferences();
+            });
+
+            document.addEventListener('keydown', event => {
+                trapFocusInActiveModal(event);
+
+                if (event.key === 'Escape') {
+                    closeMenu();
+                    closeConfirm();
+                    closeAltModal();
+                }
+            });
+        }
+
+        async function initApp() {
+            cacheElements();
+            bindEvents();
+
+            const { source, records, warnings: parseWarnings } = await loadMassJsonl();
+            state.records = records;
+            state.source = source;
+            const normalized = normalizeAndIndex(records);
+            state.index = normalized.idx;
+            state.validationWarnings = [...parseWarnings, ...normalized.warnings];
+
+            renderDrawerLists();
+            loadPreferences();
+            applyPreferences();
+            renderHeader();
+            renderLanding();
+            renderPremass();
+            showView('landing');
+
+            window.massData = records;
+            window.massDataSource = source;
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
