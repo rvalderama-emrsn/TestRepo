@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mass Companion</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%9B%AA%3C/text%3E%3C/svg%3E">
     <style>
         :root {
             --bg: #f4f1ea;
@@ -19,6 +20,7 @@
             --shadow: 0 10px 30px rgba(46, 35, 24, 0.12);
             --radius-md: 12px;
             --radius-lg: 16px;
+            --brand-glow: rgba(255, 205, 90, 0.9);
             --font-body: "Palatino Linotype", "Book Antiqua", Palatino, serif;
             --font-ui: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", sans-serif;
         }
@@ -35,6 +37,7 @@
             --success: #7ecb81;
             --danger: #f18c8c;
             --shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
+            --brand-glow: rgba(63, 38, 10, 0.8);
         }
 
         body[data-theme="8bit"] {
@@ -117,6 +120,23 @@
             border-radius: 10px;
             background: rgba(255,255,255,0.18);
             box-shadow: 0 1px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        body.session-view .brand-badge {
+            animation: brandBadgeGlow 2.4s ease-in-out infinite;
+        }
+
+        @keyframes brandBadgeGlow {
+            0%, 100% {
+                box-shadow: 0 1px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 6px 1px var(--brand-glow);
+            }
+            50% {
+                box-shadow: 0 1px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 18px 6px var(--brand-glow);
+            }
+        }
+
+        .brand-badge span {
+            text-shadow: 0 0 6px var(--brand-glow), 0 0 12px var(--brand-glow);
         }
 
         .header-meta {
@@ -717,6 +737,18 @@
             font-weight: 400;
         }
 
+        .step-description {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .hymn-lyrics-text {
+            font-style: italic;
+            font-weight: 700;
+        }
+
         .reference-list,
         .action-list {
             padding-left: 1.1rem;
@@ -988,23 +1020,43 @@
         }
 
         .modal {
-            width: min(560px, 100%);
-            max-height: 80vh;
+            width: min(680px, 96vw);
+            max-height: 90vh;
+            max-height: 90dvh;
             overflow: hidden;
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow);
-            padding: 0.86rem;
+            padding: 0;
             display: grid;
-            gap: 0.75rem;
-            grid-template-rows: auto auto minmax(0, 1fr);
+            gap: 0;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+        }
+
+        .modal > h3 {
+            margin: 0;
+            padding: 0.86rem 0.86rem 0.6rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--panel);
         }
 
         .modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 0.6rem;
+            padding: 0.6rem 0.86rem 0.86rem;
+            border-top: 1px solid var(--border);
+            background: var(--panel);
+        }
+
+        #altList,
+        #confirmMessage {
+            overflow-y: auto;
+            min-height: 0;
+            display: grid;
+            gap: 0.6rem;
+            padding: 0.75rem 0.86rem;
         }
 
         .detail-modal-header {
@@ -1012,8 +1064,7 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 0.75rem;
-            padding-bottom: 0.45rem;
-            margin-bottom: 0.15rem;
+            padding: 0.86rem 0.86rem 0.45rem;
             border-bottom: 1px solid var(--border);
             box-shadow: 0 6px 12px -10px rgba(0, 0, 0, 0.28);
         }
@@ -1027,6 +1078,7 @@
             gap: 0.75rem;
             overflow-y: auto;
             min-height: 0;
+            padding: 0.75rem 0.86rem 0.86rem;
         }
 
         .alt-option {
@@ -1042,15 +1094,56 @@
             border-color: var(--accent);
         }
 
+        .alt-option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 0.6rem;
+        }
+
+        .alt-option-header h4 {
+            margin: 0;
+            min-width: 0;
+        }
+
+        .alt-option-meta {
+            flex-shrink: 0;
+            font-style: italic;
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: right;
+            white-space: nowrap;
+        }
+
         .alt-preview {
             color: var(--muted);
             margin: 0;
         }
 
+        .alt-in-use {
+            font-style: italic;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .alt-option-body {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .alt-option-body .alt-preview {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
         .alt-option-actions {
             display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            flex: 0 0 auto;
+            gap: 0.4rem;
         }
 
         .sr-only {
@@ -1235,6 +1328,26 @@
             gap: 0.25rem;
             color: var(--text-soft);
             font-size: 0.86rem;
+        }
+
+        .parts-phase-header {
+            margin-bottom: 0.15rem;
+        }
+
+        .parts-phase-desc {
+            margin: 0.1rem 0 0.35rem;
+            font-size: 0.8rem;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .parts-step-title {
+            font-weight: 600;
+        }
+
+        .parts-step-desc {
+            color: var(--muted);
+            font-size: 0.85rem;
         }
 
         .view-toggle-group {
@@ -1613,10 +1726,7 @@
     <header class="app-header">
         <div class="header-inner">
             <div class="brand-badge" role="img" aria-label="Mass Companion">
-                <svg width="22" height="28" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect x="8.5" y="0" width="5" height="28" rx="2" fill="white"/>
-                    <rect x="0" y="7" width="22" height="5" rx="2" fill="white"/>
-                </svg>
+                <span aria-hidden="true">⛪</span>
             </div>
             <div class="header-meta">
                 <div class="app-band">Mass Companion</div>
@@ -1788,6 +1898,13 @@
                                     <option value="tl">Tagalog</option>
                                 </select>
                             </label>
+                            <label>
+                                Step description
+                                <select class="select" id="stepDescriptionSelect">
+                                    <option value="child">Simple (Child, default)</option>
+                                    <option value="adult">Standard</option>
+                                </select>
+                            </label>
                             <label class="toggle-row">
                                 <span>Show duration</span>
                                 <input class="toggle" id="showDurationToggle" type="checkbox">
@@ -1830,17 +1947,18 @@
 
     <div class="modal-shell hidden" id="altModal" role="dialog" aria-modal="true" aria-labelledby="altModalTitle">
         <div class="modal">
-            <h3 id="altModalTitle">Alternate hymn or chant</h3>
-            <div id="altList"></div>
-            <div class="modal-actions">
+            <div class="detail-modal-header">
+                <h3 id="altModalTitle" class="detail-modal-title">Alternate hymn or chant</h3>
                 <button class="ghost-btn" type="button" id="altCloseBtn">Close</button>
             </div>
+            <div id="altList"></div>
         </div>
     </div>
 
     <div class="modal-shell hidden" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
         <div class="modal">
             <div class="detail-modal-header">
+                <button class="ghost-btn hidden" type="button" id="detailBackBtn">&larr; Back</button>
                 <h3 id="detailModalTitle" class="detail-modal-title">Details</h3>
                 <button class="ghost-btn" type="button" id="detailCloseBtn">Close</button>
             </div>
@@ -1971,6 +2089,8 @@
 {"type":"song","id":"song-tinapay-ng-buhay-manoling","title":"Tinapay ng Buhay","category":"hymn","language":"Tagalog","byline":"Fr. Manoling Francisco, SJ","tags":["communion","eucharistic"],"liturgicalParts":["communion"],"sourceUrl":"https://www.christiansong-lyrics.com/tinapay-ng-buhay-catholic-song-lyrics/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Communion hymn attributed to Fr. Manoling Francisco, SJ.","lyrics":"Koro:\nIkaw, Hesus ang Tinapay ng buhay\nBinasbasan, hinati’t inialay\nBuhay na ganap ang sa ami’y kaloob\nAt pagsasalong walang hanggan.\nBasbasan ang buhay naming handog\nNawa’y matulad sa pag-aalay Mo\nBuhay na laan nang lubos\nSa mundong sa pag-ibig ay kapos\n\n(Koro)\n\nMarapatin sa kapwa maging tinapay\nKagalakan sa nalulumbay\nKatarungan sa naaapi\nAt kanlungan ng bayan Mong sawi\n\n(Koro)","lyricsFull":"Koro:\nIkaw, Hesus ang Tinapay ng buhay\nBinasbasan, hinati’t inialay\nBuhay na ganap ang sa ami’y kaloob\nAt pagsasalong walang hanggan.\nBasbasan ang buhay naming handog\nNawa’y matulad sa pag-aalay Mo\nBuhay na laan nang lubos\nSa mundong sa pag-ibig ay kapos\n\n(Koro)\n\nMarapatin sa kapwa maging tinapay\nKagalakan sa nalulumbay\nKatarungan sa naaapi\nAt kanlungan ng bayan Mong sawi\n\n(Koro)"}
 {"type":"song","id":"song-purihin-ang-panginoon","title":"Purihin ang Panginoon","category":"hymn","language":"Tagalog","byline":"Fr. Eduardo Hontiveros, SJ","tags":["entrance","recessional","praise"],"liturgicalParts":["entrance","recessional"],"sourceUrl":"https://www.christiansong-lyrics.com/purihin-ang-panginoon-catholic-song-lyrics/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Tagalog praise hymn often used in entrance/recessional.","lyrics":"Koro:\nPurihin ang Panginoon\nUmawit ng kagalakan\nAt tugtugin ang gitara\nAt ang kaaya-ayang lira\nHipan ninyo ang trumpeta\nSa ating pagkabagabag\nSa Diyos tayo’y tumawag\nSa ating mga kaaway\nTayo ay kanyang iniligtas\n\n(Koro)\n\nAng pasaning mabigat\nSa ‘ting mga balikat\nPinagaan ng lubusan\nNg Diyos na tagapagligtas\n\n(Koro)\n\nKaya’t Panginoo’y dinggin\nAng landas Niya’y tahakin\nHabang buhay ay purihin\nKagandahang loob Niya sa’tin\n\n(Koro)","lyricsFull":"Koro:\nPurihin ang Panginoon\nUmawit ng kagalakan\nAt tugtugin ang gitara\nAt ang kaaya-ayang lira\nHipan ninyo ang trumpeta\nSa ating pagkabagabag\nSa Diyos tayo’y tumawag\nSa ating mga kaaway\nTayo ay kanyang iniligtas\n\n(Koro)\n\nAng pasaning mabigat\nSa ‘ting mga balikat\nPinagaan ng lubusan\nNg Diyos na tagapagligtas\n\n(Koro)\n\nKaya’t Panginoo’y dinggin\nAng landas Niya’y tahakin\nHabang buhay ay purihin\nKagandahang loob Niya sa’tin\n\n(Koro)"}
 {"type":"song","id":"song-ang-tanging-alay-ko","title":"Ang Tanging Alay Ko","category":"hymn","language":"Tagalog","byline":"Fr. Rey Magnaye","tags":["offertory","offering"],"liturgicalParts":["offertory"],"sourceUrl":"https://www.christiansong-lyrics.com/ang-tanging-alay-ko-lyrics-catholic-song/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Offertory hymn of total self-offering.","lyrics":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubosChristianity\n\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\n\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n\n(Koro)\n\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n\n(Koro)","lyricsFull":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubosChristianity\n\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\n\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n\n(Koro)\n\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n\n(Koro)"}
+{"type":"song","id":"song-iesu-panis-vitae","title":"Iesu, Panis Vitae","category":"hymn","language":"Multilingual","byline":"Fr. Manoling Francisco, SJ","tags":["communion","eucharistic","multilingual","papal-visit-2015"],"liturgicalParts":["communion"],"sourceUrl":"https://www.bukaspalad.com/songs/iesu_panis_vitae","sourceName":"Bukas Palad Music Ministry","displayPolicy":"full","active":true,"summary":"Official Communion hymn for the 2015 Apostolic Visit of Pope Francis to the Philippines (Luneta Mass); composed by Fr. Manoling Francisco, SJ with text by Rene Javellana, SJ.","lyrics":"Iesu, Panis Vitae, Donum Patris.\nIesu, Fons Vitae, Fons Vitae Aquae.\nCibus et potus noster, cibus et potus noster\nin itinere, in itinere ad domum Dei.\n\nMula sa lupa, sumibol kang masigla,\nmatapos kang yurakan ng mga masasama.\nSumilang ang liwanag ng mga nawawala,\nTinapay ng Buhay, Pagkain ng dukha. (REFRAIN)\n\nJesus, Food divine, be our strength each day,\nso we do not tire as we witness to your love and care\nto those in greater need, both near and far away.\nMay we lead them back to you, all those who have gone astray. (REFRAIN)\n\nEn la vida, Jesu?s, sea nuestro Consuelo.\nSea nuestro Amigo y Compan?ero.\nSiempre podamos responder a su Llamada.\nSiempre dispuesto a hace?r tu Volunta?d. (REFRAIN)\n\nChristo Regi Deo nato per Mariam nobis dato.\nMerito resonet vere laus, honor, et gloria.","lyricsFull":"Refrain (Latin; All):\nIesu, Panis vitae, Donum Patris.\nIesu, Fons vitae, Fons vitae acquae.\nCibus et potus noster, cibus et potus noster\nin itinere, in itinere ad domus Dei.\n\nVerse 1 (Tagalog):\nMula sa lupa sumibol Kang masigla.\nMatapos Kang yurakan ng mga masasama,\nsumilang ang liwanag ng mga nawawala.\nTinapay ng- buhay, Pagkain ng dukha.\n\nVerse 2 (Cebuano):\nGikan sa binlud usa Ka,\nTinapay nga bunga sa among buhat at kabudlay.\nHi naut maghiusa kami sa ma niining.\nTinapay ti guma kami, Hesus, among Ginuong tunhay.\n\nVerse 3 (English):\nJesus, Food divine\nbe our strength each day\nso we don’t tire as we witness\nto Your love and care to those in greater need,\nboth near and far away, may we lead them back to You,\nall those who’ve gone astray.\n\nVerse 4 (Hiligaynon):\nDalon namong Imong balaang\npulong manga lagay kag tudlo\nMong matarong Kahayag sang\nEspiritu sang kamatu oran\nsuganga mapawa sa among dalan.\n\nVerse 5 (Spanish):\nEn la vida, Jesus, sea nuestro Consuelo\nSea nuestro amigo y compañero.\nSiempre podamos responder a su llamada,\nSiempre dispuesto a hacer tu voluntad.\n\nVerse 6 (Tagalog):\nPagkain ng buhay, Handog ng Ama,\nbukal Ka ng buhay, Batis ng biyaya.\nMaging pagkain sa ’min at inumin ng tanan\nsa paglalakbay namin sa tahanan ng Ama."}
+{"type":"songText","id":"songtext-iesu-panis-vitae-multilingual-v1","songId":"song-iesu-panis-vitae","language":"Multilingual","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Refrain (Latin; All):\nIesu, Panis vitae, Donum Patris.\nIesu, Fons vitae, Fons vitae acquae.\nCibus et potus noster, cibus et potus noster\nin itinere, in itinere ad domus Dei.\n\nVerse 1 (Tagalog):\nMula sa lupa sumibol Kang masigla.\nMatapos Kang yurakan ng mga masasama,\nsumilang ang liwanag ng mga nawawala.\nTinapay ng- buhay, Pagkain ng dukha.\n\nVerse 2 (Cebuano):\nGikan sa binlud usa Ka,\nTinapay nga bunga sa among buhat at kabudlay.\nHi naut maghiusa kami sa ma niining.\nTinapay ti guma kami, Hesus, among Ginuong tunhay.\n\nVerse 3 (English):\nJesus, Food divine\nbe our strength each day\nso we don’t tire as we witness\nto Your love and care to those in greater need,\nboth near and far away, may we lead them back to You,\nall those who’ve gone astray.\n\nVerse 4 (Hiligaynon):\nDalon namong Imong balaang\npulong manga lagay kag tudlo\nMong matarong Kahayag sang\nEspiritu sang kamatu oran\nsuganga mapawa sa among dalan.\n\nVerse 5 (Spanish):\nEn la vida, Jesus, sea nuestro Consuelo\nSea nuestro amigo y compañero.\nSiempre podamos responder a su llamada,\nSiempre dispuesto a hacer tu voluntad.\n\nVerse 6 (Tagalog):\nPagkain ng buhay, Handog ng Ama,\nbukal Ka ng buhay, Batis ng biyaya.\nMaging pagkain sa ’min at inumin ng tanan\nsa paglalakbay namin sa tahanan ng Ama."}],"sourceUrl":"https://www.bukaspalad.com/songs/iesu_panis_vitae","lastVerifiedAt":"2026-08-21"}
 {"type":"songText","id":"songtext-let-us-go-to-the-altar-bb309-en-v1","songId":"song-let-us-go-to-the-altar-bb309","language":"English","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Refrain:\nLet us go to the altar of God,\nThe God of our gladness and joy!\nLet us enter the courts of the house of the Lord\nAnd sing to the glory of God.\nGive praise with blast of trumpet,\nWith noble sound of the horn.\nWith the clash of the clanging cymbal,\nGive glory to the Lord!\nRefrain\nGive praise with lyre and timbrel,\nWith lute and sound of the harp.\nWith the dance of the flute and oboe,\nGive glory to the Lord!\nRefrain\nGive praise with pipe and organ,\nWith rousing beat of the drum.\nWith the call of the bell and bag pipe,\nGive glory to the Lord!\nRefrain\nGive praise, all creatures of heaven,\nAnd all that dwell on the earth.\nCome to worship the God who made us,\nAnd dance before the Lord!\nRefrain"}],"sourceUrl":"https://ololliturgy.wordpress.com/home/songs/entrance/bb309/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-kordero-ng-diyos-bukas-palad-tl-v1","songId":"song-kordero-ng-diyos","language":"Tagalog","versionName":"default","flow":["invocation-1","invocation-2","invocation-3"],"sections":[{"id":"invocation-1","role":"invocation","text":"Kordero ng Diyos Na nag-aalis ng mga kasalanan Ng sanlibutan Maawa Ka"},{"id":"invocation-2","role":"invocation","text":"Kordero ng Diyos Na nag-aalis ng mga kasalanan Ng sanlibutan Maawa Ka"},{"id":"invocation-3","role":"invocation","text":"Kordero ng Diyos Na nag-aalis ng mga kasalanan Ipagkaloob Mo sa amin Ang kapayapaan"}],"sourceUrl":"https://www.christiansong-lyrics.com/kordero-ng-diyos-bukas-palad-lyrics/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-pananagutan-tl-v1","songId":"song-pananagutan-lyrics","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Walang sinuman ang nabubuhay para sa sarili lamang\nWalang sinuman ang namamatay para sa sarili lamang\nKoro:\nTayong lahat ay may pananagutan sa isa’t-isa\nTayong lahat ay tinipon ng Diyos na kapiling nya\nSa ating pagmamahalan at paglilingkod sa kaninuman\nTayo’y nagdadala ng balita ng kaligtasan\nSabay-sabay ngang mag-aawitan ang mga bansa\nTayo’y itinuring ng Panginoon bilang mga anak\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/pananagutan-catholic-song-lyrics/","lastVerifiedAt":"2026-08-02"}
@@ -1979,21 +2099,21 @@
 {"type":"songText","id":"songtext-ang-tanging-alay-ko-tl-v1","songId":"song-ang-tanging-alay-ko","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubosChristianity\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n(Koro)\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/ang-tanging-alay-ko-lyrics-catholic-song/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-song-kordero-ng-diyos-full-v1","songId":"song-kordero-ng-diyos","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Kordero ng Diyos\nNa nag-aalis ng mga kasalanan\nNg sanlibutan\nMaawa Ka (2x)\nKordero ng Diyos\nNa nag-aalis ng mga kasalanan\nIpagkaloob Mo sa amin\nAng kapayapaan"}],"sourceUrl":"https://www.christiansong-lyrics.com/kordero-ng-diyos-bukas-palad-lyrics/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-song-unang-alay-full-v1","songId":"song-unang-alay","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Koro:\nKunin at tanggapin ang alay na ito\nmga biyayang nagmula sa pagpapala mo\ntanda ng bawat pusong ‘pagkat inibig Mo\nngayo’y nananalig, nagmamahal sa yo.\nTinapay na nagmula sa butil ng trigo\npagkaing nagbibigay ng buhay mo\nat alak na nagmula sa isang tangkay ng ubas\ninuming nagbibigay lakas.\nLahat ng mga lungkot ligaya’t pagsubok\nlahat ng lakas at kahinaan ko\nIaalay kong lahat buong pagkatao\nito ay isusunod sa ‘yo."}],"sourceUrl":"https://www.christiansong-lyrics.com/unang-alay-catholic-song-lyrics/","lastVerifiedAt":"2026-08-02"}
-{"type":"songAssignment","id":"assign-edsa-entrance-sunday","massPart":"entrance","churchId":"edsa-shrine","phaseId":"introductory-rites","defaultSongId":"song-buklod-ng-pagibig","selectionMode":"manual","priority":100,"songIds":["song-buklod-ng-pagibig","song-bayang-umawit","song-aba-po-santa-maria","song-sa-piging-ng-panginoon"],"context":{"dayClass":"sunday"}}
+{"type":"songAssignment","id":"assign-edsa-entrance-sunday","massPart":"entrance","churchId":"edsa-shrine","phaseId":"introductory-rites","defaultSongId":"song-buklod-ng-pagibig","selectionMode":"manual","priority":100,"songIds":["song-buklod-ng-pagibig","song-bayang-umawit","song-aba-po-santa-maria","song-sa-piging-ng-panginoon","song-purihin-ang-panginoon","song-let-us-go-to-the-altar-bb309"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-kyrie-sunday","massPart":"kyrie","churchId":"edsa-shrine","phaseId":"introductory-rites","defaultSongId":"song-panginoon-maawa-ka","selectionMode":"fixed","priority":100,"songIds":["song-panginoon-maawa-ka"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-gloria-sunday","massPart":"gloria","churchId":"edsa-shrine","phaseId":"introductory-rites","defaultSongId":"song-papuri-sa-diyos","selectionMode":"fixed","priority":100,"songIds":["song-papuri-sa-diyos"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-gospel-acclamation-ordinary","massPart":"gospel-acclamation","churchId":"edsa-shrine","phaseId":"liturgy-of-the-word","defaultSongId":"song-alleluya-wikain-mo","selectionMode":"manual","priority":100,"songIds":["song-alleluya-wikain-mo","song-seek-ye-first"],"context":{"dayClass":"sunday","season":"ordinary-time"}}
-{"type":"songAssignment","id":"assign-edsa-offertory-sunday","massPart":"offertory","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-unang-alay","selectionMode":"manual","priority":100,"songIds":["song-unang-alay","song-kapuri-puri-ka","song-take-and-receive"],"context":{"dayClass":"sunday"}}
+{"type":"songAssignment","id":"assign-edsa-offertory-sunday","massPart":"offertory","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-unang-alay","selectionMode":"manual","priority":100,"songIds":["song-unang-alay","song-kapuri-puri-ka","song-take-and-receive","song-ang-tanging-alay-ko"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-sanctus-sunday","massPart":"sanctus","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-santo-cayabyab","selectionMode":"manual","priority":100,"songIds":["song-santo-cayabyab","song-santo-hontiveros"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-memorial-acclamation-sunday","massPart":"memorial-acclamation","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-sa-krus-mo","selectionMode":"manual","priority":100,"songIds":["song-sa-krus-mo","song-si-kristo-ay-namatay"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-great-amen-sunday","massPart":"great-amen","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-great-amen","selectionMode":"fixed","priority":100,"songIds":["song-great-amen"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-lords-prayer-sunday","massPart":"lords-prayer","churchId":"edsa-shrine","phaseId":"communion-rite","defaultSongId":"song-ama-namin","selectionMode":"manual","priority":100,"songIds":["song-ama-namin","song-ama-namin-hontiveros"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-agnus-dei-sunday","massPart":"agnus-dei","churchId":"edsa-shrine","phaseId":"communion-rite","defaultSongId":"song-kordero-ng-diyos","selectionMode":"manual","priority":100,"songIds":["song-kordero-ng-diyos"],"context":{"dayClass":"sunday"}}
-{"type":"songAssignment","id":"assign-edsa-communion-sunday","massPart":"communion","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-tanging-yaman","selectionMode":"manual","priority":100,"songIds":["song-tanging-yaman","song-anima-christi","song-hesus-ng-aking-buhay","song-isang-bansa"],"context":{"dayClass":"sunday"}}
-{"type":"songAssignment","id":"assign-edsa-recessional-sunday","massPart":"recessional","churchId":"edsa-shrine","phaseId":"concluding-rites","defaultSongId":"song-birhen-ng-edsa","selectionMode":"manual","priority":100,"songIds":["song-birhen-ng-edsa","song-magmula-ngayon","song-maria-ina-ng-kapayapaan","song-awit-sa-ina-ng-santo-rosaryo"],"context":{"dayClass":"sunday"}}
+{"type":"songAssignment","id":"assign-edsa-communion-sunday","massPart":"communion","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-tanging-yaman","selectionMode":"manual","priority":100,"songIds":["song-tanging-yaman","song-anima-christi","song-hesus-ng-aking-buhay","song-isang-bansa","song-iesu-panis-vitae","song-tinapay-ng-buhay-manoling"],"context":{"dayClass":"sunday"}}
+{"type":"songAssignment","id":"assign-edsa-recessional-sunday","massPart":"recessional","churchId":"edsa-shrine","phaseId":"concluding-rites","defaultSongId":"song-birhen-ng-edsa","selectionMode":"manual","priority":100,"songIds":["song-birhen-ng-edsa","song-magmula-ngayon","song-maria-ina-ng-kapayapaan","song-awit-sa-ina-ng-santo-rosaryo","song-purihin-ang-panginoon","song-pananagutan-lyrics"],"context":{"dayClass":"sunday"}}
 {"type":"songAssignment","id":"assign-edsa-entrance-marian-solemnity","massPart":"entrance","churchId":"edsa-shrine","phaseId":"introductory-rites","defaultSongId":"song-aba-po-santa-maria","selectionMode":"manual","priority":500,"songIds":["song-aba-po-santa-maria","song-sa-piging-ng-panginoon","song-buklod-ng-pagibig"],"context":{"occasion":"marian-solemnity"}}
 {"type":"songAssignment","id":"assign-edsa-offertory-marian-solemnity","massPart":"offertory","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-unang-alay","selectionMode":"manual","priority":500,"songIds":["song-unang-alay","song-kapuri-puri-ka"],"context":{"occasion":"marian-solemnity"}}
-{"type":"songAssignment","id":"assign-edsa-communion-marian-solemnity","massPart":"communion","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-anima-christi","selectionMode":"manual","priority":500,"songIds":["song-anima-christi","song-tanging-yaman","song-hesus-ng-aking-buhay"],"context":{"occasion":"marian-solemnity"}}
+{"type":"songAssignment","id":"assign-edsa-communion-marian-solemnity","massPart":"communion","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-anima-christi","selectionMode":"manual","priority":500,"songIds":["song-anima-christi","song-tanging-yaman","song-hesus-ng-aking-buhay","song-iesu-panis-vitae"],"context":{"occasion":"marian-solemnity"}}
 {"type":"songAssignment","id":"assign-edsa-recessional-marian-solemnity","massPart":"recessional","churchId":"edsa-shrine","phaseId":"concluding-rites","defaultSongId":"song-birhen-ng-edsa","selectionMode":"manual","priority":500,"songIds":["song-birhen-ng-edsa","song-maria-ina-ng-kapayapaan","song-awit-sa-ina-ng-santo-rosaryo","song-magmula-ngayon"],"context":{"occasion":"marian-solemnity"}}
 {"type":"songAssignment","id":"assign-edsa-entrance-national-healing","massPart":"entrance","churchId":"edsa-shrine","phaseId":"introductory-rites","defaultSongId":"song-bayang-umawit","selectionMode":"manual","priority":450,"songIds":["song-bayang-umawit","song-buklod-ng-pagibig"],"context":{"occasion":"national-healing"}}
 {"type":"songAssignment","id":"assign-edsa-communion-national-healing","massPart":"communion","churchId":"edsa-shrine","phaseId":"liturgy-of-the-eucharist","defaultSongId":"song-isang-bansa","selectionMode":"manual","priority":450,"songIds":["song-isang-bansa","song-tanging-yaman"],"context":{"occasion":"national-healing"}}
@@ -2021,6 +2141,8 @@
 {"type":"prayer","id":"prayer-for-peace-pope-francis-v1","title":"Prayer for Peace of Pope Francis","category":"peace","language":"English","recitationMode":"leader-response","tags":["peace","pope-francis","intercessory"],"contentText":"Lord Jesus,\nwe adore your cross\nwhich frees us from sin, the origin of every division and evil;\nwe proclaim your resurrection,\nwhich ransoms man from the slavery of failure and death;\nwe await your coming in glory,\nwhich will bring to fulfilment your kingdom of justice, joy and peace.\nLord Jesus,\nby your glorious passion,\nconquer the hardness of our hearts, imprisoned by hatred and selfishness;\nby the power of your resurrection,\nsave the victims of injustice and maltreatment from their suffering;\nby the fidelity of your coming,\nconfound the culture of death and make the triumph of life shine forth.\nLord Jesus,\nunite to your cross the sufferings of the many innocent victims:\nthe children, the elderly, and the persecuted Christians;\nenvelop in paschal light those who are deeply wounded:\nabused persons, deprived of freedom and dignity;\nlet those who live in uncertainty experience the enduring constancy of your kingdom: the exiles, refugees, and those who have lost the joy of living.\nLord Jesus,\ncast forth the shadow of your cross over peoples at war;\nmay they learn the way of reconciliation, dialogue and forgiveness;\nlet the peoples so wearied by bombing experience the joy of your resurrection:\nraise up Iraq and Syria from devastation;\nreunite your dispersed children under your gentle kingship:\nsustain Christians in the Diaspora and grant them the unity of faith and love.\nO Virgin Mary, Queen of peace,\nyou who stood at the foot of the cross,\nobtain from your Son pardon for our sins;\nyou who never doubted the victory of his resurrection,\nsustain our faith and our hope;\nyou who are enthroned as Queen in glory,\nteach us the royal road of service and the glory of love.\nAmen.\n--------------","contentTextShort":"A custom invocation delivered by the Pope asking God to dismantle the logic of war, heal broken relationships, and grant lasting harmony to troubled global regions.","contentTextFull":"Lord Jesus,\nwe adore your cross\nwhich frees us from sin, the origin of every division and evil;\nwe proclaim your resurrection,\nwhich ransoms man from the slavery of failure and death;\nwe await your coming in glory,\nwhich will bring to fulfilment your kingdom of justice, joy and peace.\nLord Jesus,\nby your glorious passion,\nconquer the hardness of our hearts, imprisoned by hatred and selfishness;\nby the power of your resurrection,\nsave the victims of injustice and maltreatment from their suffering;\nby the fidelity of your coming,\nconfound the culture of death and make the triumph of life shine forth.\nLord Jesus,\nunite to your cross the sufferings of the many innocent victims:\nthe children, the elderly, and the persecuted Christians;\nenvelop in paschal light those who are deeply wounded:\nabused persons, deprived of freedom and dignity;\nlet those who live in uncertainty experience the enduring constancy of your kingdom: the exiles, refugees, and those who have lost the joy of living.\nLord Jesus,\ncast forth the shadow of your cross over peoples at war;\nmay they learn the way of reconciliation, dialogue and forgiveness;\nlet the peoples so wearied by bombing experience the joy of your resurrection:\nraise up Iraq and Syria from devastation;\nreunite your dispersed children under your gentle kingship:\nsustain Christians in the Diaspora and grant them the unity of faith and love.\nO Virgin Mary, Queen of peace,\nyou who stood at the foot of the cross,\nobtain from your Son pardon for our sins;\nyou who never doubted the victory of his resurrection,\nsustain our faith and our hope;\nyou who are enthroned as Queen in glory,\nteach us the royal road of service and the glory of love.\nAmen.\n--------------","descriptionShort":"A custom invocation delivered by the Pope asking God to dismantle the logic of war, heal broken relationships, and grant lasting harmony to troubled global regions.","timing":"Occasionally inserted into the Prayers of the Faithful or recited together right after Communion during a time of silent reflection.","partOfMass":"Occasionally (Prayers of the Faithful)","sourceName":"USCCB Prayer Collection","sourceUrl":"https://www.usccb.org/prayers/prayer-peace-pope-francis","liturgicalContext":{"partOfMass":"Occasionally (Prayers of the Faithful)","timingNote":"Occasionally inserted into the Prayers of the Faithful or recited together right after Communion during a time of silent reflection.","inMass":true},"devotionalUse":{"typicalTimes":["Occasional"],"usualSetting":"outside-mass","intentionsNote":"Intercession for global peace and reconciliation."},"source":{"name":"USCCB Prayer Collection","url":"https://www.usccb.org/prayers/prayer-peace-pope-francis","verifiedAt":"2026-08-02"}}
 {"type":"prayer","id":"prayer-for-peace-pope-francis-v2","title":"Prayer for Peace of Pope Francis (Alternate)","category":"peace","language":"English","recitationMode":"leader-response","tags":["peace","pope-francis","intercessory","alternate-version"],"contentText":"Lord God of peace, hear our prayer!\nWe have tried so many times and over so many years to resolve our conflicts by our own powers and by the force of our arms. How many moments of hostility and darkness have we experienced; how much blood has been shed; how many lives have been shattered; how many hopes have been buried… But our efforts have been in vain.\nNow, Lord, come to our aid! Grant us peace, teach us peace; guide our steps in the way of peace. Open our eyes and our hearts, and give us the courage to say: \"Never again war!\"; \"With war everything is lost\". Instill in our hearts the courage to take concrete steps to achieve peace.\nLord, God of Abraham, God of the Prophets, God of Love, you created us and you call us to live as brothers and sisters. Give us the strength daily to be instruments of peace; enable us to see everyone who crosses our path as our brother or sister. Make us sensitive to the plea of our citizens who entreat us to turn our weapons of war into implements of peace, our trepidation into confident trust, and our quarreling into forgiveness.\nKeep alive within us the flame of hope, so that with patience and perseverance we may opt for dialogue and reconciliation. In this way may peace triumph at last, and may the words \"division\", \"hatred\" and \"war\" be banished from the heart of every man and woman. Lord, defuse the violence of our tongues and our hands. Renew our hearts and minds, so that the word which always brings us together will be \"brother\", and our way of life will always be that of: Shalom, Peace, Salaam!\nAmen.\n--------------","contentTextShort":"Note: This is an alternate phrasing for Prayer for Peace of Pope Francis, referring to his specific, heartfelt petitions for an end to global conflict.","contentTextFull":"Lord God of peace, hear our prayer!\nWe have tried so many times and over so many years to resolve our conflicts by our own powers and by the force of our arms. How many moments of hostility and darkness have we experienced; how much blood has been shed; how many lives have been shattered; how many hopes have been buried… But our efforts have been in vain.\nNow, Lord, come to our aid! Grant us peace, teach us peace; guide our steps in the way of peace. Open our eyes and our hearts, and give us the courage to say: \"Never again war!\"; \"With war everything is lost\". Instill in our hearts the courage to take concrete steps to achieve peace.\nLord, God of Abraham, God of the Prophets, God of Love, you created us and you call us to live as brothers and sisters. Give us the strength daily to be instruments of peace; enable us to see everyone who crosses our path as our brother or sister. Make us sensitive to the plea of our citizens who entreat us to turn our weapons of war into implements of peace, our trepidation into confident trust, and our quarreling into forgiveness.\nKeep alive within us the flame of hope, so that with patience and perseverance we may opt for dialogue and reconciliation. In this way may peace triumph at last, and may the words \"division\", \"hatred\" and \"war\" be banished from the heart of every man and woman. Lord, defuse the violence of our tongues and our hands. Renew our hearts and minds, so that the word which always brings us together will be \"brother\", and our way of life will always be that of: Shalom, Peace, Salaam!\nAmen.\n--------------","descriptionShort":"Note: This is an alternate phrasing for Prayer for Peace of Pope Francis, referring to his specific, heartfelt petitions for an end to global conflict.","timing":"Occasionally inserted into the Prayers of the Faithful or recited together right after Communion during a time of silent reflection.","partOfMass":"Occasionally (Prayers of the Faithful)","sourceName":"USCCB Prayer Collection","sourceUrl":"https://www.usccb.org/prayers/pope-francis-prayer-peace","liturgicalContext":{"partOfMass":"Occasionally (Prayers of the Faithful)","timingNote":"Occasionally inserted into the Prayers of the Faithful or recited together right after Communion during a time of silent reflection.","inMass":true},"devotionalUse":{"typicalTimes":["Occasional"],"usualSetting":"outside-mass","intentionsNote":"Peacebuilding and reconciliation among nations and communities."},"source":{"name":"USCCB Prayer Collection","url":"https://www.usccb.org/prayers/pope-francis-prayer-peace","verifiedAt":"2026-08-02"}}
 {"type":"prayer","id":"pope-francis-prayer-for-mercy","title":"Pope Francis' Prayer for Mercy","category":"mercy","language":"English","recitationMode":"leader-response","tags":["mercy","pope-francis","intercessory"],"contentText":"You are the visible face of the invisible Father,\nof the God who manifests his power above all by forgiveness and mercy:\nlet the Church be your visible face in the world, its Lord risen and glorified.\nYou willed that your ministers would also be clothed in weakness\nin order that they may feel compassion for those in ignorance and error:\nlet everyone who approaches them feel sought after, loved, and forgiven by God.\nSend your Spirit and consecrate every one of us with its anointing,\nso that the Jubilee of Mercy may be a year of grace from the Lord,\nand your Church, with renewed enthusiasm, may bring good news to the poor,\nproclaim liberty to captives and the oppressed,\nand restore sight to the blind.  \nWe ask this through the intercession of Mary, Mother of Mercy,\nyou who live and reign with the Father and the Holy Spirit for ever and ever.\nAmen.  \n(Excerpted from Pope Francis' Prayer for the Jubilee Year of Mercy)","contentTextShort":"A prayer written by the Pope emphasizing God's endless capacity to forgive, asking believers to become instruments of tenderness, compassion, and reconciliation.","contentTextFull":"You are the visible face of the invisible Father,\nof the God who manifests his power above all by forgiveness and mercy:\nlet the Church be your visible face in the world, its Lord risen and glorified.\nYou willed that your ministers would also be clothed in weakness\nin order that they may feel compassion for those in ignorance and error:\nlet everyone who approaches them feel sought after, loved, and forgiven by God.\nSend your Spirit and consecrate every one of us with its anointing,\nso that the Jubilee of Mercy may be a year of grace from the Lord,\nand your Church, with renewed enthusiasm, may bring good news to the poor,\nproclaim liberty to captives and the oppressed,\nand restore sight to the blind.  \nWe ask this through the intercession of Mary, Mother of Mercy,\nyou who live and reign with the Father and the Holy Spirit for ever and ever.\nAmen.  \n(Excerpted from Pope Francis' Prayer for the Jubilee Year of Mercy)","descriptionShort":"A prayer written by the Pope emphasizing God's endless capacity to forgive, asking believers to become instruments of tenderness, compassion, and reconciliation.","timing":"Occasionally inserted into the Prayers of the Faithful or recited together right after Communion during a time of silent reflection.","partOfMass":"Occasionally (Prayers of the Faithful)","sourceName":"USCCB Prayer Collection","sourceUrl":"https://www.usccb.org/prayers/pope-francis-prayer-mercy","liturgicalContext":{"partOfMass":"Occasionally (Prayers of the Faithful)","timingNote":"Occasionally inserted into the Prayers of the Faithful or recited together right after Communion during a time of silent reflection.","inMass":true},"devotionalUse":{"typicalTimes":["Occasional"],"usualSetting":"outside-mass","intentionsNote":"Mercy, compassion, and renewal of the Church."},"source":{"name":"USCCB Prayer Collection","url":"https://www.usccb.org/prayers/pope-francis-prayer-mercy","verifiedAt":"2026-08-02"}}
+{"type":"prayer","id":"three-oclock-prayer","title":"Three O'Clock Prayer","category":"mercy","language":"English","recitationMode":"private-or-unison","tags":["divine-mercy","hour-of-mercy","devotional"],"contentText":"You expired, O Jesus, but the source of life flowed out for souls\nand an ocean of mercy opened up for the whole world.\n\nO Fountain of Life, unfathomable Divine Mercy,\nenvelop the whole world and empty Yourself out upon us.\n\nO Blood and Water which flowed out from the heart of Jesus\nas a fount of mercy for us, I trust in You.\n\nHoly God, Holy Mighty One, Holy Immortal One,\nhave mercy on us and the whole world.\nHoly God, Holy Mighty One, Holy Immortal One\nhave mercy on us and the whole world.\nHoly God, Holy Mighty One, Holy Immortal One,\nhave mercy on us and the whole world.\nAmen\n\n*Jesus, King of Mercy, I trust in You!*","contentTextShort":"A short devotion prayed at 3:00 PM, honoring the Hour of Mercy and the Passion of Christ.","contentTextFull":"You expired, O Jesus, but the source of life flowed out for souls\nand an ocean of mercy opened up for the whole world.\n\nO Fountain of Life, unfathomable Divine Mercy,\nenvelop the whole world and empty Yourself out upon us.\n\nO Blood and Water which flowed out from the heart of Jesus\nas a fount of mercy for us, I trust in You.\n\nHoly God, Holy Mighty One, Holy Immortal One,\nhave mercy on us and the whole world.\nHoly God, Holy Mighty One, Holy Immortal One\nhave mercy on us and the whole world.\nHoly God, Holy Mighty One, Holy Immortal One,\nhave mercy on us and the whole world.\nAmen\n\n*Jesus, King of Mercy, I trust in You!*","descriptionShort":"A short devotion prayed at 3:00 PM, honoring the Hour of Mercy and the Passion of Christ.","sourceName":"Catholic Heart and Mind","sourceUrl":"https://catholicheartandmind.com/devotions/three-oclock-prayer/","liturgicalContext":{"partOfMass":"none","timingNote":"Typically prayed at 3:00 PM as a private devotion","inMass":false},"devotionalUse":{"typicalTimes":["3:00 PM"],"usualSetting":"outside-mass","intentionsNote":"Mercy, trust in Jesus, and intercession for the world."},"source":{"name":"Catholic Heart and Mind","url":"https://catholicheartandmind.com/devotions/three-oclock-prayer/","verifiedAt":"2026-08-21"}}
+{"type":"prayer","id":"prayer-for-piece","title":"Prayer for Piece","category":"intercessions","language":"English","recitationMode":"leader-response","tags":["priests","edsa","intercessory"],"contentText":"O Almighty, Eternal God,\n\nLook upon the face of Your Son and for love of Him,\nwho is the Eternal High Priest, have pity on Your priests.\nRemember, O most compassionate God, that they are but weak and frail human beings.\nStir up in them the grace of their vocation which is in them by the imposition of the bishop's hands.\nKeep them close to You, lest the enemy prevail against them, so that they may never do anything in the slightest degree unworthy of their sublime vocation.\n\nO Jesus, I pray for Your faithful and fervent priests;\nfor Your unfaithful and tepid priests;\nor Your priest laboring at home or abroad in distant mission fields;\nfor Your tempted priests;\nfor the lonely and desolate priests;\nfor Your young priests; for Your dying priests;\nfor the souls of Your priests in purgatory.\nBut above all, I commend to You the priests dearest to me,\nthe priest who baptized me,\nthe priests who have absolved me from sins,\nthe priests at whose Masses I have assisted and who have offered me Your Body and Blood in Holy Communion,\nthe priests who have taught and instructed me or helped and encouraged me,\nand the priests to whom I am indebted in any other way.\n\nO Jesus, keep them all close to Your heart, and bless them abundantly in time and eternity.\n\nAmen.","contentTextShort":"The Prayer for Priests is an intercessory prayer focused on the sanctification, protection, and emotional comfort of Catholic clergy.","contentTextFull":"O Almighty, Eternal God,\n\nLook upon the face of Your Son and for love of Him,\nwho is the Eternal High Priest, have pity on Your priests.\nRemember, O most compassionate God, that they are but weak and frail human beings.\nStir up in them the grace of their vocation which is in them by the imposition of the bishop's hands.\nKeep them close to You, lest the enemy prevail against them, so that they may never do anything in the slightest degree unworthy of their sublime vocation.\n\nO Jesus, I pray for Your faithful and fervent priests;\nfor Your unfaithful and tepid priests;\nor Your priest laboring at home or abroad in distant mission fields;\nfor Your tempted priests;\nfor the lonely and desolate priests;\nfor Your young priests; for Your dying priests;\nfor the souls of Your priests in purgatory.\nBut above all, I commend to You the priests dearest to me,\nthe priest who baptized me,\nthe priests who have absolved me from sins,\nthe priests at whose Masses I have assisted and who have offered me Your Body and Blood in Holy Communion,\nthe priests who have taught and instructed me or helped and encouraged me,\nand the priests to whom I am indebted in any other way.\n\nO Jesus, keep them all close to Your heart, and bless them abundantly in time and eternity.\n\nAmen.","descriptionShort":"The Prayer for Priests is an intercessory prayer focused on the sanctification, protection, and emotional comfort of Catholic clergy. It explicitly acknowledges the heavy burdens, temptations, and human vulnerabilities that priests face while asking Jesus to shield them.","timing":"Daily and Sunday Masses; often emphasized during Priesthood Sundays, the Feast of St. John Vianney, and annual clergy retreats.","partOfMass":"Like most parish devotionals or special institutional prayers in the Philippines, it is generally recited after the Post-Communion Prayer and just before the Final Blessing and Dismissal.","sourceName":"Catholic Faith Defense (Facebook)","sourceUrl":"https://www.facebook.com/Catholicfaithdefense/posts/prayer-for-priestsfromedsa-shrinealmighty-eternal-god-lookupon-the-face-of-your-/340726165157349/","liturgicalContext":{"partOfMass":"Concluding Rites","timingNote":"After Post-Communion Prayer and before Final Blessing when used locally","inMass":false},"devotionalUse":{"typicalTimes":["Daily","Sunday"],"usualSetting":"outside-mass","intentionsNote":"Sanctification, protection, and perseverance of priests."},"source":{"name":"Catholic Faith Defense (Facebook)","url":"https://www.facebook.com/Catholicfaithdefense/posts/prayer-for-priestsfromedsa-shrinealmighty-eternal-god-lookupon-the-face-of-your-/340726165157349/","verifiedAt":"2026-08-21"}}
 {"type":"prayerAssignment","id":"assign-edsa-prayer-peace-sunday","churchId":"edsa-shrine","prayerId":"edsa-prayer-for-peace","priority":120,"context":{"dayClass":"sunday"}}
 {"type":"prayerAssignment","id":"assign-edsa-prayer-rosary-sunday","churchId":"edsa-shrine","prayerId":"rosary-intentions-edsa","priority":115,"context":{"dayClass":"sunday"}}
 {"type":"prayerAssignment","id":"assign-edsa-prayer-birhen-marian","churchId":"edsa-shrine","prayerId":"birhen-ng-edsa-prayer","priority":220,"context":{"occasion":"marian-solemnity"}}
@@ -2032,51 +2154,42 @@
 {"type":"prayerAssignment","id":"assign-edsa-prayer-confiteor-sunday","churchId":"edsa-shrine","prayerId":"confiteor","priority":106,"context":{"dayClass":"sunday"}}
 {"type":"prayerAssignment","id":"assign-edsa-prayer-nicene-creed-sunday","churchId":"edsa-shrine","prayerId":"nicene-creed","priority":105,"context":{"dayClass":"sunday"}}
 {"type":"prayerAssignment","id":"assign-edsa-prayer-apostles-creed-marian","churchId":"edsa-shrine","prayerId":"apostles-creed","priority":206,"context":{"occasion":"marian-solemnity"}}
-{"type":"phase","id":"introductory-rites","order":1,"title":"Introductory Rites"}
-{"type":"phase","id":"liturgy-of-the-word","order":2,"title":"Liturgy of the Word"}
-{"type":"phase","id":"liturgy-of-the-eucharist","order":3,"title":"Liturgy of the Eucharist"}
+{"type":"phase","id":"introductory-rites","order":1,"title":"Introductory Rites","descriptionAdult":"We gather as one community to prepare our hearts for worship.","descriptionChild":"Arriving at God’s house and getting ready for the celebration."}
+{"type":"phase","id":"liturgy-of-the-word","order":2,"title":"Liturgy of the Word","descriptionAdult":"God speaks directly to His people through the Holy Scriptures.","descriptionChild":"God’s story time! We sit down and listen to what God wants to tell us."}
+{"type":"phase","id":"liturgy-of-the-eucharist","order":3,"title":"Liturgy of the Eucharist","descriptionAdult":"The center of the Mass where bread and wine become Christ's Body and Blood.","descriptionChild":"The Holy Meal. Jesus shares Himself with us in a wonderful way."}
 {"type":"phase","id":"communion-rite","order":4,"title":"Communion Rite"}
-{"type":"phase","id":"concluding-rites","order":5,"title":"Concluding Rites"}
-{"type":"step","id":"entrance-chant","phaseId":"introductory-rites","order":1,"title":"Entrance Procession and Hymn","stepType":"hymn","massPart":"entrance","stance":"stand","estimatedSeconds":180,"allowAutoProgress":true,"lyrics":"Sing to the Lord a new song; sing to the Lord, all you lands. Proclaim his marvelous deeds to all the nations.","lyricsShort":"Sing to the Lord a new song.","lyricsFull":"Sing to the Lord a new song; sing to the Lord, all you lands. Proclaim his marvelous deeds to all the nations.","actions":["Join the procession prayerfully","Make a reverent bow toward the altar"],"alternatives":[{"id":"alt-entrance-1","title":"Gather Us In","lyrics":"Here in this place new light is streaming, now is the darkness vanished away.","lyricsShort":"Here in this place new light is streaming.","lyricsFull":"Here in this place new light is streaming, now is the darkness vanished away."},{"id":"alt-entrance-2","title":"All Are Welcome","lyrics":"Let us build a house where love can dwell and all can safely live.","lyricsShort":"Let us build a house where love can dwell.","lyricsFull":"Let us build a house where love can dwell and all can safely live."}]}
-{"type":"step","id":"sign-of-the-cross","phaseId":"introductory-rites","order":2,"title":"Sign of the Cross and Greeting","stepType":"script","stance":"stand","estimatedSeconds":60,"allowAutoProgress":false,"leaderText":"In the name of the Father, and of the Son, and of the Holy Spirit. The Lord be with you.","leaderTextShort":"In the name of the Father, and of the Son, and of the Holy Spirit.","leaderTextFull":"In the name of the Father, and of the Son, and of the Holy Spirit. The Lord be with you.","responseText":"Amen. And with your spirit.","responseTextShort":"Amen.","responseTextFull":"Amen. And with your spirit.","contentText":"The celebrant greets the people and invites everyone into prayer.","contentTextShort":"Opening greeting and assembly response.","contentTextFull":"The celebrant greets the people and invites everyone into prayer.","actions":["Make the sign of the cross","Respond clearly with the assembly"]}
-{"type":"step","id":"penitential-act","phaseId":"introductory-rites","order":3,"title":"Penitential Act and Kyrie","stepType":"prayer","massPart":"kyrie","stance":"stand","estimatedSeconds":120,"allowAutoProgress":false,"contentText":"I confess to almighty God and to you, my brothers and sisters... Lord, have mercy. Christ, have mercy. Lord, have mercy.","contentTextShort":"Lord, have mercy. Christ, have mercy. Lord, have mercy.","contentTextFull":"I confess to almighty God and to you, my brothers and sisters... Lord, have mercy. Christ, have mercy. Lord, have mercy.","actions":["Examine conscience briefly","Pray the Confiteor with the assembly"]}
-{"type":"step","id":"gloria","phaseId":"introductory-rites","order":4,"title":"Gloria","stepType":"hymn","massPart":"gloria","stance":"stand","estimatedSeconds":150,"allowAutoProgress":true,"lyrics":"Glory to God in the highest, and on earth peace to people of good will.","lyricsShort":"Glory to God in the highest.","lyricsFull":"Glory to God in the highest, and on earth peace to people of good will.","actions":["Sing or recite with the whole assembly"]}
-{"type":"step","id":"collect","phaseId":"introductory-rites","order":5,"title":"Collect (Opening Prayer)","stepType":"prayer","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"responseText":"Amen.","responseTextShort":"Amen.","responseTextFull":"Amen.","contentText":"O God, draw near to your servants, kindly answer our prayers, and increase the gifts of your grace within us.","contentTextShort":"O God, hear our prayer and increase your grace within us.","contentTextFull":"O God, draw near to your servants, kindly answer our prayers, and increase the gifts of your grace within us.","actions":["Listen attentively to the proper prayer for the day","Sit after the Amen"]}
-{"type":"step","id":"first-reading","phaseId":"liturgy-of-the-word","order":6,"title":"First Reading","stepType":"reading","stance":"sit","estimatedSeconds":180,"allowAutoProgress":true,"responseText":"Thanks be to God.","responseTextShort":"Thanks be to God.","responseTextFull":"Thanks be to God.","contentText":"Isaiah 55:1-3 - God invites all who are thirsty to come to the waters and receive freely.","contentTextShort":"Isaiah 55:1-3 - Invitation to the thirsty.","contentTextFull":"Isaiah 55:1-3 - God invites all who are thirsty to come to the waters and receive freely.","references":[{"label":"Isaiah 55:1-3","url":"https://bible.usccb.org/bible/readings/080226.cfm"}]}
-{"type":"step","id":"responsorial-psalm","phaseId":"liturgy-of-the-word","order":7,"title":"Responsorial Psalm","stepType":"prayer","stance":"sit","estimatedSeconds":120,"allowAutoProgress":true,"responseText":"The hand of the Lord feeds us; he answers all our needs.","responseTextShort":"The hand of the Lord feeds us; he answers all our needs.","responseTextFull":"The hand of the Lord feeds us; he answers all our needs.","contentText":"Psalm 145. Response: The hand of the Lord feeds us; he answers all our needs.","contentTextShort":"Psalm 145 response: The hand of the Lord feeds us.","contentTextFull":"Psalm 145. Response: The hand of the Lord feeds us; he answers all our needs.","actions":["Listen to the psalm verses attentively","Join the response clearly with the assembly"],"references":[{"label":"Psalm 145","url":"https://bible.usccb.org/bible/readings/080226.cfm"}]}
-{"type":"step","id":"second-reading","phaseId":"liturgy-of-the-word","order":8,"title":"Second Reading","stepType":"reading","stance":"sit","estimatedSeconds":180,"allowAutoProgress":true,"responseText":"Thanks be to God.","responseTextShort":"Thanks be to God.","responseTextFull":"Thanks be to God.","contentText":"Romans 8:35, 37-39 - Nothing can separate us from the love of God in Christ Jesus.","contentTextShort":"Romans 8: Nothing can separate us from Christ's love.","contentTextFull":"Romans 8:35, 37-39 - Nothing can separate us from the love of God in Christ Jesus.","references":[{"label":"Romans 8:35, 37-39","url":"https://bible.usccb.org/bible/readings/080226.cfm"}]}
-{"type":"step","id":"gospel-acclamation","phaseId":"liturgy-of-the-word","order":9,"title":"Gospel Acclamation","stepType":"hymn","massPart":"gospel-acclamation","stance":"stand","estimatedSeconds":90,"allowAutoProgress":true,"lyrics":"Alleluia, alleluia. One does not live by bread alone, but by every word that comes from the mouth of God.","lyricsShort":"Alleluia, alleluia.","lyricsFull":"Alleluia, alleluia. One does not live by bread alone, but by every word that comes from the mouth of God.","actions":["Stand and sing with the assembly","Trace small cross on forehead, lips, and heart before the Gospel"]}
-{"type":"step","id":"holy-gospel","phaseId":"liturgy-of-the-word","order":10,"title":"Holy Gospel","stepType":"reading","stance":"stand","estimatedSeconds":240,"allowAutoProgress":false,"leaderText":"The Lord be with you. A reading from the holy Gospel according to Matthew.","leaderTextShort":"A reading from the holy Gospel according to Matthew.","leaderTextFull":"The Lord be with you. A reading from the holy Gospel according to Matthew.","responseText":"And with your spirit. Glory to you, O Lord.","responseTextShort":"Glory to you, O Lord.","responseTextFull":"And with your spirit. Glory to you, O Lord.","contentText":"Matthew 14:13-21 - Jesus blesses five loaves and two fish, feeds the crowd, and reveals God's abundant care.","contentTextShort":"Matthew 14:13-21 - Jesus feeds the multitude with five loaves and two fish.","contentTextFull":"Matthew 14:13-21 - Jesus multiplies five loaves and two fish and feeds over five thousand, with twelve baskets left over.","actions":["Before the Gospel, trace a small cross on forehead, lips, and heart","Stand reverently and listen to the proclamation","After \"The Gospel of the Lord,\" respond: \"Praise to you, Lord Jesus Christ\""],"references":[{"label":"Matthew 14:13-21","url":"https://bible.usccb.org/bible/readings/080226.cfm"}]}
-{"type":"step","id":"homily","phaseId":"liturgy-of-the-word","order":11,"title":"Homily","stepType":"action","stance":"sit","estimatedSeconds":480,"allowAutoProgress":false,"contentText":"The priest breaks open the Scriptures and applies today's message to Christian life.","contentTextShort":"Listen and carry one concrete takeaway this week.","contentTextFull":"The priest breaks open the Scriptures and applies today's message to Christian life.","actions":["Listen prayerfully","Reflect on one practical response for the week"]}
-{"type":"step","id":"creed","phaseId":"liturgy-of-the-word","order":12,"title":"Profession of Faith (Creed)","stepType":"prayer","stance":"stand","estimatedSeconds":150,"allowAutoProgress":false,"leaderText":"Let us profess our faith.","leaderTextShort":"Let us profess our faith.","leaderTextFull":"Let us profess our faith.","contentText":"I believe in one God, the Father almighty, maker of heaven and earth...","contentTextShort":"I believe in one God, the Father almighty, maker of heaven and earth...","contentTextFull":"I believe in one God, the Father almighty, maker of heaven and earth...","actions":["Stand and recite the Creed with the assembly"]}
-{"type":"step","id":"universal-prayer","phaseId":"liturgy-of-the-word","order":13,"title":"Universal Prayer","stepType":"prayer","stance":"stand","estimatedSeconds":150,"allowAutoProgress":false,"responseText":"Lord, hear our prayer.","responseTextShort":"Lord, hear our prayer.","responseTextFull":"Lord, hear our prayer.","contentText":"The faithful offer petitions for the Church, the world, those in need, and local intentions.","contentTextShort":"The faithful offer petitions for the Church, the world, those in need, and local intentions.","contentTextFull":"The faithful offer petitions for the Church, the world, those in need, and local intentions.","actions":["Join each petition with the common response","Sit after the concluding prayer"]}
-{"type":"step","id":"offertory","phaseId":"liturgy-of-the-eucharist","order":14,"title":"Presentation of the Gifts and Offertory","stepType":"action","massPart":"offertory","stance":"sit","estimatedSeconds":210,"allowAutoProgress":true,"contentText":"Bread, wine, and offerings are presented at the altar as signs of thanksgiving and self-offering.","contentTextShort":"Bread, wine, and offerings are presented at the altar as signs of thanksgiving and self-offering.","contentTextFull":"Bread, wine, and offerings are presented at the altar as signs of thanksgiving and self-offering.","actions":["Prepare offering","Pray silently for intentions"]}
-{"type":"step","id":"invitation-to-prayer","phaseId":"liturgy-of-the-eucharist","order":15,"title":"Invitation to Prayer","stepType":"script","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"leaderText":"Pray, brethren, that my sacrifice and yours may be acceptable to God, the almighty Father.","leaderTextShort":"Pray, brethren, that my sacrifice and yours may be acceptable to God, the almighty Father.","leaderTextFull":"Pray, brethren, that my sacrifice and yours may be acceptable to God, the almighty Father.","responseText":"May the Lord accept the sacrifice at your hands for the praise and glory of his name, for our good and the good of all his holy Church.","responseTextShort":"May the Lord accept the sacrifice at your hands for the praise and glory of his name, for our good and the good of all his holy Church.","responseTextFull":"May the Lord accept the sacrifice at your hands for the praise and glory of his name, for our good and the good of all his holy Church."}
+{"type":"phase","id":"concluding-rites","order":5,"title":"Concluding Rites","descriptionAdult":"We are blessed and sent forth to live out the Gospel in the world.","descriptionChild":"The sending out. We leave the church to share Jesus’ love with others."}
+{"type":"step","id":"entrance-chant","phaseId":"introductory-rites","order":1,"title":"Entrance Procession and Hymn","stepType":"hymn","massPart":"entrance","stance":"stand","estimatedSeconds":180,"allowAutoProgress":true,"lyrics":"Sing to the Lord a new song; sing to the Lord, all you lands. Proclaim his marvelous deeds to all the nations.","lyricsShort":"Sing to the Lord a new song.","lyricsFull":"Sing to the Lord a new song; sing to the Lord, all you lands. Proclaim his marvelous deeds to all the nations.","actions":["Join the procession prayerfully","Make a reverent bow toward the altar"],"alternatives":[{"id":"alt-entrance-1","title":"Gather Us In","lyrics":"Here in this place new light is streaming, now is the darkness vanished away.","lyricsShort":"Here in this place new light is streaming.","lyricsFull":"Here in this place new light is streaming, now is the darkness vanished away."},{"id":"alt-entrance-2","title":"All Are Welcome","lyrics":"Let us build a house where love can dwell and all can safely live.","lyricsShort":"Let us build a house where love can dwell.","lyricsFull":"Let us build a house where love can dwell and all can safely live."}],"descriptionAdult":"The priest, deacon, and altar servers process to the altar while the congregation sings an opening hymn.","descriptionChild":"The priest and helpers walk to the altar while everyone stands up and sings."}
+{"type":"step","id":"sign-of-the-cross","phaseId":"introductory-rites","order":2,"title":"Sign of the Cross and Greeting","stepType":"script","stance":"stand","estimatedSeconds":60,"allowAutoProgress":false,"leaderText":"In the name of the Father, and of the Son, and of the Holy Spirit. The Lord be with you.","leaderTextShort":"In the name of the Father, and of the Son, and of the Holy Spirit.","leaderTextFull":"In the name of the Father, and of the Son, and of the Holy Spirit. The Lord be with you.","responseText":"Amen. And with your spirit.","responseTextShort":"Amen.","responseTextFull":"Amen. And with your spirit.","contentText":"The celebrant greets the people and invites everyone into prayer.","contentTextShort":"Opening greeting and assembly response.","contentTextFull":"The celebrant greets the people and invites everyone into prayer.","actions":["Make the sign of the cross","Respond clearly with the assembly"],"descriptionAdult":"The priest begins with the Sign of the Cross and welcomes the community in the name of the Trinity.","descriptionChild":"The priest makes the Sign of the Cross and says a warm \"hello\" to the whole church."}
+{"type":"step","id":"penitential-act","phaseId":"introductory-rites","order":3,"title":"Penitential Act and Kyrie","stepType":"prayer","massPart":"kyrie","stance":"stand","estimatedSeconds":120,"allowAutoProgress":false,"contentText":"I confess to almighty God and to you, my brothers and sisters... Lord, have mercy. Christ, have mercy. Lord, have mercy.","contentTextShort":"Lord, have mercy. Christ, have mercy. Lord, have mercy.","contentTextFull":"I confess to almighty God and to you, my brothers and sisters... Lord, have mercy. Christ, have mercy. Lord, have mercy.","actions":["Examine conscience briefly","Pray the Confiteor with the assembly"],"descriptionAdult":"The congregation silently reflects on their sins and asks God for His forgiveness and mercy (Kyrie).","descriptionChild":"We pause to say sorry to God for our mistakes so we can start fresh."}
+{"type":"step","id":"gloria","phaseId":"introductory-rites","order":4,"title":"Gloria","stepType":"hymn","massPart":"gloria","stance":"stand","estimatedSeconds":150,"allowAutoProgress":true,"lyrics":"Glory to God in the highest, and on earth peace to people of good will.","lyricsShort":"Glory to God in the highest.","lyricsFull":"Glory to God in the highest, and on earth peace to people of good will.","actions":["Sing or recite with the whole assembly"],"descriptionAdult":"An ancient hymn of praise sung or recited to glorify God the Father and the Lamb (omitted in Advent/Lent).","descriptionChild":"We sing a giant, joyful \"Happy Birthday\" style song of praise to God!"}
+{"type":"step","id":"collect","phaseId":"introductory-rites","order":5,"title":"Collect (Opening Prayer)","stepType":"prayer","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"responseText":"Amen.","responseTextShort":"Amen.","responseTextFull":"Amen.","contentText":"O God, draw near to your servants, kindly answer our prayers, and increase the gifts of your grace within us.","contentTextShort":"O God, hear our prayer and increase your grace within us.","contentTextFull":"O God, draw near to your servants, kindly answer our prayers, and increase the gifts of your grace within us.","actions":["Listen attentively to the proper prayer for the day","Sit after the Amen"],"descriptionAdult":"The priest summarizes the theme of the day's liturgy and gathers everyone’s individual intentions into one collective prayer.","descriptionChild":"The priest asks everyone to pray silently, then says a prayer that brings us all together."}
+{"type":"step","id":"first-reading","phaseId":"liturgy-of-the-word","order":6,"title":"First Reading","stepType":"reading","stance":"sit","estimatedSeconds":180,"allowAutoProgress":true,"responseText":"Thanks be to God.","responseTextShort":"Thanks be to God.","responseTextFull":"Thanks be to God.","contentText":"Isaiah 55:1-3 - God invites all who are thirsty to come to the waters and receive freely.","contentTextShort":"Isaiah 55:1-3 - Invitation to the thirsty.","contentTextFull":"Isaiah 55:1-3 - God invites all who are thirsty to come to the waters and receive freely.","references":[{"label":"Isaiah 55:1-3","url":"https://bible.usccb.org/bible/readings/080226.cfm"}],"descriptionAdult":"A reading usually taken from the Old Testament, highlighting God's history with the people of Israel.","descriptionChild":"We listen to a story from a long time ago, before Jesus was born."}
+{"type":"step","id":"responsorial-psalm","phaseId":"liturgy-of-the-word","order":7,"title":"Responsorial Psalm","stepType":"prayer","stance":"sit","estimatedSeconds":120,"allowAutoProgress":true,"responseText":"The hand of the Lord feeds us; he answers all our needs.","responseTextShort":"The hand of the Lord feeds us; he answers all our needs.","responseTextFull":"The hand of the Lord feeds us; he answers all our needs.","contentText":"Psalm 145. Response: The hand of the Lord feeds us; he answers all our needs.","contentTextShort":"Psalm 145 response: The hand of the Lord feeds us.","contentTextFull":"Psalm 145. Response: The hand of the Lord feeds us; he answers all our needs.","actions":["Listen to the psalm verses attentively","Join the response clearly with the assembly"],"references":[{"label":"Psalm 145","url":"https://bible.usccb.org/bible/readings/080226.cfm"}],"descriptionAdult":"A poetic prayer from the Book of Psalms, sung by a cantor with the congregation repeating the response.","descriptionChild":"We sing back to God using beautiful, musical poetry from the Bible."}
+{"type":"step","id":"second-reading","phaseId":"liturgy-of-the-word","order":8,"title":"Second Reading","stepType":"reading","stance":"sit","estimatedSeconds":180,"allowAutoProgress":true,"responseText":"Thanks be to God.","responseTextShort":"Thanks be to God.","responseTextFull":"Thanks be to God.","contentText":"Romans 8:35, 37-39 - Nothing can separate us from the love of God in Christ Jesus.","contentTextShort":"Romans 8: Nothing can separate us from Christ's love.","contentTextFull":"Romans 8:35, 37-39 - Nothing can separate us from the love of God in Christ Jesus.","references":[{"label":"Romans 8:35, 37-39","url":"https://bible.usccb.org/bible/readings/080226.cfm"}],"descriptionAdult":"A reading from the New Testament Letters (Epistles), showing how early Christians lived out their faith.","descriptionChild":"We listen to a letter written by Jesus’ first followers about how to be good Christians."}
+{"type":"step","id":"gospel-acclamation","phaseId":"liturgy-of-the-word","order":9,"title":"Gospel Acclamation","stepType":"hymn","massPart":"gospel-acclamation","stance":"stand","estimatedSeconds":90,"allowAutoProgress":true,"lyrics":"Alleluia, alleluia. One does not live by bread alone, but by every word that comes from the mouth of God.","lyricsShort":"Alleluia, alleluia.","lyricsFull":"Alleluia, alleluia. One does not live by bread alone, but by every word that comes from the mouth of God.","actions":["Stand and sing with the assembly","Trace small cross on forehead, lips, and heart before the Gospel"],"descriptionAdult":"The congregation stands to welcome Christ, who is about to speak to them through the Holy Gospel.","descriptionChild":"We stand up and sing \"Alleluia!\" (which means Praise God!) to welcome Jesus’ words."}
+{"type":"step","id":"holy-gospel","phaseId":"liturgy-of-the-word","order":10,"title":"Holy Gospel","stepType":"reading","stance":"stand","estimatedSeconds":240,"allowAutoProgress":false,"leaderText":"The Lord be with you. A reading from the holy Gospel according to Matthew.","leaderTextShort":"A reading from the holy Gospel according to Matthew.","leaderTextFull":"The Lord be with you. A reading from the holy Gospel according to Matthew.","responseText":"And with your spirit. Glory to you, O Lord.","responseTextShort":"Glory to you, O Lord.","responseTextFull":"And with your spirit. Glory to you, O Lord.","contentText":"Matthew 14:13-21 - Jesus blesses five loaves and two fish, feeds the crowd, and reveals God's abundant care.","contentTextShort":"Matthew 14:13-21 - Jesus feeds the multitude with five loaves and two fish.","contentTextFull":"Matthew 14:13-21 - Jesus multiplies five loaves and two fish and feeds over five thousand, with twelve baskets left over.","actions":["Before the Gospel, trace a small cross on forehead, lips, and heart","Stand reverently and listen to the proclamation","After \"The Gospel of the Lord,\" respond: \"Praise to you, Lord Jesus Christ\""],"references":[{"label":"Matthew 14:13-21","url":"https://bible.usccb.org/bible/readings/080226.cfm"}],"descriptionAdult":"The priest or deacon reads a passage from Matthew, Mark, Luke, or John detailing the life and teachings of Jesus.","descriptionChild":"The most important story! We hear about what Jesus actually said and did while on Earth."}
+{"type":"step","id":"homily","phaseId":"liturgy-of-the-word","order":11,"title":"Homily","stepType":"action","stance":"sit","estimatedSeconds":480,"allowAutoProgress":false,"contentText":"The priest breaks open the Scriptures and applies today's message to Christian life.","contentTextShort":"Listen and carry one concrete takeaway this week.","contentTextFull":"The priest breaks open the Scriptures and applies today's message to Christian life.","actions":["Listen prayerfully","Reflect on one practical response for the week"],"descriptionAdult":"The priest explains the readings and applies their spiritual lessons to our modern daily lives.","descriptionChild":"The priest explains the stories we just heard and gives us tips on how to live them out."}
+{"type":"step","id":"creed","phaseId":"liturgy-of-the-word","order":12,"title":"Profession of Faith (Creed)","stepType":"prayer","stance":"stand","estimatedSeconds":150,"allowAutoProgress":false,"leaderText":"Let us profess our faith.","leaderTextShort":"Let us profess our faith.","leaderTextFull":"Let us profess our faith.","contentText":"I believe in one God, the Father almighty, maker of heaven and earth...","contentTextShort":"I believe in one God, the Father almighty, maker of heaven and earth...","contentTextFull":"I believe in one God, the Father almighty, maker of heaven and earth...","actions":["Stand and recite the Creed with the assembly"],"descriptionAdult":"The community stands to recite the Nicene or Apostles' Creed, stating the core beliefs of the Catholic faith.","descriptionChild":"We stand up and proudly say out loud exactly what we believe as Catholics."}
+{"type":"step","id":"universal-prayer","phaseId":"liturgy-of-the-word","order":13,"title":"Universal Prayer","stepType":"prayer","stance":"stand","estimatedSeconds":150,"allowAutoProgress":false,"responseText":"Lord, hear our prayer.","responseTextShort":"Lord, hear our prayer.","responseTextFull":"Lord, hear our prayer.","contentText":"The faithful offer petitions for the Church, the world, those in need, and local intentions.","contentTextShort":"The faithful offer petitions for the Church, the world, those in need, and local intentions.","contentTextFull":"The faithful offer petitions for the Church, the world, those in need, and local intentions.","actions":["Join each petition with the common response","Sit after the concluding prayer"],"descriptionAdult":"The congregation offers prayers of petition for the Church, the world, the suffering, and the local community.","descriptionChild":"We pray for the Pope, the world, our families, and anyone who is sick or sad."}
+{"type":"step","id":"offertory","phaseId":"liturgy-of-the-eucharist","order":14,"title":"Presentation of the Gifts and Offertory","stepType":"action","massPart":"offertory","stance":"sit","estimatedSeconds":210,"allowAutoProgress":true,"contentText":"Bread, wine, and offerings are presented at the altar as signs of thanksgiving and self-offering.","contentTextShort":"Bread, wine, and offerings are presented at the altar as signs of thanksgiving and self-offering.","contentTextFull":"Bread, wine, and offerings are presented at the altar as signs of thanksgiving and self-offering.","actions":["Prepare offering","Pray silently for intentions"],"descriptionAdult":"Bread, wine, and financial offerings are brought to the altar while an offertory hymn is sung.","descriptionChild":"Helpers bring up the bread, wine, and donation baskets to the altar as a gift to God."}
+{"type":"step","id":"invitation-to-prayer","phaseId":"liturgy-of-the-eucharist","order":15,"title":"Invitation to Prayer","stepType":"script","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"leaderText":"Pray, brethren, that my sacrifice and yours may be acceptable to God, the almighty Father.","leaderTextShort":"Pray, brethren, that my sacrifice and yours may be acceptable to God, the almighty Father.","leaderTextFull":"Pray, brethren, that my sacrifice and yours may be acceptable to God, the almighty Father.","responseText":"May the Lord accept the sacrifice at your hands for the praise and glory of his name, for our good and the good of all his holy Church.","responseTextShort":"May the Lord accept the sacrifice at your hands for the praise and glory of his name, for our good and the good of all his holy Church.","responseTextFull":"May the Lord accept the sacrifice at your hands for the praise and glory of his name, for our good and the good of all his holy Church.","descriptionAdult":"The priest prays that God will accept these human gifts and prepare them for consecration.","descriptionChild":"The priest asks God to accept the gifts we just brought up."}
 {"type":"step","id":"holy-holy","phaseId":"liturgy-of-the-eucharist","order":16,"title":"Preface Dialogue and Sanctus","stepType":"hymn","massPart":"sanctus","stance":"stand","estimatedSeconds":150,"allowAutoProgress":true,"leaderText":"The Lord be with you. Lift up your hearts. Let us give thanks to the Lord our God.","leaderTextShort":"The Lord be with you. Lift up your hearts. Let us give thanks to the Lord our God.","leaderTextFull":"The Lord be with you. Lift up your hearts. Let us give thanks to the Lord our God.","responseText":"And with your spirit. We lift them up to the Lord. It is right and just.","responseTextShort":"And with your spirit. We lift them up to the Lord. It is right and just.","responseTextFull":"And with your spirit. We lift them up to the Lord. It is right and just.","lyrics":"Holy, Holy, Holy Lord God of hosts. Heaven and earth are full of your glory. Hosanna in the highest.","lyricsShort":"Holy, Holy, Holy Lord God of hosts. Heaven and earth are full of your glory. Hosanna in the highest.","lyricsFull":"Holy, Holy, Holy Lord God of hosts. Heaven and earth are full of your glory. Hosanna in the highest.","alternatives":[{"id":"alt-holy-1","title":"Mass of Creation Sanctus","lyrics":"Holy, holy, holy Lord, God of power and might...","lyricsShort":"Holy, holy, holy Lord, God of power and might...","lyricsFull":"Holy, holy, holy Lord, God of power and might..."}]}
-{"type":"step","id":"eucharistic-prayer","phaseId":"liturgy-of-the-eucharist","order":17,"title":"Eucharistic Prayer, Consecration, and Memorial Acclamation","stepType":"prayer","massPart":"memorial-acclamation","stance":"kneel","estimatedSeconds":420,"allowAutoProgress":false,"contentText":"The priest prays the Eucharistic Prayer; through the words of institution the bread and wine become the Body and Blood of Christ. The assembly proclaims the memorial acclamation and concludes with the Great Amen.","contentTextShort":"The priest prays the Eucharistic Prayer; through the words of institution the bread and wine become the Body and Blood of Christ. The assembly proclaims the memorial acclamation and concludes with the Great Amen.","contentTextFull":"The priest prays the Eucharistic Prayer; through the words of institution the bread and wine become the Body and Blood of Christ. The assembly proclaims the memorial acclamation and concludes with the Great Amen.","actions":["Kneel in adoration","Respond to the memorial acclamation","Stand at the conclusion with Amen"]}
-{"type":"step","id":"lords-prayer","phaseId":"communion-rite","order":19,"title":"The Lord's Prayer","stepType":"prayer","massPart":"lords-prayer","stance":"stand","estimatedSeconds":90,"allowAutoProgress":false,"leaderText":"Deliver us, Lord, we pray, from every evil, graciously grant peace in our days, that, by the help of your mercy, we may be always free from sin and safe from all distress, as we await the blessed hope and the coming of our Savior, Jesus Christ.","leaderTextShort":"Deliver us, Lord, we pray, from every evil...","leaderTextFull":"Deliver us, Lord, we pray, from every evil, graciously grant peace in our days, that, by the help of your mercy, we may be always free from sin and safe from all distress, as we await the blessed hope and the coming of our Savior, Jesus Christ.","responseText":"For the kingdom, the power and the glory are yours now and for ever.","responseTextShort":"For the kingdom, the power and the glory are yours now and for ever.","responseTextFull":"For the kingdom, the power and the glory are yours now and for ever.","contentText":"Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.","contentTextShort":"Our Father, who art in heaven, hallowed be thy name... deliver us from evil.","contentTextFull":"Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.","actions":["Pray the Our Father with the full assembly","Conclude with the doxology response when invited"]}
-{"type":"step","id":"sign-of-peace","phaseId":"communion-rite","order":20,"title":"Sign of Peace","stepType":"action","stance":"stand","estimatedSeconds":60,"allowAutoProgress":true,"leaderText":"The peace of the Lord be with you always.","leaderTextShort":"The peace of the Lord be with you always.","leaderTextFull":"The peace of the Lord be with you always.","responseText":"And with your spirit.","responseTextShort":"And with your spirit.","responseTextFull":"And with your spirit.","contentText":"After the prayer for peace, the deacon or priest may invite: Let us offer each other the sign of peace.","contentTextShort":"Offer one another a reverent sign of peace when invited.","contentTextFull":"After the prayer for peace, the deacon or priest may invite: Let us offer each other the sign of peace.","actions":["Offer a simple sign of peace to those nearby","Avoid leaving your place or prolonged greetings"]}
-{"type":"step","id":"agnus-dei","phaseId":"communion-rite","order":21,"title":"Lamb of God (Agnus Dei)","stepType":"hymn","massPart":"agnus-dei","stance":"kneel","estimatedSeconds":90,"allowAutoProgress":true,"lyrics":"Lamb of God, you take away the sins of the world, have mercy on us. Lamb of God, you take away the sins of the world, have mercy on us. Lamb of God, you take away the sins of the world, grant us peace.","lyricsShort":"Lamb of God, you take away the sins of the world... grant us peace.","lyricsFull":"Lamb of God, you take away the sins of the world, have mercy on us.\nLamb of God, you take away the sins of the world, have mercy on us.\nLamb of God, you take away the sins of the world, grant us peace.","actions":["Join the chant prayerfully"]}
-{"type":"step","id":"communion","phaseId":"communion-rite","order":22,"title":"Invitation to Communion","stepType":"script","massPart":"communion","stance":"kneel","estimatedSeconds":90,"allowAutoProgress":false,"leaderText":"Behold the Lamb of God, behold him who takes away the sins of the world. Blessed are those called to the supper of the Lamb.","leaderTextShort":"Behold the Lamb of God, behold him who takes away the sins of the world. Blessed are those called to the supper of the Lamb.","leaderTextFull":"Behold the Lamb of God, behold him who takes away the sins of the world. Blessed are those called to the supper of the Lamb.","responseText":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","responseTextShort":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","responseTextFull":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","actions":["Stand as the priest presents the Host and chalice","Respond clearly with the assembly","Kneel prayerfully after the response where customary"]}
-{"type":"step","id":"holy-communion","phaseId":"communion-rite","order":23,"title":"Holy Communion","stepType":"action","stance":"procession","estimatedSeconds":360,"allowAutoProgress":false,"contentText":"The faithful process to receive the Eucharist while a communion hymn is sung.","contentTextShort":"The faithful process to receive the Eucharist while a communion hymn is sung.","contentTextFull":"The faithful process to receive the Eucharist while a communion hymn is sung.","actions":["Approach reverently","Respond \"Amen\" before receiving","Return to your place and kneel or sit in silent thanksgiving"]}
-{"type":"step","id":"prayer-after-communion","phaseId":"communion-rite","order":24,"title":"Prayer After Communion","stepType":"prayer","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"leaderText":"Let us pray.","leaderTextShort":"Let us pray.","leaderTextFull":"Let us pray.","responseText":"Amen.","responseTextShort":"Amen.","responseTextFull":"Amen.","contentText":"The priest asks that the sacrament received may bring renewal in this life and eternal life in the next.","contentTextShort":"The priest asks that the sacrament received may bring renewal in this life and eternal life in the next.","contentTextFull":"The priest asks that the sacrament received may bring renewal in this life and eternal life in the next.","actions":["Stand when invited by the priest","Respond Amen at the conclusion"]}
-{"type":"step","id":"final-blessing","phaseId":"concluding-rites","order":25,"title":"Final Blessing","stepType":"script","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"leaderText":"The Lord be with you. May almighty God bless you, the Father, and the Son, and the Holy Spirit.","leaderTextShort":"The Lord be with you. May almighty God bless you...","leaderTextFull":"The Lord be with you. May almighty God bless you, the Father, and the Son, and the Holy Spirit.","responseText":"And with your spirit. Amen.","responseTextShort":"And with your spirit. Amen.","responseTextFull":"And with your spirit. Amen.","contentText":"At some churches, brief announcements or a prayer for peace may precede the final blessing.","contentTextShort":"Announcements or a prayer for peace may precede the blessing.","contentTextFull":"At some churches, brief announcements or a prayer for peace may precede the final blessing.","actions":["Follow local cues: sit for announcements if asked","At EDSA Shrine, kneel for Prayer for Peace when invited","Stand for the final blessing and respond Amen"]}
-{"type":"step","id":"dismissal","phaseId":"concluding-rites","order":26,"title":"Dismissal","stepType":"script","massPart":"recessional","stance":"stand","estimatedSeconds":45,"allowAutoProgress":false,"leaderText":"Go forth, the Mass is ended.","leaderTextShort":"Go forth, the Mass is ended.","leaderTextFull":"Go forth, the Mass is ended.","responseText":"Thanks be to God.","responseTextShort":"Thanks be to God.","responseTextFull":"Thanks be to God.","contentText":"The assembly is sent forth to live the Gospel in daily life.","contentTextShort":"The assembly is sent forth to live the Gospel in daily life.","contentTextFull":"The assembly is sent forth to live the Gospel in daily life.","actions":["Make the sign of the cross"]}
+{"type":"step","id":"eucharistic-prayer","phaseId":"liturgy-of-the-eucharist","order":17,"title":"Eucharistic Prayer, Consecration, and Memorial Acclamation","stepType":"prayer","massPart":"memorial-acclamation","stance":"kneel","estimatedSeconds":420,"allowAutoProgress":false,"contentText":"The priest prays the Eucharistic Prayer; through the words of institution the bread and wine become the Body and Blood of Christ. The assembly proclaims the memorial acclamation and concludes with the Great Amen.","contentTextShort":"The priest prays the Eucharistic Prayer; through the words of institution the bread and wine become the Body and Blood of Christ. The assembly proclaims the memorial acclamation and concludes with the Great Amen.","contentTextFull":"The priest prays the Eucharistic Prayer; through the words of institution the bread and wine become the Body and Blood of Christ. The assembly proclaims the memorial acclamation and concludes with the Great Amen.","actions":["Kneel in adoration","Respond to the memorial acclamation","Stand at the conclusion with Amen"],"descriptionAdult":"The core prayer where the priest repeats Jesus' words at the Last Supper. By the power of the Holy Spirit, the bread and wine become the actual Body and Blood of Christ.","descriptionChild":"The most sacred moment! The bread and wine miraculously change into the real Body and Blood of Jesus."}
+{"type":"step","id":"lords-prayer","phaseId":"communion-rite","order":19,"title":"The Lord's Prayer","stepType":"prayer","massPart":"lords-prayer","stance":"stand","estimatedSeconds":90,"allowAutoProgress":false,"leaderText":"Deliver us, Lord, we pray, from every evil, graciously grant peace in our days, that, by the help of your mercy, we may be always free from sin and safe from all distress, as we await the blessed hope and the coming of our Savior, Jesus Christ.","leaderTextShort":"Deliver us, Lord, we pray, from every evil...","leaderTextFull":"Deliver us, Lord, we pray, from every evil, graciously grant peace in our days, that, by the help of your mercy, we may be always free from sin and safe from all distress, as we await the blessed hope and the coming of our Savior, Jesus Christ.","responseText":"For the kingdom, the power and the glory are yours now and for ever.","responseTextShort":"For the kingdom, the power and the glory are yours now and for ever.","responseTextFull":"For the kingdom, the power and the glory are yours now and for ever.","contentText":"Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.","contentTextShort":"Our Father, who art in heaven, hallowed be thy name... deliver us from evil.","contentTextFull":"Our Father, who art in heaven, hallowed be thy name; thy kingdom come, thy will be done on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.","actions":["Pray the Our Father with the full assembly","Conclude with the doxology response when invited"],"descriptionAdult":"The community stands and prays the \"Our Father,\" the prayer that Jesus himself taught his disciples.","descriptionChild":"We hold hands or raise our hands and pray the \"Our Father\" together."}
+{"type":"step","id":"sign-of-peace","phaseId":"communion-rite","order":20,"title":"Sign of Peace","stepType":"action","stance":"stand","estimatedSeconds":60,"allowAutoProgress":true,"leaderText":"The peace of the Lord be with you always.","leaderTextShort":"The peace of the Lord be with you always.","leaderTextFull":"The peace of the Lord be with you always.","responseText":"And with your spirit.","responseTextShort":"And with your spirit.","responseTextFull":"And with your spirit.","contentText":"After the prayer for peace, the deacon or priest may invite: Let us offer each other the sign of peace.","contentTextShort":"Offer one another a reverent sign of peace when invited.","contentTextFull":"After the prayer for peace, the deacon or priest may invite: Let us offer each other the sign of peace.","actions":["Offer a simple sign of peace to those nearby","Avoid leaving your place or prolonged greetings"],"descriptionAdult":"The congregation shares a gesture of Christ's peace and reconciliation with those standing nearby.","descriptionChild":"We turn to our neighbors, smile, and say, \"Peace be with you!\""}
+{"type":"step","id":"agnus-dei","phaseId":"communion-rite","order":21,"title":"Lamb of God (Agnus Dei)","stepType":"hymn","massPart":"agnus-dei","stance":"kneel","estimatedSeconds":90,"allowAutoProgress":true,"lyrics":"Lamb of God, you take away the sins of the world, have mercy on us. Lamb of God, you take away the sins of the world, have mercy on us. Lamb of God, you take away the sins of the world, grant us peace.","lyricsShort":"Lamb of God, you take away the sins of the world... grant us peace.","lyricsFull":"Lamb of God, you take away the sins of the world, have mercy on us.\nLamb of God, you take away the sins of the world, have mercy on us.\nLamb of God, you take away the sins of the world, grant us peace.","actions":["Join the chant prayerfully"],"descriptionAdult":"The priest breaks the Host while the congregation asks Christ for mercy and peace (Agnus Dei).","descriptionChild":"The priest breaks the bread, and we ask Jesus to bring peace to our hearts."}
+{"type":"step","id":"communion","phaseId":"communion-rite","order":22,"title":"Invitation to Communion","stepType":"script","stance":"kneel","estimatedSeconds":90,"allowAutoProgress":false,"leaderText":"Behold the Lamb of God, behold him who takes away the sins of the world. Blessed are those called to the supper of the Lamb.","leaderTextShort":"Behold the Lamb of God, behold him who takes away the sins of the world. Blessed are those called to the supper of the Lamb.","leaderTextFull":"Behold the Lamb of God, behold him who takes away the sins of the world. Blessed are those called to the supper of the Lamb.","responseText":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","responseTextShort":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","responseTextFull":"Lord, I am not worthy that you should enter under my roof, but only say the word and my soul shall be healed.","actions":["Stand as the priest presents the Host and chalice","Respond clearly with the assembly","Kneel prayerfully after the response where customary"]}
+{"type":"step","id":"holy-communion","phaseId":"communion-rite","order":23,"title":"Holy Communion","stepType":"action","massPart":"communion","stance":"procession","estimatedSeconds":360,"allowAutoProgress":false,"contentText":"The faithful process to receive the Eucharist while a communion hymn is sung.","contentTextShort":"The faithful process to receive the Eucharist while a communion hymn is sung.","contentTextFull":"The faithful process to receive the Eucharist while a communion hymn is sung.","actions":["Approach reverently","Respond \"Amen\" before receiving","Return to your place and kneel or sit in silent thanksgiving"],"descriptionAdult":"The faithful process forward to receive the Blessed Sacrament while communion hymns (like Iesu, Panis Vitae) are sung.","descriptionChild":"We walk up reverently to receive Jesus in Holy Communion. We say \"Amen\" and pray quietly at our seats."}
+{"type":"step","id":"prayer-after-communion","phaseId":"communion-rite","order":24,"title":"Prayer After Communion","stepType":"prayer","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"leaderText":"Let us pray.","leaderTextShort":"Let us pray.","leaderTextFull":"Let us pray.","responseText":"Amen.","responseTextShort":"Amen.","responseTextFull":"Amen.","contentText":"The priest asks that the sacrament received may bring renewal in this life and eternal life in the next.","contentTextShort":"The priest asks that the sacrament received may bring renewal in this life and eternal life in the next.","contentTextFull":"The priest asks that the sacrament received may bring renewal in this life and eternal life in the next.","actions":["Stand when invited by the priest","Respond Amen at the conclusion"],"descriptionAdult":"The priest asks God that the sacrament we received will bear spiritual fruit in our daily actions.","descriptionChild":"The priest says a final thank-you prayer for the holy meal we just shared."}
+{"type":"step","id":"final-blessing","phaseId":"concluding-rites","order":25,"title":"Final Blessing","stepType":"script","stance":"stand","estimatedSeconds":75,"allowAutoProgress":false,"leaderText":"The Lord be with you. May almighty God bless you, the Father, and the Son, and the Holy Spirit.","leaderTextShort":"The Lord be with you. May almighty God bless you...","leaderTextFull":"The Lord be with you. May almighty God bless you, the Father, and the Son, and the Holy Spirit.","responseText":"And with your spirit. Amen.","responseTextShort":"And with your spirit. Amen.","responseTextFull":"And with your spirit. Amen.","contentText":"At some churches, brief announcements or a prayer for peace may precede the final blessing.","contentTextShort":"Announcements or a prayer for peace may precede the blessing.","contentTextFull":"At some churches, brief announcements or a prayer for peace may precede the final blessing.","actions":["Follow local cues: sit for announcements if asked","At EDSA Shrine, kneel for Prayer for Peace when invited","Stand for the final blessing and respond Amen"],"descriptionAdult":"The priest invokes the blessing of the Holy Trinity over the entire congregation.","descriptionChild":"The priest blesses us in the name of the Father, Son, and Holy Spirit."}
+{"type":"step","id":"dismissal","phaseId":"concluding-rites","order":26,"title":"Dismissal","stepType":"script","massPart":"recessional","stance":"stand","estimatedSeconds":45,"allowAutoProgress":false,"leaderText":"Go forth, the Mass is ended.","leaderTextShort":"Go forth, the Mass is ended.","leaderTextFull":"Go forth, the Mass is ended.","responseText":"Thanks be to God.","responseTextShort":"Thanks be to God.","responseTextFull":"Thanks be to God.","contentText":"The assembly is sent forth to live the Gospel in daily life.","contentTextShort":"The assembly is sent forth to live the Gospel in daily life.","contentTextFull":"The assembly is sent forth to live the Gospel in daily life.","actions":["Make the sign of the cross"],"descriptionAdult":"The deacon or priest sends the people forth to love and serve the Lord. The ministers process out during a final hymn.","descriptionChild":"The priest says, \"Go in peace!\" We sing a happy song as we walk outside to go change the world with kindness."}
 {"type":"step","id":"recessional","phaseId":"concluding-rites","order":27,"title":"Recessional Hymn","stepType":"hymn","stance":"stand","estimatedSeconds":180,"allowAutoProgress":true,"contentText":"A concluding hymn accompanies the ministers as they depart, and the assembly is sent to live the Gospel.","contentTextShort":"A concluding hymn accompanies the ministers as they depart.","contentTextFull":"A concluding hymn accompanies the ministers as they depart, and the assembly is sent to live the Gospel.","lyrics":"A concluding hymn accompanies the ministers as they depart.","lyricsShort":"A concluding hymn accompanies the ministers as they depart.","lyricsFull":"A concluding hymn accompanies the ministers as they depart.","actions":["Remain for the final hymn when customary"]}
 {"type":"step","id":"great-amen-step","phaseId":"liturgy-of-the-eucharist","order":18,"title":"Great Amen","stepType":"hymn","massPart":"great-amen","stance":"stand","estimatedSeconds":45,"allowAutoProgress":true,"lyrics":"Amen, amen, amen.","lyricsShort":"Amen, amen, amen.","lyricsFull":"Amen, amen, amen.","actions":["Sing the Great Amen as the Eucharistic Prayer concludes"]}
     </script>
 
     <script>
         const STORAGE_KEY = 'wwm-prefs-v1';
-        const STEP_MASS_PART_MAP = {
-            'entrance-chant': 'entrance',
-            'gospel-acclamation': 'gospel-acclamation',
-            'offertory': 'offertory',
-            'holy-holy': 'sanctus',
-            'communion': 'communion',
-            'dismissal': 'recessional'
-        };
-
         const state = {
             view: 'landing',
             records: [],
@@ -2112,7 +2225,9 @@
                 selectedAlternatives: {},
                 elapsedTimerId: null,
                 autoAdvanceTimerId: null,
-                navigationEvents: 0
+                navigationEvents: 0,
+                stepDurations: {},
+                currentStepEnteredAt: null
             },
             ui: {
                 activeModal: null,
@@ -2124,7 +2239,9 @@
                 massDaysSortOrder: 'asc',
                 massDaysDateFilter: 'current-future',
                 lastFocusedElement: null,
-                endActionsExpanded: false
+                endActionsExpanded: false,
+                detailModalHistory: [],
+                lastDetailModalView: null
             },
             confirmAction: null,
             selectedMassDayDate: null
@@ -2146,10 +2263,10 @@
                 'menuOverlay', 'closeMenuBtn', 'referencesList',
                 'warningsCard', 'warningsList',
                 'diagnosticsCard', 'diagnosticsContent', 'diagnosticsList', 'diagnosticsToggleBtn',
-                'themeSelect', 'churchSelect', 'occasionSelect', 'textModeSelect', 'lineBreakModeSelect', 'languageSelect', 'showDurationToggle', 'showLyricsToggle', 'autoProgressToggle',
+                'themeSelect', 'churchSelect', 'occasionSelect', 'textModeSelect', 'lineBreakModeSelect', 'languageSelect', 'stepDescriptionSelect', 'showDurationToggle', 'showLyricsToggle', 'autoProgressToggle',
                 'confirmModal', 'confirmMessage', 'confirmCancelBtn', 'confirmOkBtn',
                 'altModal', 'altList', 'altCloseBtn',
-                'detailModal', 'detailModalTitle', 'detailModalBody', 'detailCloseBtn',
+                'detailModal', 'detailModalTitle', 'detailModalBody', 'detailCloseBtn', 'detailBackBtn',
                 'massDaySelect', 'massDayTodayBtn', 'massDayPrevBtn', 'massDayNextBtn'
             ].forEach(id => {
                 el[id] = document.getElementById(id);
@@ -2392,7 +2509,8 @@
         }
 
         function inferDayClass() {
-            const dayOfWeek = new Date().getDay();
+            const activeMs = parseIsoDateToUtcMs(getActiveMassDay()?.date);
+            const dayOfWeek = Number.isFinite(activeMs) ? new Date(activeMs).getUTCDay() : new Date().getDay();
             return dayOfWeek === 0 ? 'sunday' : 'weekday';
         }
 
@@ -2421,7 +2539,7 @@
         }
 
         function resolveSongAssignmentForStep(step) {
-            const massPart = STEP_MASS_PART_MAP[step?.id];
+            const massPart = step?.massPart;
             if (!massPart) return null;
 
             const churchId = state.prefs.defaultChurchId || state.index.churches[0]?.id || '';
@@ -2651,7 +2769,6 @@
                 const hasLyrics = Boolean(String(alt.lyrics || '').trim());
                 const preview = hasLyrics ? buildLyricsPreview(alt.lyrics) : '';
                 const isActive = selectedAltId ? alt.id === selectedAltId : alt.id === defaultId;
-                const activeLabel = isActive ? '<p class="alt-preview"><strong>In use</strong></p>' : '';
                 const detailButton = alt.sourceSongId && hasLyrics
                     ? `<button class="ghost-btn" type="button" data-alt-detail-id="${escapeHtml(alt.sourceSongId)}">View lyrics</button>`
                     : '';
@@ -2660,11 +2777,15 @@
                     : '';
                 return `
                     <div class="alt-option${isActive ? ' is-active' : ''}">
-                        <h4>${safeTitle}</h4>
-                        ${safeDescription ? `<p style="color: var(--muted);">${safeDescription}</p>` : ''}
-                        ${preview ? `<p class="alt-preview">${formatPrayerText(preview)}</p>` : ''}
-                        ${activeLabel}
-                        ${detailButton || useButton ? `<div class="alt-option-actions">${detailButton}${useButton}</div>` : ''}
+                        <div class="alt-option-header">
+                            <h4>${safeTitle}${isActive ? ' <span class="alt-in-use">(In use)</span>' : ''}</h4>
+                            ${safeDescription ? `<span class="alt-option-meta">${safeDescription}</span>` : ''}
+                        </div>
+                        ${preview || detailButton || useButton ? `
+                        <div class="alt-option-body">
+                            ${preview ? `<p class="alt-preview">${formatPrayerText(preview)}</p>` : ''}
+                            ${detailButton || useButton ? `<div class="alt-option-actions">${detailButton}${useButton}</div>` : ''}
+                        </div>` : ''}
                     </div>
                 `;
             }).join('')}`;
@@ -2714,7 +2835,13 @@
             }
         }
 
-        function openDetailModal(title, bodyHtml, onOpen) {
+        function openDetailModal(title, bodyHtml, onOpen, options) {
+            const resetHistory = !options || options.resetHistory !== false;
+            if (resetHistory) {
+                state.ui.detailModalHistory = [];
+            }
+            state.ui.lastDetailModalView = { title, bodyHtml, onOpen };
+
             el.detailModalTitle.textContent = title || 'Details';
             el.detailModalBody.innerHTML = bodyHtml || '<p style="color: var(--muted);">No details available.</p>';
 
@@ -2735,10 +2862,28 @@
             if (typeof onOpen === 'function') {
                 onOpen(el.detailModalBody);
             }
+            el.detailBackBtn.classList.toggle('hidden', state.ui.detailModalHistory.length === 0);
             openModal(el.detailModal, el.detailCloseBtn);
         }
 
+        // Drills into a detail view (e.g. a specific song/prayer/mass day) from whatever
+        // list is currently showing, keeping that list on a back-stack instead of losing it.
+        function openDetailModalDrillIn(title, bodyHtml, onOpen) {
+            if (state.ui.lastDetailModalView && !el.detailModal.classList.contains('hidden')) {
+                state.ui.detailModalHistory.push(state.ui.lastDetailModalView);
+            }
+            openDetailModal(title, bodyHtml, onOpen, { resetHistory: false });
+        }
+
+        function goBackDetailModal() {
+            const previous = state.ui.detailModalHistory.pop();
+            if (!previous) return;
+            openDetailModal(previous.title, previous.bodyHtml, previous.onOpen, { resetHistory: false });
+        }
+
         function closeDetailModal() {
+            state.ui.detailModalHistory = [];
+            state.ui.lastDetailModalView = null;
             closeModal(el.detailModal);
         }
 
@@ -2812,6 +2957,7 @@
             el.textModeSelect.value = state.prefs.textMode || 'full';
             el.lineBreakModeSelect.value = state.prefs.lineBreakMode || 'author';
             el.languageSelect.value = state.prefs.language || 'en';
+            el.stepDescriptionSelect.value = state.prefs.stepDescriptionAudience || 'child';
             renderHeader();
             renderSession();
         }
@@ -2837,7 +2983,8 @@
                 lineBreakMode: 'author',
                 occasion: 'auto',
                 autoProgress: !!state.index.appConfig?.enableAutoProgressByDefault,
-                language: 'en'
+                language: 'en',
+                stepDescriptionAudience: 'child'
             };
 
             state.prefs = {
@@ -3190,7 +3337,7 @@
                 <div class="prayer-block primary-content"><div class="label">Prayer</div><div class="primary-content-body">${prayerBody}</div></div>
                 ${renderPrayerInfo(prayer)}
             `;
-            openDetailModal(prayer.title || 'Prayer', body);
+            openDetailModalDrillIn(prayer.title || 'Prayer', body);
         }
 
         function renderSongTextSections(songText, showSectionLabels = false) {
@@ -3249,7 +3396,7 @@
                 ${detailsBlock}
             `;
 
-            openDetailModal(song.title || 'Hymn', body);
+            openDetailModalDrillIn(song.title || 'Hymn', body);
         }
 
         function openMassDayDetail(massDayId) {
@@ -3351,7 +3498,7 @@
                 ${(propersHtml || fallbackPropersHtml) ? `<div class="prayer-block"><div class="label">Propers</div>${propersHtml || fallbackPropersHtml}</div>` : ''}
             `;
 
-            openDetailModal(massDay.celebration || 'Mass Day', body, (container) => {
+            openDetailModalDrillIn(massDay.celebration || 'Mass Day', body, (container) => {
                 // attach handlers for inline prayer detail buttons
                 container.querySelectorAll('button[data-prayer-id]').forEach(btn => {
                     btn.addEventListener('click', () => {
@@ -3491,6 +3638,42 @@
                 const songList = uniqueSongs.map(song => `<li><button type="button" class="prayer-link detail-link" data-song-id="${escapeHtml(song.id)}">${escapeHtml(song.title || 'Untitled hymn')}</button></li>`).join('');
                 return `<li><strong>${escapeHtml(label)}</strong><ul class="schedule-day-list">${songList}</ul></li>`;
             }).join('')}</ul>`;
+        }
+
+        function renderPartsOfMassDetailBody(container) {
+            const audience = state.ui.partsAudience === 'child' ? 'child' : 'adult';
+            const controls = `
+                <div class="hymn-controls-row">
+                    <span class="hymn-controls-label">Description</span>
+                    <div class="hymn-mode-switch" role="group" aria-label="Description audience">
+                        <button type="button" class="link-btn view-toggle-btn ${audience === 'adult' ? 'is-active' : ''}" aria-pressed="${audience === 'adult' ? 'true' : 'false'}" data-parts-audience="adult">Standard</button>
+                        <button type="button" class="link-btn view-toggle-btn ${audience === 'child' ? 'is-active' : ''}" aria-pressed="${audience === 'child' ? 'true' : 'false'}" data-parts-audience="child">Simple (Child)</button>
+                    </div>
+                </div>
+            `;
+            const list = state.index.phases.length
+                ? `<ul class="modal-list parts-of-mass-list">${state.index.phases.map(phase => {
+                    const steps = state.index.steps
+                        .filter(step => step.phaseId === phase.id)
+                        .sort((a, b) => (a.order || 0) - (b.order || 0));
+                    const phaseDesc = audience === 'child' ? phase.descriptionChild : phase.descriptionAdult;
+                    const stepItems = steps.length
+                        ? steps.map((step, idx) => {
+                            const stepDesc = audience === 'child' ? step.descriptionChild : step.descriptionAdult;
+                            const label = escapeHtml(`${step.order || idx + 1}. ${step.title || step.id || 'Untitled step'}`);
+                            return `<li><span class="parts-step-title">${label}</span>${stepDesc ? `<span class="parts-step-desc"> — ${escapeHtml(stepDesc)}</span>` : ''}</li>`;
+                        }).join('')
+                        : '<li>No steps configured.</li>';
+                    return `<li><div class="parts-phase-header"><strong>${escapeHtml(phase.title || phase.id || 'Untitled phase')}</strong>${phaseDesc ? `<p class="parts-phase-desc">${escapeHtml(phaseDesc)}</p>` : ''}</div><ul class="schedule-day-list">${stepItems}</ul></li>`;
+                }).join('')}</ul>`
+                : '<p style="color: var(--muted);">No phases configured.</p>';
+            container.innerHTML = `${controls}${list}`;
+            container.querySelectorAll('button[data-parts-audience]').forEach(node => {
+                node.addEventListener('click', () => {
+                    state.ui.partsAudience = node.getAttribute('data-parts-audience') || 'adult';
+                    renderPartsOfMassDetailBody(container);
+                });
+            });
         }
 
         function renderHymnsDetailBody(container) {
@@ -3848,12 +4031,19 @@
             const chosenLyrics = selectedAlt ? getTextField(selectedAlt, 'lyrics') : stepLyrics;
             const renderLabeledBody = (label, value, fallback) =>
                 `<div><div class="section-label">${label}</div><p>${formatPrayerText(value || fallback)}</p></div>`;
+            const renderHymnLyricsBody = (value, fallback) =>
+                `<div><div class="section-label">Hymn Lyrics</div><p class="hymn-lyrics-text">${formatPrayerText(value || fallback)}</p></div>`;
+            const renderPrayerWithHymn = (guidanceHtml) => {
+                if (!step.massPart || !state.prefs.showLyrics) return guidanceHtml;
+                const hymnBlock = renderHymnLyricsBody(chosenLyrics, 'No lyrics configured for this hymn.');
+                return `${guidanceHtml}${hymnBlock}`;
+            };
 
             if (stepType === 'hymn') {
                 if (!state.prefs.showLyrics) {
                     return '<p>Lyrics are hidden by preference.</p>';
                 }
-                return renderLabeledBody('Hymn Lyrics', chosenLyrics, 'No lyrics configured for this hymn.');
+                return renderHymnLyricsBody(chosenLyrics, 'No lyrics configured for this hymn.');
             }
 
             if (stepType === 'reading') {
@@ -3915,7 +4105,7 @@
                         `;
                     }
                 }
-                return renderLabeledBody('Prayer', stepContent, 'No prayer text configured.');
+                return renderPrayerWithHymn(renderLabeledBody('Prayer', stepContent, 'No prayer text configured.'));
             }
 
             if (stepType === 'script') {
@@ -3926,7 +4116,8 @@
             }
 
             if (stepType === 'action') {
-                return renderLabeledBody('Action Guidance', stepContent, 'Follow the action cues below.');
+                const guidance = renderLabeledBody('Action Guidance', stepContent, 'Follow the action cues below.');
+                return renderPrayerWithHymn(guidance);
             }
 
             return renderLabeledBody('Content', stepContent || stepLyrics, 'No content text configured.');
@@ -4084,6 +4275,16 @@
 
             const actionItems = (step.actions || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
             const noteItems = (step.notes || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
+            const upcomingStep = state.index.steps[state.session.currentStepIndex + 1] || null;
+            const currentStance = String(step.stance || '').trim().toLowerCase();
+            const upcomingStance = String(upcomingStep?.stance || '').trim().toLowerCase();
+            const needsStancePrepHint = Boolean(
+                upcomingStep && currentStance && upcomingStance && upcomingStance !== currentStance
+            );
+            const stancePrepItem = needsStancePrepHint
+                ? `<li><strong>Preparation:</strong> Next step changes stance to <strong>${escapeHtml(toTitleCaseLabel(upcomingStep.stance))}</strong>.</li>`
+                : '';
+            const actionItemsWithPrep = `${actionItems}${stancePrepItem}`;
 
             // For reading/psalm steps, build references dynamically from the active mass day.
             const activeDay = getActiveMassDay();
@@ -4135,11 +4336,18 @@
 
             const isSignOfCrossStep = step.id === 'sign-of-the-cross';
             const helperLabel = isSignOfCrossStep ? 'Notes' : 'Actions';
-            const helperListHtml = isSignOfCrossStep ? noteItems : actionItems;
+            const helperListHtml = isSignOfCrossStep ? noteItems : actionItemsWithPrep;
             const helperEmptyText = isSignOfCrossStep ? 'No notes for this step.' : 'None listed.';
+
+            const descAudience = state.prefs.stepDescriptionAudience === 'adult' ? 'adult' : 'child';
+            const stepDescription = descAudience === 'adult' ? step.descriptionAdult : step.descriptionChild;
+            const stepDescriptionHtml = stepDescription
+                ? `<p class="step-description action-item-emphasis">${escapeHtml(stepDescription)}</p>`
+                : '';
 
             el.stepCard.innerHTML = `
                 <div class="step-main-content">
+                    ${stepDescriptionHtml}
                     ${altSummary}
                     ${assignmentSummary}
                     ${signOfCrossDialogueHtml || interleavedDialogueHtml || leaderBlock}
@@ -4165,7 +4373,7 @@
                 });
             });
 
-            const hasAlternatives = stepType === 'hymn' && getStepAlternatives(step).length > 0;
+            const hasAlternatives = getStepAlternatives(step).length > 0;
             el.alternativesBtn.disabled = !hasAlternatives;
             el.alternativesBtn.textContent = state.session.selectedAlternatives[step.id]
                 ? 'Change alternate chant/hymn'
@@ -4333,6 +4541,30 @@
                         const bodyContainer = container.querySelector('#massDaysDetailBody') || container;
                         renderMassDaysDetailBody(bodyContainer);
                     });
+                    return;
+                }
+                if (kind === 'partsOfMass') {
+                    openDetailModal('Parts of the Mass', '<div id="partsOfMassDetailBody"></div>', (container) => {
+                        const bodyContainer = container.querySelector('#partsOfMassDetailBody') || container;
+                        renderPartsOfMassDetailBody(bodyContainer);
+                    });
+                    return;
+                }
+                if (kind === 'links') {
+                    const importantLinks = [
+                        { title: 'USCCB Bible', url: 'https://bible.usccb.org/' },
+                        { title: 'USCCB Daily Readings', url: 'https://bible.usccb.org/daily-bible-reading' },
+                        { title: 'EDSA Shrine Official', url: 'https://www.facebook.com/EDSAShrineOfficial/' },
+                        { title: 'Bukas Palad Songs', url: 'https://www.bukaspalad.com/songs/' },
+                        { title: 'Awit at Papuri', url: 'https://awitatpapuri.com/' },
+                        { title: 'Romcal (Roman Catholic Calendar)', url: 'https://github.com/romcal/romcal' }
+                    ];
+                    const body = `<ul class="modal-list">${importantLinks.map(link => {
+                        const safeTitle = escapeHtml(link.title || link.url || 'Untitled link');
+                        const safeUrl = escapeHtml(link.url || '#');
+                        return `<li><a class="detail-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeTitle}<span class="external-indicator" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></li>`;
+                    }).join('')}</ul>`;
+                    openDetailModal('Links', body);
                 }
             };
 
@@ -4341,7 +4573,9 @@
                 '<li><button type="button" class="link-btn" data-detail-kind="churches">View Churches</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="prayers">View Prayers</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="hymns">View Hymns</button></li>',
-                '<li><button type="button" class="link-btn" data-detail-kind="massDays">View Mass Days</button></li>'
+                '<li><button type="button" class="link-btn" data-detail-kind="massDays">View Mass Days</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="partsOfMass">View Parts of the Mass</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="links">View Links</button></li>'
             ].join('');
 
             el.referencesList.querySelectorAll('button[data-detail-kind]').forEach(btn => {
@@ -4377,6 +4611,8 @@
             state.session.startedAt = Date.now();
             state.session.currentStepIndex = 0;
             state.session.navigationEvents = 0;
+            state.session.stepDurations = {};
+            state.session.currentStepEnteredAt = Date.now();
             state.ui.endActionsExpanded = false;
             showView('session');
             renderSession();
@@ -4392,6 +4628,7 @@
         }
 
         function moveToStep(index) {
+            recordTimeForCurrentStep();
             const clamped = Math.max(0, Math.min(state.index.steps.length - 1, index));
             state.session.currentStepIndex = clamped;
             state.session.navigationEvents += 1;
@@ -4413,12 +4650,69 @@
         }
 
         function endSessionToLanding() {
+            recordTimeForCurrentStep();
+            showSessionSummary();
             clearTimers();
             state.session.startedAt = null;
             state.session.currentStepIndex = 0;
+            state.session.stepDurations = {};
+            state.session.currentStepEnteredAt = null;
             showView('landing');
             renderLanding();
             renderDiagnostics();
+        }
+
+        function recordTimeForCurrentStep() {
+            if (!state.session.currentStepEnteredAt) return;
+            const step = state.index.steps[state.session.currentStepIndex];
+            const deltaSeconds = Math.max(0, Math.floor((Date.now() - state.session.currentStepEnteredAt) / 1000));
+            if (step && deltaSeconds > 0) {
+                state.session.stepDurations[step.id] = (state.session.stepDurations[step.id] || 0) + deltaSeconds;
+            }
+            state.session.currentStepEnteredAt = Date.now();
+        }
+
+        function showSessionSummary() {
+            if (!state.session.startedAt) return;
+            const durations = state.session.stepDurations || {};
+            const trackedStepIds = new Set(Object.keys(durations));
+
+            const phaseRows = state.index.phases.map(phase => {
+                const steps = state.index.steps
+                    .filter(step => step.phaseId === phase.id)
+                    .sort((a, b) => (a.order || 0) - (b.order || 0));
+                steps.forEach(step => trackedStepIds.delete(step.id));
+                const phaseSeconds = steps.reduce((sum, step) => sum + (durations[step.id] || 0), 0);
+                const stepItems = steps
+                    .filter(step => durations[step.id])
+                    .map(step => `<li>${escapeHtml(step.title || step.id)}: ${formatElapsed(durations[step.id])}</li>`)
+                    .join('');
+                if (!phaseSeconds) return '';
+                return `<li><strong>${escapeHtml(phase.title || phase.id)}</strong> — ${formatElapsed(phaseSeconds)}<ul class="schedule-day-list">${stepItems}</ul></li>`;
+            }).filter(Boolean).join('');
+
+            // Steps whose phaseId doesn't match a known phase still get listed here instead of vanishing from the total.
+            const unmatchedItems = [...trackedStepIds]
+                .map(stepId => {
+                    const seconds = durations[stepId];
+                    if (!seconds) return '';
+                    const step = state.index.steps.find(s => s.id === stepId);
+                    return `<li>${escapeHtml(step?.title || stepId)}: ${formatElapsed(seconds)}</li>`;
+                })
+                .filter(Boolean)
+                .join('');
+            const unmatchedBlock = unmatchedItems
+                ? `<li><strong>Other steps</strong><ul class="schedule-day-list">${unmatchedItems}</ul></li>`
+                : '';
+
+            // Total is the sum of the same per-step segments listed below, so the numbers always add up.
+            const totalSeconds = Object.values(durations).reduce((sum, seconds) => sum + seconds, 0);
+
+            const body = `
+                <p><strong>Total time:</strong> ${formatElapsed(totalSeconds)}</p>
+                ${phaseRows || unmatchedBlock ? `<ul class="modal-list">${phaseRows}${unmatchedBlock}</ul>` : '<p style="color: var(--muted);">No per-step timing was recorded for this session.</p>'}
+            `;
+            openDetailModal('Mass Summary', body);
         }
 
         function scheduleAutoAdvanceIfEligible(step) {
@@ -4491,8 +4785,12 @@
 
             el.startOverBtn.addEventListener('click', () => {
                 showConfirm('Start over from the first step?', () => {
+                    recordTimeForCurrentStep();
+                    showSessionSummary();
                     state.session.currentStepIndex = 0;
                     state.session.startedAt = Date.now();
+                    state.session.stepDurations = {};
+                    state.session.currentStepEnteredAt = Date.now();
                     renderSession();
                 });
             });
@@ -4514,6 +4812,7 @@
 
             el.altCloseBtn.addEventListener('click', closeAltModal);
             el.detailCloseBtn.addEventListener('click', closeDetailModal);
+            el.detailBackBtn.addEventListener('click', goBackDetailModal);
             if (el.diagnosticsToggleBtn) {
                 el.diagnosticsToggleBtn.addEventListener('click', () => {
                     state.ui.diagnosticsExpanded = !state.ui.diagnosticsExpanded;
@@ -4572,6 +4871,11 @@
             el.languageSelect.addEventListener('change', () => {
                 state.prefs.language = el.languageSelect.value;
                 renderPremass();
+                renderSession();
+                savePreferences();
+            });
+            el.stepDescriptionSelect.addEventListener('change', () => {
+                state.prefs.stepDescriptionAudience = el.stepDescriptionSelect.value || 'child';
                 renderSession();
                 savePreferences();
             });
