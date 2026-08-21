@@ -1499,7 +1499,11 @@
 
         @media (max-width: 900px) {
             .landing-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .landing-grid > * {
+                min-width: 0;
             }
 
             .progress-block {
@@ -2324,9 +2328,49 @@
             return `${year}-${month}-${day}`;
         }
 
+        function parseIsoDateToUtcMs(isoDate) {
+            if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return Number.NaN;
+            const [year, month, day] = isoDate.split('-').map(Number);
+            return Date.UTC(year, month - 1, day);
+        }
+
+        function getNearestMassDayToIso(isoDate) {
+            const targetMs = parseIsoDateToUtcMs(isoDate);
+            if (!Number.isFinite(targetMs) || !state.index.massDays.length) return null;
+
+            let best = null;
+            let bestDistance = Number.POSITIVE_INFINITY;
+
+            state.index.massDays.forEach(day => {
+                const dayMs = parseIsoDateToUtcMs(day?.date);
+                if (!Number.isFinite(dayMs)) return;
+
+                const distance = Math.abs(dayMs - targetMs);
+                if (distance < bestDistance) {
+                    best = day;
+                    bestDistance = distance;
+                    return;
+                }
+
+                // Tie-breaker: prefer future date over past date when equally near.
+                if (distance === bestDistance && best) {
+                    const bestMs = parseIsoDateToUtcMs(best.date);
+                    const currentIsFuture = dayMs >= targetMs;
+                    const bestIsFuture = bestMs >= targetMs;
+                    if (currentIsFuture && !bestIsFuture) {
+                        best = day;
+                    } else if (currentIsFuture === bestIsFuture && dayMs < bestMs) {
+                        best = day;
+                    }
+                }
+            });
+
+            return best;
+        }
+
         function getTodaysMassDay() {
             const today = getTodayIsoDate();
-            return state.index.massDays.find(d => d.date === today) || state.index.massDays[0] || null;
+            return state.index.massDays.find(d => d.date === today) || getNearestMassDayToIso(today);
         }
 
         function getActiveMassDay() {
@@ -2334,6 +2378,10 @@
                 return state.index.massDays.find(d => d.date === state.selectedMassDayDate) || getTodaysMassDay();
             }
             return getTodaysMassDay();
+        }
+
+        function getDefaultMassDayDate() {
+            return getTodaysMassDay()?.date || null;
         }
 
         function formatHumanDateFromIso(isoDate) {
@@ -2804,9 +2852,9 @@
 
         function renderHeader() {
             const massDay = getActiveMassDay();
-            const dateStr = state.selectedMassDayDate || getTodayIsoDate();
-            el.headerDate.textContent = state.selectedMassDayDate
-                ? formatHumanDateFromIso(state.selectedMassDayDate)
+            const activeDate = state.selectedMassDayDate || getDefaultMassDayDate();
+            el.headerDate.textContent = activeDate
+                ? formatHumanDateFromIso(activeDate)
                 : formatHumanDate();
             el.headerCelebration.textContent = massDay?.celebration || 'Mass day not configured';
         }
@@ -2854,7 +2902,7 @@
                     : '';
 
                 const details = [
-                    `${escapeHtml(state.selectedMassDayDate ? formatHumanDateFromIso(state.selectedMassDayDate) : formatHumanDate())} - ${escapeHtml(massDay.celebration || '')}`,
+                    `${escapeHtml(state.selectedMassDayDate ? formatHumanDateFromIso(state.selectedMassDayDate) : (getDefaultMassDayDate() ? formatHumanDateFromIso(getDefaultMassDayDate()) : formatHumanDate()))} - ${escapeHtml(massDay.celebration || '')}`,
                     massDay.theme ? `<span class="landing-key">Theme:</span> ${escapeHtml(massDay.theme)}` : '',
                     readingSummary ? `<span class="landing-key">Readings:</span> ${escapeHtml(readingSummary)}` : '',
                     massDay.massImpact ? `<span class="landing-key">Mass notes:</span> ${escapeHtml(massDay.massImpact)}` : '',
@@ -2884,7 +2932,7 @@
                 el.dayClassTag.textContent = toDisplayLabel(massDay.rank || inferDayClass(), 'Day');
                 el.liturgicalColorTag.textContent = toDisplayLabel(massDay.liturgicalColor, 'Color');
             } else {
-                el.landingCelebration.textContent = `${state.selectedMassDayDate ? formatHumanDateFromIso(state.selectedMassDayDate) : formatHumanDate()} - Celebration not configured`;
+                el.landingCelebration.textContent = `${state.selectedMassDayDate ? formatHumanDateFromIso(state.selectedMassDayDate) : (getDefaultMassDayDate() ? formatHumanDateFromIso(getDefaultMassDayDate()) : formatHumanDate())} - Celebration not configured`;
                 el.todayChurchCard.classList.add('hidden');
                 el.todayChurchList.innerHTML = '';
                 el.dayClassTag.textContent = toDisplayLabel(inferDayClass(), 'Day');
@@ -2898,12 +2946,11 @@
         function navigateMassDay(direction) {
             const sorted = [...state.index.massDays].sort((a, b) => a.date.localeCompare(b.date));
             if (!sorted.length) return;
-            const active = state.selectedMassDayDate || getTodayIsoDate();
+            const active = state.selectedMassDayDate || getDefaultMassDayDate() || getTodayIsoDate();
             const idx = sorted.findIndex(d => d.date === active);
             const next = sorted[idx + direction];
             if (!next) return;
-            const today = getTodayIsoDate();
-            state.selectedMassDayDate = next.date === today ? null : next.date;
+            state.selectedMassDayDate = next.date;
             renderHeader();
             renderLanding();
         }
@@ -2912,7 +2959,8 @@
             if (!el.massDaySelect) return;
             const sorted = [...state.index.massDays].sort((a, b) => a.date.localeCompare(b.date));
             const today = getTodayIsoDate();
-            const active = state.selectedMassDayDate || today;
+            const defaultDate = getDefaultMassDayDate();
+            const active = state.selectedMassDayDate || defaultDate || today;
             el.massDaySelect.innerHTML = sorted.map(d => {
                 const label = `${d.date} — ${d.celebration}`;
                 return `<option value="${escapeHtml(d.date)}" ${d.date === active ? 'selected' : ''}>${escapeHtml(label)}</option>`;
@@ -2920,8 +2968,8 @@
             const activeIdx = sorted.findIndex(d => d.date === active);
             el.massDayPrevBtn.disabled = activeIdx <= 0;
             el.massDayNextBtn.disabled = activeIdx >= sorted.length - 1;
-            const isToday = !state.selectedMassDayDate || state.selectedMassDayDate === today;
-            el.massDayTodayBtn.classList.toggle('hidden', isToday);
+            const isAtDefault = active === (defaultDate || today);
+            el.massDayTodayBtn.classList.toggle('hidden', isAtDefault);
         }
 
         function renderWarnings() {
@@ -4403,13 +4451,15 @@
             el.massDayNextBtn.addEventListener('click', () => navigateMassDay(1));
             el.massDaySelect.addEventListener('change', () => {
                 const val = el.massDaySelect.value;
-                const today = getTodayIsoDate();
-                state.selectedMassDayDate = val === today ? null : val;
+                state.selectedMassDayDate = val;
                 renderHeader();
                 renderLanding();
             });
             el.massDayTodayBtn.addEventListener('click', () => {
-                state.selectedMassDayDate = null;
+                const defaultDate = getDefaultMassDayDate();
+                if (defaultDate) {
+                    state.selectedMassDayDate = defaultDate;
+                }
                 renderHeader();
                 renderLanding();
             });
@@ -4549,6 +4599,7 @@
             const normalized = normalizeAndIndex(records);
             state.index = normalized.idx;
             state.validationWarnings = [...parseWarnings, ...normalized.warnings];
+            state.selectedMassDayDate = getDefaultMassDayDate();
 
             renderDrawerLists();
             loadPreferences();
