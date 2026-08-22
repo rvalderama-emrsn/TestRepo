@@ -217,7 +217,7 @@
 
         .btn {
             background: var(--accent);
-            color: #fff;
+            color: var(--panel);
             border-color: transparent;
             min-height: 40px;
             padding: 0.62rem 0.9rem;
@@ -284,6 +284,24 @@
             line-height: 1.42;
             font-size: 0.93rem;
             text-wrap: pretty;
+        }
+
+        .landing-purpose {
+            max-width: 52ch;
+            color: var(--muted);
+            margin-top: 0.48rem;
+            font-size: 0.9rem;
+        }
+
+        .context-status {
+            margin-top: 0.65rem;
+            color: var(--muted);
+            font-family: var(--font-ui);
+            font-size: 0.78rem;
+        }
+
+        .context-status.is-offline {
+            color: var(--accent-strong);
         }
 
         .landing-key {
@@ -612,6 +630,45 @@
             font-variant-numeric: tabular-nums;
             text-align: right;
             white-space: nowrap;
+        }
+
+        #elapsedLabel.is-hidden {
+            display: none;
+        }
+
+        .session-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.55rem;
+            min-height: 1.2rem;
+        }
+
+        .auto-progress-status {
+            color: var(--muted);
+            font-family: var(--font-ui);
+            font-size: 0.76rem;
+            text-align: right;
+        }
+
+        .auto-progress-pause-btn {
+            min-height: 26px;
+            padding: 0.2rem 0.45rem;
+            font-size: 0.72rem;
+        }
+
+        .keyboard-hint {
+            color: var(--muted);
+            font-family: var(--font-ui);
+            font-size: 0.74rem;
+            text-align: center;
+            margin: 0;
+        }
+
+        .preference-help {
+            color: var(--muted);
+            font-size: 0.76rem;
+            line-height: 1.3;
         }
 
         .progress-meter-row {
@@ -996,6 +1053,16 @@
             gap: 0.4rem;
         }
 
+        .menu-group-label {
+            color: var(--muted);
+            font-family: var(--font-ui);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 0.35rem 0.1rem 0.05rem;
+            text-transform: uppercase;
+        }
+
         .link-btn {
             width: 100%;
             text-align: left;
@@ -1033,6 +1100,10 @@
             display: grid;
             place-items: center;
             padding: 1rem;
+        }
+
+        #confirmModal {
+            z-index: 50;
         }
 
         .fab-comment-btn {
@@ -1084,6 +1155,14 @@
             color: var(--muted);
             font-size: 0.82rem;
             margin-right: auto;
+        }
+
+        .summary-guidance {
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.35;
+            margin: 0;
+            padding: 0.55rem 0.86rem 0;
         }
 
         #commentEntryText {
@@ -1412,6 +1491,34 @@
 
         .parts-phase-header {
             margin-bottom: 0.15rem;
+        }
+
+        .parts-overview {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.35;
+            margin: 0 0 0.7rem;
+        }
+
+        .parts-phase-title-row,
+        .parts-step-title-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.6rem;
+        }
+
+        .parts-step-title-row {
+            align-items: flex-start;
+        }
+
+        .parts-step-duration {
+            color: var(--muted);
+            flex: 0 0 auto;
+            font-family: var(--font-ui);
+            font-size: 0.76rem;
+            font-weight: 400;
+            white-space: nowrap;
         }
 
         .parts-phase-desc {
@@ -1825,6 +1932,7 @@
             <div class="landing-grid">
                 <div class="landing-hero">
                     <h1 id="landingTitle">Enter the Mass prayerfully, one step at a time</h1>
+                    <p class="landing-purpose">A quiet guide for following the readings, prayers, responses, and actions of the Mass.</p>
                     <button class="btn landing-primary-action" id="startMassBtn" type="button">&#9654;&nbsp; Start Mass</button>
                     <div class="landing-content-indent">
                         <div class="mass-day-picker-row">
@@ -1835,12 +1943,13 @@
                             <button id="massDayTodayBtn" class="ghost-btn mass-day-today-btn hidden" type="button" aria-label="Jump to today">&#8617;</button>
                         </div>
                         <p id="landingCelebration">Today's celebration will appear here.</p>
+                        <p id="contentStatus" class="context-status" role="status" aria-live="polite"></p>
                         <div class="status-strip">
                             <span class="tag" id="dayClassTag">Day: ...</span>
                             <span class="tag" id="liturgicalColorTag">Color: ...</span>
                         </div>
                         <div class="today-card" id="todayChurchCard">
-                            <h4>Today at Selected Church</h4>
+                            <h4 id="todayChurchTitle">Today at Selected Church</h4>
                             <ul id="todayChurchList"></ul>
                         </div>
                         <div class="warning-box hidden" id="landingWarnings" role="status" aria-live="polite">
@@ -1886,7 +1995,11 @@
                 <div class="progress-block">
                     <div class="progress-header-row">
                         <div class="kicker" id="progressKicker">Phase 0 of 0 (Step 0 of 0)</div>
-                        <span id="elapsedLabel">Elapsed: 00:00</span>
+                        <div class="session-status-row">
+                            <span id="autoProgressStatus" class="auto-progress-status" role="status" aria-live="polite"></span>
+                            <button class="ghost-btn auto-progress-pause-btn hidden" id="autoProgressPauseBtn" type="button">Pause auto-progress</button>
+                            <span id="elapsedLabel">Elapsed: 00:00</span>
+                        </div>
                     </div>
                     <div class="progress-meter-row">
                         <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress">
@@ -1906,6 +2019,7 @@
                         </div>
                         <button class="btn step-nav-next step-nav-btn" id="nextBtn" type="button">Next</button>
                     </div>
+                    <p class="keyboard-hint" id="keyboardHint">Keyboard: Left/Right arrows navigate steps</p>
                     <div class="control-row wide session-end-row hidden" id="endActionsRow">
                         <button class="ghost-btn session-end-btn" id="startOverBtn" type="button">Start Over</button>
                         <p class="nav-hint hidden" id="navHint">Step navigation moves one step at a time.</p>
@@ -1939,7 +2053,7 @@
                     </div>
 
                     <div class="drawer-card">
-                        <h4>Preferences</h4>
+                        <h4>Personalize</h4>
                         <div class="prefs-grid">
                             <label>
                                 Theme
@@ -2003,10 +2117,12 @@
                                 <span>Enable auto-progress</span>
                                 <input class="toggle" id="autoProgressToggle" type="checkbox">
                             </label>
+                            <p class="preference-help">Auto-progress follows estimated step times. You can pause it during a session.</p>
                             <label class="toggle-row">
                                 <span>Commenting mode</span>
                                 <input class="toggle" id="commentingModeToggle" type="checkbox">
                             </label>
+                            <p class="preference-help">Comments stay on this device and are cleared after closing the end-of-session summary.</p>
                         </div>
                         <div style="margin-top: 0.9rem;">
                             <button class="link-btn hidden" id="viewCommentsBtn" type="button">View &amp; copy comments</button>
@@ -2086,6 +2202,7 @@
                 <h3 id="commentsSummaryTitle" class="detail-modal-title">Comments Summary</h3>
                 <button class="ghost-btn" type="button" id="commentsSummaryCloseBtn">Close</button>
             </div>
+            <p class="summary-guidance" id="commentsSummaryGuidance"></p>
             <div id="commentsSummaryBody" class="detail-modal-body"></div>
             <div class="modal-actions">
                 <span id="commentsSummaryStatus" class="comments-summary-status" role="status" aria-live="polite"></span>
@@ -2096,8 +2213,8 @@
     </div>
 
     <script id="embedded-mass-jsonl" type="application/x-ndjson">
-{"type":"appConfig","appName":"Mass Companion","version":"0.4.0","defaultTheme":"light","defaultChurchId":"edsa-shrine","defaultTextMode":"full","showDurationByDefault":true,"showFullLyricsByDefault":true,"enableAutoProgressByDefault":false}
-{"type":"massDay","id":"ordinary-time-19-2026-08-09","date":"2026-08-09","celebration":"19th Sunday in Ordinary Time","liturgicalColor":"Green","propers_entrance_id":"propers-entrance-2026-08-09","propers_collect_id":"propers-collect-2026-08-09","propers_responsorial_id":"propers-psalmresp-2026-08-09","propers_communion_id":"propers-comm-2026-08-09","propers_entrance_text":"Look to your covenant, O Lord, and forget not the life of your poor ones for ever. Arise, O God, and defend your cause, and forget not the cries of those who seek you.","propers_collect_text":"Almighty ever-living God, in whom we place our trust, hear the prayers of your people and grant that, strengthened by your word and sacraments, we may stand firm in faith when trials come.","propers_responsorial_text":"Lord, let us see your kindness, and grant us your salvation.","propers_communion_text":"O Jerusalem, glorify the Lord, who gives you your fill of finest wheat.","reading_first_summary":"Elijah looks for God in dramatic signs, but learns that God can also speak in a quiet whisper.","reading_psalm_summary":"I will hear what God proclaims; God — for he proclaims peace.","reading_second_summary":"Paul grieves for Israel, honoring their sacred calling, and longs for his people to welcome Christ.","reading_gospel_summary":"Jesus walks toward his followers in the storm; Peter steps out in faith but begins to sink, and Jesus saves him, calms the storm, and reveals his divine power.","reading_first_full_text":"1 Kings 19:9a, 11-13a\nAt the mountain of God, Horeb,\nElijah came to a cave where he took shelter.\nThen the LORD said to him,\n“Go outside and stand on the mountain before the LORD;\nthe LORD will be passing by.”\nA strong and heavy wind was rending the mountains\nand crushing rocks before the LORD—\nbut the LORD was not in the wind.\nAfter the wind there was an earthquake—\nbut the LORD was not in the earthquake.\nAfter the earthquake there was fire—\nbut the LORD was not in the fire.\nAfter the fire there was a tiny whispering sound.\nWhen he heard this,\nElijah hid his face in his cloak\nand went and stood at the entrance of the cave.","reading_psalm_full_text":"Psalm 85:9, 10, 11-12, 13-14\nR. (8) Lord, let us see your kindness, and grant us your salvation.\nI will hear what God proclaims;\nthe LORD — for he proclaims peace.\nNear indeed is his salvation to those who fear him,\nglory dwelling in our land.\nR. Lord, let us see your kindness, and grant us your salvation.\nKindness and truth shall meet;\njustice and peace shall kiss.\nTruth shall spring out of the earth,\nand justice shall look down from heaven.\nR. Lord, let us see your kindness, and grant us your salvation.\nThe LORD himself will give his benefits;\nour land shall yield its increase.\nJustice shall walk before him,\nand prepare the way of his steps.\nR. Lord, let us see your kindness, and grant us your salvation.","reading_second_full_text":"Romans 9:1-5\nBrothers and sisters:\nI speak the truth in Christ, I do not lie;\nmy conscience joins with the Holy Spirit in bearing me witness\nthat I have great sorrow and constant anguish in my heart.\nFor I could wish that I myself were accursed and cut off from Christ\nfor the sake of my own people,\nmy kindred according to the flesh.\nThey are Israelites;\ntheirs the adoption, the glory, the covenants,\nthe giving of the law, the worship, and the promises;\ntheirs the patriarchs, and from them,\naccording to the flesh, is the Christ,\nwho is over all, God blessed forever. Amen.","reading_gospel_full_text":"Matthew 14:22-33\nAfter he had fed the people, Jesus made the disciples get into a boat\nand precede him to the other side,\nwhile he dismissed the crowds.\nAfter doing so, he went up on the mountain by himself to pray.\nWhen it was evening he was there alone.\nMeanwhile the boat, already a few miles offshore,\nwas being tossed about by the waves, for the wind was against it.\nDuring the fourth watch of the night,\nhe came toward them walking on the sea.\nWhen the disciples saw him walking on the sea they were terrified.\n“It is a ghost,” they said, and they cried out in fear.\nAt once Jesus spoke to them, “Take courage, it is I; do not be afraid.”\nPeter said to him in reply,\n“Lord, if it is you, command me to come to you on the water.”\nHe said, “Come.”\nPeter got out of the boat and began to walk on the water toward Jesus.\nBut when he saw how strong the wind was he became frightened;\nand, beginning to sink, he cried out, “Lord, save me!”\nImmediately Jesus stretched out his hand and caught Peter,\nand said to him, “O you of little faith, why did you doubt?”\nAfter they got into the boat, the wind died down.\nThose who were in the boat did him homage, saying,\n“Truly, you are the Son of God.”","rank":"Sunday","theme":"Faith Over Fear","readings":{"first":"1 Kings 19:9, 11-13","psalm":"Psalm 85:9, 10, 11-12, 13-14","second":"Romans 9:1-5","gospel":"Matthew 14:22-33"},"responsorialPsalm":{"response":"Lord, let us see your kindness, and grant us your salvation.","responseTagalog":"Ipakita sa amin, Poon, iyong pag-ibig at lwalhati."}}
+{"type":"appConfig","appName":"Mass Companion","version":"0.5.0","defaultTheme":"light","defaultChurchId":"edsa-shrine","defaultTextMode":"full","showDurationByDefault":true,"showFullLyricsByDefault":true,"enableAutoProgressByDefault":false}
+{"type":"massDay","id":"ordinary-time-19-2026-08-09","date":"2026-08-09","celebration":"19th Sunday in Ordinary Time","liturgicalColor":"Green","propers_entrance_id":"propers-entrance-2026-08-09","propers_collect_id":"propers-collect-2026-08-09","propers_responsorial_id":"propers-psalmresp-2026-08-09","propers_communion_id":"propers-comm-2026-08-09","propers_entrance_text":"Look to your covenant, O Lord, and forget not the life of your poor ones for ever. Arise, O God, and defend your cause, and forget not the cries of those who seek you.","propers_collect_text":"Almighty ever-living God, in whom we place our trust, hear the prayers of your people and grant that, strengthened by your word and sacraments, we may stand firm in faith when trials come.","propers_responsorial_text":"Lord, let us see your kindness, and grant us your salvation.","propers_communion_text":"O Jerusalem, glorify the Lord, who gives you your fill of finest wheat.","reading_first_summary":"Elijah looks for God in dramatic signs, but learns that God can also speak in a quiet whisper.","reading_psalm_summary":"I will hear what God proclaims; God — for he proclaims peace.","reading_second_summary":"Paul grieves for Israel, honoring their sacred calling, and longs for his people to welcome Christ.","reading_gospel_summary":"Jesus walks toward his followers in the storm; Peter steps out in faith but begins to sink, and Jesus saves him, calms the storm, and reveals his divine power.","reading_first_full_text":"1 Kings 19:9a, 11-13a\nAt the mountain of God, Horeb,\nElijah came to a cave where he took shelter.\nThen the LORD said to him,\n“Go outside and stand on the mountain before the LORD;\nthe LORD will be passing by.”\nA strong and heavy wind was rending the mountains\nand crushing rocks before the LORD—\nbut the LORD was not in the wind.\nAfter the wind there was an earthquake—\nbut the LORD was not in the earthquake.\nAfter the earthquake there was fire—\nbut the LORD was not in the fire.\nAfter the fire there was a tiny whispering sound.\nWhen he heard this,\nElijah hid his face in his cloak\nand went and stood at the entrance of the cave.","reading_psalm_full_text":"Psalm 85:9, 10, 11-12, 13-14\nR. (8) Lord, let us see your kindness, and grant us your salvation.\nI will hear what God proclaims;\nthe LORD — for he proclaims peace.\nNear indeed is his salvation to those who fear him,\nglory dwelling in our land.\nR. Lord, let us see your kindness, and grant us your salvation.\nKindness and truth shall meet;\njustice and peace shall kiss.\nTruth shall spring out of the earth,\nand justice shall look down from heaven.\nR. Lord, let us see your kindness, and grant us your salvation.\nThe LORD himself will give his benefits;\nour land shall yield its increase.\nJustice shall walk before him,\nand prepare the way of his steps.\nR. Lord, let us see your kindness, and grant us your salvation.","reading_second_full_text":"Romans 9:1-5\nBrothers and sisters:\nI speak the truth in Christ, I do not lie;\nmy conscience joins with the Holy Spirit in bearing me witness\nthat I have great sorrow and constant anguish in my heart.\nFor I could wish that I myself were accursed and cut off from Christ\nfor the sake of my own people,\nmy kindred according to the flesh.\nThey are Israelites;\ntheirs the adoption, the glory, the covenants,\nthe giving of the law, the worship, and the promises;\ntheirs the patriarchs, and from them,\naccording to the flesh, is the Christ,\nwho is over all, God blessed forever. Amen.","reading_gospel_full_text":"Matthew 14:22-33\nAfter he had fed the people, Jesus made the disciples get into a boat\nand precede him to the other side,\nwhile he dismissed the crowds.\nAfter doing so, he went up on the mountain by himself to pray.\nWhen it was evening he was there alone.\nMeanwhile the boat, already a few miles offshore,\nwas being tossed about by the waves, for the wind was against it.\nDuring the fourth watch of the night,\nhe came toward them walking on the sea.\nWhen the disciples saw him walking on the sea they were terrified.\n“It is a ghost,” they said, and they cried out in fear.\nAt once Jesus spoke to them, “Take courage, it is I; do not be afraid.”\nPeter said to him in reply,\n“Lord, if it is you, command me to come to you on the water.”\nHe said, “Come.”\nPeter got out of the boat and began to walk on the water toward Jesus.\nBut when he saw how strong the wind was he became frightened;\nand, beginning to sink, he cried out, “Lord, save me!”\nImmediately Jesus stretched out his hand and caught Peter,\nand said to him, “O you of little faith, why did you doubt?”\nAfter they got into the boat, the wind died down.\nThose who were in the boat did him homage, saying,\n“Truly, you are the Son of God.”","rank":"Sunday","theme":"Faith Over Fear","readings":{"first":"1 Kings 19:9, 11-13","psalm":"Psalm 85:9, 10, 11-12, 13-14","second":"Romans 9:1-5","gospel":"Matthew 14:22-33"},"responsorialPsalm":{"response":"Lord, let us see your kindness, and grant us your salvation.","responseTagalog":"Ipakita sa amin, Poon, iyong pag-ibig at luwalhati."}}
 {"type":"church","id":"edsa-shrine","name":"National Shrine of Mary, Queen of Peace (EDSA Shrine)","location":"EDSA cor. Ortigas Ave., Quezon City","practicalNotes":"Arrive at least 30 minutes early for Sunday Masses — the 1:30 PM slot fills quickly after the noon crowd. Robinsons Galleria basement parking is the practical option."}
 {"type":"schedule","id":"edsa-sun-0800","churchId":"edsa-shrine","day":"Sunday","startTime":"08:00","language":"English","obligation":"sunday","recurrence":"weekly","dayOfWeek":"sunday"}
 {"type":"schedule","id":"edsa-sun-0930","churchId":"edsa-shrine","day":"Sunday","startTime":"09:30","language":"English","obligation":"sunday","recurrence":"weekly","dayOfWeek":"sunday"}
@@ -2112,7 +2229,7 @@
 {"type":"schedule","id":"edsa-mon-sat-1500","churchId":"edsa-shrine","day":"Monday-Saturday","startTime":"15:00","language":"English","obligation":"weekday","recurrence":"weekly","dayOfWeek":"monday-saturday"}
 {"type":"schedule","id":"edsa-mon-sat-1800","churchId":"edsa-shrine","day":"Monday-Saturday","startTime":"18:00","language":"English","obligation":"weekday","recurrence":"weekly","dayOfWeek":"monday-saturday"}
 {"type":"schedule","id":"edsa-sat-1800-anticipated","churchId":"edsa-shrine","day":"Saturday","startTime":"18:00","language":"English","obligation":"anticipated","recurrence":"weekly","dayOfWeek":"saturday","notes":"Fulfills Sunday obligation"}
-{"type":"song","id":"song-buklod-ng-pagibig","title":"Buklod ng Pag-ibig","category":"hymn","language":"Tagalog","byline":"Fr. Eduardo P. Hontiveros, SJ","tags":["entrance","processional","edsa"],"liturgicalParts":["entrance"],"active":true,"summary":"A Filipino entrance hymn about gathering as a community in love and worship."}
+{"type":"song","id":"song-buklod-ng-pagibig","title":"Buklod ng Pag-ibig","category":"hymn","language":"Tagalog","byline":"Fr. Eduardo P. Hontiveros, SJ","tags":["entrance","processional","edsa"],"liturgicalParts":["entrance"],"displayPolicy":"full","active":true,"summary":"A Filipino entrance hymn about gathering as a community in love and worship."}
 {"type":"song","id":"song-bayang-umawit","title":"Bayang Umawit","category":"hymn","language":"Tagalog","byline":"Fr. Manoling Francisco, SJ","tags":["entrance","processional"],"sourceUrl":"https://genius.com/Himig-heswita-bayan-umawit-lyrics","sourceName":"Genius.com","lyrics":"[Chorus]\nBayan, umawit ng papuri\nSapagkat ngayon Ika'y pinili\nIisang bayan, iisang lipi\nIisang Diyos, iisang Hari\nBayan, umawit ng papuri\nBayan, umawit ng papuri\n\n[Verse 1]\nMula sa ilan ay tinawag ng Diyos\nBayang lagalag, inangkin ng lubos\nPagkat kailan ma'y 'di pababayaan\nMinamahal N'yang kawan\n\n[Chorus]\nBayan, umawit ng papuri\nSapagkat ngayon Ika'y pinili\nIisang bayan, iisang lipi (Iisang bayan, iisang lipi)\nIisang Diyos, iisang Hari (Diyos, Hari)\nBayan, umawit ng papuri (Bayan, umawit ng papuri)\nBayan, umawit ng papuri (Bayan, umawit ng papuri)\n\n[Verse 2]\nPanginoon, ating magliligtas\nSa kagipitan, Siyang tanging lakas\nPagkat sumpa N'ya'y laging iingatan\nMinamahal N'yang Bayan","lyricsFull":"[Chorus]\nBayan, umawit ng papuri\nSapagkat ngayon Ika'y pinili\nIisang bayan, iisang lipi\nIisang Diyos, iisang Hari\nBayan, umawit ng papuri\nBayan, umawit ng papuri\n\n[Verse 1]\nMula sa ilan ay tinawag ng Diyos\nBayang lagalag, inangkin ng lubos\nPagkat kailan ma'y 'di pababayaan\nMinamahal N'yang kawan\n\n[Chorus]\nBayan, umawit ng papuri\nSapagkat ngayon Ika'y pinili\nIisang bayan, iisang lipi (Iisang bayan, iisang lipi)\nIisang Diyos, iisang Hari (Diyos, Hari)\nBayan, umawit ng papuri (Bayan, umawit ng papuri)\nBayan, umawit ng papuri (Bayan, umawit ng papuri)\n\n[Verse 2]\nPanginoon, ating magliligtas\nSa kagipitan, Siyang tanging lakas\nPagkat sumpa N'ya'y laging iingatan\nMinamahal N'yang Bayan"}
 {"type":"song","id":"song-sa-piging-ng-panginoon","title":"Sa Piging ng Panginoon","category":"hymn","language":"Tagalog","tags":["entrance","marian"]}
 {"type":"song","id":"song-panginoon-maawa-ka","title":"Panginoon, Maawa Ka","category":"chant","language":"Tagalog","byline":"Fr. Eduardo \\Fr. Honti\\ Hontiveros, SJ","tags":["kyrie","penitential"],"liturgicalParts":["kyrie"],"displayPolicy":"full","active":true,"summary":"A Tagalog Kyrie setting for the Penitential Act, alternating priest and assembly responses."}
@@ -2140,7 +2257,7 @@
 {"type":"song","id":"song-pananagutan-lyrics","title":"Pananagutan","category":"hymn","language":"Tagalog","tags":["recessional","mission","community"],"liturgicalParts":["recessional"],"sourceUrl":"https://www.christiansong-lyrics.com/pananagutan-catholic-song-lyrics/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Tagalog hymn on shared responsibility and mission.","lyrics":"Walang sinuman ang nabubuhay para sa sarili lamang\nWalang sinuman ang namamatay para sa sarili lamang\nKoro:\nTayong lahat ay may pananagutan sa isa’t-isa\nTayong lahat ay tinipon ng Diyos na kapiling nya\nSa ating pagmamahalan at paglilingkod sa kaninuman\nTayo’y nagdadala ng balita ng kaligtasan\nSabay-sabay ngang mag-aawitan ang mga bansa\nTayo’y itinuring ng Panginoon bilang mga anak\n(Koro)","lyricsFull":"Walang sinuman ang nabubuhay para sa sarili lamang\nWalang sinuman ang namamatay para sa sarili lamang\nKoro:\nTayong lahat ay may pananagutan sa isa’t-isa\nTayong lahat ay tinipon ng Diyos na kapiling nya\nSa ating pagmamahalan at paglilingkod sa kaninuman\nTayo’y nagdadala ng balita ng kaligtasan\nSabay-sabay ngang mag-aawitan ang mga bansa\nTayo’y itinuring ng Panginoon bilang mga anak\n(Koro)"}
 {"type":"song","id":"song-tinapay-ng-buhay-manoling","title":"Tinapay ng Buhay","category":"hymn","language":"Tagalog","byline":"Fr. Manoling Francisco, SJ","tags":["communion","eucharistic"],"liturgicalParts":["communion"],"sourceUrl":"https://www.christiansong-lyrics.com/tinapay-ng-buhay-catholic-song-lyrics/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Communion hymn attributed to Fr. Manoling Francisco, SJ.","lyrics":"Koro:\nIkaw, Hesus ang Tinapay ng buhay\nBinasbasan, hinati’t inialay\nBuhay na ganap ang sa ami’y kaloob\nAt pagsasalong walang hanggan.\nBasbasan ang buhay naming handog\nNawa’y matulad sa pag-aalay Mo\nBuhay na laan nang lubos\nSa mundong sa pag-ibig ay kapos\n\n(Koro)\n\nMarapatin sa kapwa maging tinapay\nKagalakan sa nalulumbay\nKatarungan sa naaapi\nAt kanlungan ng bayan Mong sawi\n\n(Koro)","lyricsFull":"Koro:\nIkaw, Hesus ang Tinapay ng buhay\nBinasbasan, hinati’t inialay\nBuhay na ganap ang sa ami’y kaloob\nAt pagsasalong walang hanggan.\nBasbasan ang buhay naming handog\nNawa’y matulad sa pag-aalay Mo\nBuhay na laan nang lubos\nSa mundong sa pag-ibig ay kapos\n\n(Koro)\n\nMarapatin sa kapwa maging tinapay\nKagalakan sa nalulumbay\nKatarungan sa naaapi\nAt kanlungan ng bayan Mong sawi\n\n(Koro)"}
 {"type":"song","id":"song-purihin-ang-panginoon","title":"Purihin ang Panginoon","category":"hymn","language":"Tagalog","byline":"Fr. Eduardo Hontiveros, SJ","tags":["entrance","recessional","praise"],"liturgicalParts":["entrance","recessional"],"sourceUrl":"https://www.christiansong-lyrics.com/purihin-ang-panginoon-catholic-song-lyrics/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Tagalog praise hymn often used in entrance/recessional.","lyrics":"Koro:\nPurihin ang Panginoon\nUmawit ng kagalakan\nAt tugtugin ang gitara\nAt ang kaaya-ayang lira\nHipan ninyo ang trumpeta\nSa ating pagkabagabag\nSa Diyos tayo’y tumawag\nSa ating mga kaaway\nTayo ay kanyang iniligtas\n\n(Koro)\n\nAng pasaning mabigat\nSa ‘ting mga balikat\nPinagaan ng lubusan\nNg Diyos na tagapagligtas\n\n(Koro)\n\nKaya’t Panginoo’y dinggin\nAng landas Niya’y tahakin\nHabang buhay ay purihin\nKagandahang loob Niya sa’tin\n\n(Koro)","lyricsFull":"Koro:\nPurihin ang Panginoon\nUmawit ng kagalakan\nAt tugtugin ang gitara\nAt ang kaaya-ayang lira\nHipan ninyo ang trumpeta\nSa ating pagkabagabag\nSa Diyos tayo’y tumawag\nSa ating mga kaaway\nTayo ay kanyang iniligtas\n\n(Koro)\n\nAng pasaning mabigat\nSa ‘ting mga balikat\nPinagaan ng lubusan\nNg Diyos na tagapagligtas\n\n(Koro)\n\nKaya’t Panginoo’y dinggin\nAng landas Niya’y tahakin\nHabang buhay ay purihin\nKagandahang loob Niya sa’tin\n\n(Koro)"}
-{"type":"song","id":"song-ang-tanging-alay-ko","title":"Ang Tanging Alay Ko","category":"hymn","language":"Tagalog","byline":"Fr. Rey Magnaye","tags":["offertory","offering"],"liturgicalParts":["offertory"],"sourceUrl":"https://www.christiansong-lyrics.com/ang-tanging-alay-ko-lyrics-catholic-song/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Offertory hymn of total self-offering.","lyrics":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubosChristianity\n\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\n\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n\n(Koro)\n\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n\n(Koro)","lyricsFull":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubosChristianity\n\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\n\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n\n(Koro)\n\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n\n(Koro)"}
+{"type":"song","id":"song-ang-tanging-alay-ko","title":"Ang Tanging Alay Ko","category":"hymn","language":"Tagalog","byline":"Fr. Rey Magnaye","tags":["offertory","offering"],"liturgicalParts":["offertory"],"sourceUrl":"https://www.christiansong-lyrics.com/ang-tanging-alay-ko-lyrics-catholic-song/","sourceName":"Christian Song Lyrics","displayPolicy":"full","active":true,"summary":"Offertory hymn of total self-offering.","lyrics":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubos\n\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\n\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n\n(Koro)\n\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n\n(Koro)","lyricsFull":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubos\n\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\n\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n\n(Koro)\n\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n\n(Koro)"}
 {"type":"song","id":"song-iesu-panis-vitae","title":"Iesu, Panis Vitae","category":"hymn","language":"Multilingual","byline":"Fr. Manoling Francisco, SJ","tags":["communion","eucharistic","multilingual","papal-visit-2015"],"liturgicalParts":["communion"],"sourceUrl":"https://www.bukaspalad.com/songs/iesu_panis_vitae","sourceName":"Bukas Palad Music Ministry","displayPolicy":"full","active":true,"summary":"Official Communion hymn for the 2015 Apostolic Visit of Pope Francis to the Philippines (Luneta Mass); composed by Fr. Manoling Francisco, SJ with text by Rene Javellana, SJ.","lyrics":"Iesu, Panis Vitae, Donum Patris.\nIesu, Fons Vitae, Fons Vitae Aquae.\nCibus et potus noster, cibus et potus noster\nin itinere, in itinere ad domum Dei.\n\nMula sa lupa, sumibol kang masigla,\nmatapos kang yurakan ng mga masasama.\nSumilang ang liwanag ng mga nawawala,\nTinapay ng Buhay, Pagkain ng dukha. (REFRAIN)\n\nJesus, Food divine, be our strength each day,\nso we do not tire as we witness to your love and care\nto those in greater need, both near and far away.\nMay we lead them back to you, all those who have gone astray. (REFRAIN)\n\nEn la vida, Jesu?s, sea nuestro Consuelo.\nSea nuestro Amigo y Compan?ero.\nSiempre podamos responder a su Llamada.\nSiempre dispuesto a hace?r tu Volunta?d. (REFRAIN)\n\nChristo Regi Deo nato per Mariam nobis dato.\nMerito resonet vere laus, honor, et gloria.","lyricsFull":"Refrain (Latin; All):\nIesu, Panis vitae, Donum Patris.\nIesu, Fons vitae, Fons vitae acquae.\nCibus et potus noster, cibus et potus noster\nin itinere, in itinere ad domus Dei.\n\nVerse 1 (Tagalog):\nMula sa lupa sumibol Kang masigla.\nMatapos Kang yurakan ng mga masasama,\nsumilang ang liwanag ng mga nawawala.\nTinapay ng- buhay, Pagkain ng dukha.\n\nVerse 2 (Cebuano):\nGikan sa binlud usa Ka,\nTinapay nga bunga sa among buhat at kabudlay.\nHi naut maghiusa kami sa ma niining.\nTinapay ti guma kami, Hesus, among Ginuong tunhay.\n\nVerse 3 (English):\nJesus, Food divine\nbe our strength each day\nso we don’t tire as we witness\nto Your love and care to those in greater need,\nboth near and far away, may we lead them back to You,\nall those who’ve gone astray.\n\nVerse 4 (Hiligaynon):\nDalon namong Imong balaang\npulong manga lagay kag tudlo\nMong matarong Kahayag sang\nEspiritu sang kamatu oran\nsuganga mapawa sa among dalan.\n\nVerse 5 (Spanish):\nEn la vida, Jesus, sea nuestro Consuelo\nSea nuestro amigo y compañero.\nSiempre podamos responder a su llamada,\nSiempre dispuesto a hacer tu voluntad.\n\nVerse 6 (Tagalog):\nPagkain ng buhay, Handog ng Ama,\nbukal Ka ng buhay, Batis ng biyaya.\nMaging pagkain sa ’min at inumin ng tanan\nsa paglalakbay namin sa tahanan ng Ama."}
 {"type":"songText","id":"songtext-seek-ye-first-en-v1","songId":"song-seek-ye-first","language":"English","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Seek ye first the Kingdom of God\nAnd His righteousness\nAnd all these things shall be added unto you\nAllelu Alleluia\n\nAsk and it shall be given unto you\nSeek and ye shall find\nKnock and it shall be opened unto you\nAllelu Alleluia\n\nAl - le - lu - ia\nAl - le - lu - ia\nAl - le - lu - ia\nAl - le - lu Al - le - lu - ia\n(2x)"}],"lastVerifiedAt":"2026-08-21"}
 {"type":"songText","id":"songtext-bayang-umawit-tl-v1","songId":"song-bayang-umawit","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"[Koro]\nBayan, umawit ng papuri\nSapagkat ngayon ika'y pinili\nIisang bayan, iisang lipi\nIisang Diyos, iisang Hari\nBayan, umawit ng papuri\nBayan, umawit ng papuri\n\n[Talata 1]\nMula sa ilang ay tinawag ng Diyos\nBayang lagalag inangkin ng lubos\nPagkat kailanma'y 'di pababayaan\nMinamahal N'yang kawan\n\n(Ulitin ang Koro)\n\n[Talata 2]\nPanginoon nating manliligtas\nSa kagipitan, Siya'y tanging lakas\nPagkat sumpa N'ya'y laging iingatan\nMinamahal N'yang bayan\n\n(Ulitin ang Koro)"}],"lastVerifiedAt":"2026-08-21"}
@@ -2155,7 +2272,7 @@
 {"type":"songText","id":"songtext-pananagutan-tl-v1","songId":"song-pananagutan-lyrics","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Walang sinuman ang nabubuhay para sa sarili lamang\nWalang sinuman ang namamatay para sa sarili lamang\nKoro:\nTayong lahat ay may pananagutan sa isa’t-isa\nTayong lahat ay tinipon ng Diyos na kapiling nya\nSa ating pagmamahalan at paglilingkod sa kaninuman\nTayo’y nagdadala ng balita ng kaligtasan\nSabay-sabay ngang mag-aawitan ang mga bansa\nTayo’y itinuring ng Panginoon bilang mga anak\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/pananagutan-catholic-song-lyrics/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-tinapay-ng-buhay-tl-v1","songId":"song-tinapay-ng-buhay-manoling","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Koro:\nIkaw, Hesus ang Tinapay ng buhay\nBinasbasan, hinati’t inialay\nBuhay na ganap ang sa ami’y kaloob\nAt pagsasalong walang hanggan.\nBasbasan ang buhay naming handog\nNawa’y matulad sa pag-aalay Mo\nBuhay na laan nang lubos\nSa mundong sa pag-ibig ay kapos\n(Koro)\nMarapatin sa kapwa maging tinapay\nKagalakan sa nalulumbay\nKatarungan sa naaapi\nAt kanlungan ng bayan Mong sawi\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/tinapay-ng-buhay-catholic-song-lyrics/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-purihin-ang-panginoon-tl-v1","songId":"song-purihin-ang-panginoon","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Koro:\nPurihin ang Panginoon\nUmawit ng kagalakan\nAt tugtugin ang gitara\nAt ang kaaya-ayang lira\nHipan ninyo ang trumpeta\nSa ating pagkabagabag\nSa Diyos tayo’y tumawag\nSa ating mga kaaway\nTayo ay kanyang iniligtas\n(Koro)\nAng pasaning mabigat\nSa ‘ting mga balikat\nPinagaan ng lubusan\nNg Diyos na tagapagligtas\n(Koro)\nKaya’t Panginoo’y dinggin\nAng landas Niya’y tahakin\nHabang buhay ay purihin\nKagandahang loob Niya sa’tin\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/purihin-ang-panginoon-catholic-song-lyrics/","lastVerifiedAt":"2026-08-02"}
-{"type":"songText","id":"songtext-ang-tanging-alay-ko-tl-v1","songId":"song-ang-tanging-alay-ko","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubosChristianity\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n(Koro)\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/ang-tanging-alay-ko-lyrics-catholic-song/","lastVerifiedAt":"2026-08-02"}
+{"type":"songText","id":"songtext-ang-tanging-alay-ko-tl-v1","songId":"song-ang-tanging-alay-ko","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Salamat sa Iyo\nAking Panginoong Hesus\nAko’y inibig Mo\nAt inangking lubos\nKoro:\nAng tanging alay ko sa Iyo aking Ama\nAy buong buhay ko puso at kaluluwa\nDi na makayanang maipagkaloob\nMamahaling hiyas O gintong sinukob\nAng tanging dalangin O Diyos ay tanggapin\nAng tanging alay ko nawa ay gamitin\nIto lamang Ama wala nang iba pa\nAkong hinihiling\nDi ko akalain\nNa ako ay bigyang pansin\nAng taong tulad ko\nDi dapat mahalin\n(Koro)\nAking hinihintay\nAng Iyong pagbabalik, Hesus\nAng makapiling Ka’y\nKagalakang lubos\n(Koro)"}],"sourceUrl":"https://www.christiansong-lyrics.com/ang-tanging-alay-ko-lyrics-catholic-song/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-song-kordero-ng-diyos-full-v1","songId":"song-kordero-ng-diyos","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Kordero ng Diyos\nNa nag-aalis ng mga kasalanan\nNg sanlibutan\nMaawa Ka (2x)\nKordero ng Diyos\nNa nag-aalis ng mga kasalanan\nIpagkaloob Mo sa amin\nAng kapayapaan"}],"sourceUrl":"https://www.christiansong-lyrics.com/kordero-ng-diyos-bukas-palad-lyrics/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-song-unang-alay-full-v1","songId":"song-unang-alay","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"Koro:\nKunin at tanggapin ang alay na ito\nmga biyayang nagmula sa pagpapala mo\ntanda ng bawat pusong ‘pagkat inibig Mo\nngayo’y nananalig, nagmamahal sa yo.\nTinapay na nagmula sa butil ng trigo\npagkaing nagbibigay ng buhay mo\nat alak na nagmula sa isang tangkay ng ubas\ninuming nagbibigay lakas.\nLahat ng mga lungkot ligaya’t pagsubok\nlahat ng lakas at kahinaan ko\nIaalay kong lahat buong pagkatao\nito ay isusunod sa ‘yo."}],"sourceUrl":"https://www.christiansong-lyrics.com/unang-alay-catholic-song-lyrics/","lastVerifiedAt":"2026-08-02"}
 {"type":"songText","id":"songtext-buklod-ng-pagibig-tl-v1","songId":"song-buklod-ng-pagibig","language":"Tagalog","versionName":"default","flow":["full"],"sections":[{"id":"full","role":"full","text":"[Chorus]\nBuklod ng pag-ibig, tayo ay sumamba\nSa pagkakaisa, purihin Siyang aba\n\n[Verse 1]\nPurihin, purihin at ating sambahin\nAng Diyos ng pag-ibig, nagmamahal sa'tin\n\n[Chorus]\n\n[Verse 2]\nIwalay sa puso'y sama ng loob\nHalika'y iwaksi't ibaon sa limot\n\n[Chorus]\n\n[Verse 3]\nSa hapag ng Diyos, ang lahat ay katabi\nAng Ama ay pag-ibig sa atin ay kay-laki\n\n[Chorus]\n\n[Verse 4]\nSa pagmamahalan, tayo'y nagtitipon\nHalina't umawit, magalak sa Poon\n\n[Chorus]"}],"sourceUrl":"https://genius.com/Himig-heswita-buklod-ng-pag-ibig-lyrics","lastVerifiedAt":"2026-08-21"}
@@ -2297,6 +2414,9 @@
                 selectedAlternatives: {},
                 elapsedTimerId: null,
                 autoAdvanceTimerId: null,
+                autoProgressPaused: false,
+                autoProgressRemainingMs: null,
+                autoProgressDueAt: null,
                 navigationEvents: 0,
                 stepDurations: {},
                 currentStepEnteredAt: null,
@@ -2318,10 +2438,12 @@
                 detailModalHistory: [],
                 lastDetailModalView: null,
                 pendingCommentsSummary: false,
-                clearCommentsOnSummaryClose: true
+                clearCommentsOnSummaryClose: true,
+                confirmingCommentClear: false
             },
             confirmAction: null,
-            selectedMassDayDate: null
+            selectedMassDayDate: null,
+            selectedMassDayExplicit: false
         };
 
         const el = {};
@@ -2330,11 +2452,11 @@
             [
                 'headerCelebration', 'headerDate', 'menuButton',
                 'landingPanel', 'landingCelebration', 'dayClassTag', 'liturgicalColorTag',
-                'todayChurchCard', 'todayChurchList',
-                'landingWarnings', 'landingWarningsList',
+                'todayChurchCard', 'todayChurchTitle', 'todayChurchList',
+                'landingWarnings', 'landingWarningsList', 'contentStatus',
                 'startMassBtn', 'startPremassBtn', 'openSchedulesBtn',
                 'premassPanel', 'premassIntro', 'premassPrayerList', 'continueToMassBtn', 'backToLandingFromPremassBtn',
-                'sessionPanel', 'phaseKicker', 'progressKicker', 'stepTitle', 'stepSubtitle', 'elapsedLabel', 'progressLabel',
+                'sessionPanel', 'phaseKicker', 'progressKicker', 'stepTitle', 'stepSubtitle', 'elapsedLabel', 'progressLabel', 'autoProgressStatus', 'autoProgressPauseBtn', 'keyboardHint',
                 'progressFill', 'stepCard', 'jumpSelect', 'backBtn', 'nextBtn', 'alternativesBtn', 'startOverBtn',
                 'endSessionBtn', 'navHint', 'endActionsToggleBtn', 'endActionsRow',
                 'menuOverlay', 'closeMenuBtn', 'referencesList',
@@ -2347,7 +2469,7 @@
                 'massDaySelect', 'massDayTodayBtn', 'massDayPrevBtn', 'massDayNextBtn',
                 'commentingModeToggle', 'commentFabBtn', 'commentFabBtnMenu', 'commentFabBtnAlt', 'commentFabBtnDetail', 'commentFabBtnConfirm',
                 'commentEntryModal', 'commentEntryPageLabel', 'commentEntryText', 'commentEntryCancelBtn', 'commentEntrySaveBtn',
-                'commentsSummaryModal', 'commentsSummaryBody', 'commentsSummaryCloseBtn', 'commentsSummaryCopyBtn', 'commentsSummaryEmailBtn', 'commentsSummaryStatus',
+                'commentsSummaryModal', 'commentsSummaryGuidance', 'commentsSummaryBody', 'commentsSummaryCloseBtn', 'commentsSummaryCopyBtn', 'commentsSummaryEmailBtn', 'commentsSummaryStatus',
                 'viewCommentsBtn'
             ].forEach(id => {
                 el[id] = document.getElementById(id);
@@ -2590,6 +2712,10 @@
             return getTodaysMassDay()?.date || null;
         }
 
+        function isTodayMassDayExact() {
+            return Boolean(state.index.massDays.some(day => day.date === getTodayIsoDate()));
+        }
+
         function formatHumanDateFromIso(isoDate) {
             const [y, m, d] = isoDate.split('-').map(Number);
             return new Intl.DateTimeFormat('en-US', {
@@ -2730,6 +2856,13 @@
             const min = Math.floor(seconds / 60);
             const sec = seconds % 60;
             return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
+        function formatEstimatedDuration(seconds) {
+            const numericSeconds = Number(seconds);
+            if (!Number.isFinite(numericSeconds) || numericSeconds <= 0) return '';
+            if (numericSeconds < 60) return `~${Math.max(1, Math.round(numericSeconds))} sec`;
+            return `~${Math.max(1, Math.round(numericSeconds / 60))} min`;
         }
 
         function getElapsedSeconds() {
@@ -3079,6 +3212,9 @@
 
         function showCommentsSummary() {
             const pageKeys = Object.keys(state.session.comments);
+            el.commentsSummaryGuidance.textContent = state.ui.clearCommentsOnSummaryClose
+                ? 'Copy or email your notes before closing. Closing this session summary clears its comments from this device.'
+                : 'These comments remain saved on this device when you close this view.';
             if (pageKeys.length === 0) {
                 el.commentsSummaryBody.innerHTML = '<p style="color: var(--muted);">No comments were recorded for this Mass.</p>';
             } else {
@@ -3092,6 +3228,14 @@
         }
 
         function closeCommentsSummary() {
+            if (state.ui.clearCommentsOnSummaryClose && Object.keys(state.session.comments).length > 0 && !state.ui.confirmingCommentClear) {
+                state.ui.confirmingCommentClear = true;
+                showConfirm('Closing this summary clears these comments from this device. Copy or email them first?', () => {
+                    closeCommentsSummary();
+                    state.ui.confirmingCommentClear = false;
+                });
+                return;
+            }
             closeModal(el.commentsSummaryModal);
             if (state.ui.clearCommentsOnSummaryClose) {
                 state.session.comments = {};
@@ -3134,7 +3278,21 @@
             } catch (error) {
                 succeeded = legacyCopyToClipboard(text);
             }
-            el.commentsSummaryStatus.textContent = succeeded ? 'Copied to clipboard.' : 'Copy failed — try Email instead.';
+            el.commentsSummaryStatus.textContent = succeeded ? 'Copied to clipboard.' : 'Copy failed. Try Email instead.';
+        }
+
+        function emailCommentsSummary() {
+            const subject = encodeURIComponent('Mass Companion - Session Comments');
+            const body = encodeURIComponent(buildCommentsSummaryText());
+            const mailto = `mailto:?subject=${subject}&body=${body}`;
+            try {
+                const emailWindow = window.open(mailto, '_blank', 'noopener,noreferrer');
+                el.commentsSummaryStatus.textContent = emailWindow
+                    ? 'Email opened. If it did not open, use Copy instead.'
+                    : 'Email could not be opened. Use Copy instead.';
+            } catch (error) {
+                el.commentsSummaryStatus.textContent = 'Email could not be opened. Use Copy instead.';
+            }
         }
 
         function showSessionSummaryFlow() {
@@ -3330,20 +3488,42 @@
 
                 if (churchLines.length > 0) {
                     el.todayChurchCard.classList.remove('hidden');
+                    el.todayChurchTitle.textContent = state.selectedMassDayExplicit || !isTodayMassDayExact()
+                        ? 'At Selected Church'
+                        : 'Today at Selected Church';
                     el.todayChurchList.innerHTML = churchLines.join('');
                 } else {
                     el.todayChurchCard.classList.add('hidden');
+                    el.todayChurchTitle.textContent = 'At Selected Church';
                     el.todayChurchList.innerHTML = '';
                 }
 
                 el.dayClassTag.textContent = toDisplayLabel(massDay.rank || inferDayClass(), 'Day');
                 el.liturgicalColorTag.textContent = toDisplayLabel(massDay.liturgicalColor, 'Color');
+
+                const dateContext = state.selectedMassDayExplicit
+                    ? `Selected Mass day: ${formatHumanDateFromIso(massDay.date)}`
+                    : (isTodayMassDayExact()
+                        ? `Today's Mass: ${formatHumanDateFromIso(massDay.date)}`
+                        : `Nearest available celebration: ${formatHumanDateFromIso(massDay.date)}`);
+                const sourceContext = state.source === 'embedded'
+                    ? 'Offline content is in use.'
+                    : 'Full content loaded.';
+                const warningContext = state.validationWarnings.length
+                    ? ` ${state.validationWarnings.length} content warning${state.validationWarnings.length === 1 ? '' : 's'} available.`
+                    : '';
+                el.contentStatus.textContent = `${dateContext}. ${sourceContext}${warningContext}`;
+                el.contentStatus.classList.toggle('is-offline', state.source === 'embedded');
             } else {
                 el.landingCelebration.textContent = `${state.selectedMassDayDate ? formatHumanDateFromIso(state.selectedMassDayDate) : (getDefaultMassDayDate() ? formatHumanDateFromIso(getDefaultMassDayDate()) : formatHumanDate())} - Celebration not configured`;
                 el.todayChurchCard.classList.add('hidden');
                 el.todayChurchList.innerHTML = '';
                 el.dayClassTag.textContent = toDisplayLabel(inferDayClass(), 'Day');
                 el.liturgicalColorTag.textContent = 'Color';
+                el.contentStatus.textContent = state.source === 'embedded'
+                    ? 'Offline content is in use. No Mass day is configured.'
+                    : 'No Mass day is configured.';
+                el.contentStatus.classList.toggle('is-offline', state.source === 'embedded');
             }
             renderMassDayPicker();
             renderWarnings();
@@ -3358,6 +3538,7 @@
             const next = sorted[idx + direction];
             if (!next) return;
             state.selectedMassDayDate = next.date;
+            state.selectedMassDayExplicit = true;
             renderHeader();
             renderLanding();
         }
@@ -3919,17 +4100,25 @@
                         .filter(step => step.phaseId === phase.id)
                         .sort((a, b) => (a.order || 0) - (b.order || 0));
                     const phaseDesc = audience === 'child' ? phase.descriptionChild : phase.descriptionAdult;
+                    const phaseSeconds = steps.reduce((sum, step) => sum + (Number(step.estimatedSeconds) || 0), 0);
+                    const phaseDuration = formatEstimatedDuration(phaseSeconds);
                     const stepItems = steps.length
                         ? steps.map((step, idx) => {
                             const stepDesc = audience === 'child' ? step.descriptionChild : step.descriptionAdult;
                             const label = escapeHtml(`${step.order || idx + 1}. ${step.title || step.id || 'Untitled step'}`);
-                            return `<li><span class="parts-step-title">${label}</span>${stepDesc ? `<span class="parts-step-desc"> — ${escapeHtml(stepDesc)}</span>` : ''}</li>`;
+                            const duration = formatEstimatedDuration(step.estimatedSeconds);
+                            return `<li><div class="parts-step-title-row"><span class="parts-step-title">${label}</span>${duration ? `<span class="parts-step-duration" aria-label="Estimated time ${duration.replace('~', '')}">${duration}</span>` : ''}</div>${stepDesc ? `<span class="parts-step-desc">${escapeHtml(stepDesc)}</span>` : ''}</li>`;
                         }).join('')
                         : '<li>No steps configured.</li>';
-                    return `<li><div class="parts-phase-header"><strong>${escapeHtml(phase.title || phase.id || 'Untitled phase')}</strong>${phaseDesc ? `<p class="parts-phase-desc">${escapeHtml(phaseDesc)}</p>` : ''}</div><ul class="schedule-day-list">${stepItems}</ul></li>`;
+                    return `<li><div class="parts-phase-header"><div class="parts-phase-title-row"><strong>${escapeHtml(phase.title || phase.id || 'Untitled phase')}</strong>${phaseDuration ? `<span class="parts-step-duration" aria-label="Estimated phase time ${phaseDuration.replace('~', '')}">${phaseDuration}</span>` : ''}</div>${phaseDesc ? `<p class="parts-phase-desc">${escapeHtml(phaseDesc)}</p>` : ''}</div><ul class="schedule-day-list">${stepItems}</ul></li>`;
                 }).join('')}</ul>`
                 : '<p style="color: var(--muted);">No phases configured.</p>';
-            container.innerHTML = `${controls}${list}`;
+            const totalSeconds = state.index.steps.reduce((sum, step) => sum + (Number(step.estimatedSeconds) || 0), 0);
+            const totalDuration = formatEstimatedDuration(totalSeconds);
+            const overview = totalDuration
+                ? `<p class="parts-overview"><strong>Estimated Mass flow: about ${escapeHtml(totalDuration.slice(1))}</strong><br>Times are approximate and may vary by celebration, music, homily, and parish practice.</p>`
+                : '<p class="parts-overview">Times are not configured for this celebration.</p>';
+            container.innerHTML = `${controls}${overview}${list}`;
             container.querySelectorAll('button[data-parts-audience]').forEach(node => {
                 node.addEventListener('click', () => {
                     state.ui.partsAudience = node.getAttribute('data-parts-audience') || 'adult';
@@ -4588,11 +4777,10 @@
             el.progressFill.parentElement.setAttribute('aria-valuenow', String(progress));
             el.progressFill.parentElement.setAttribute('aria-valuetext', `Step ${currentStepNumber} of ${totalSteps}`);
 
-            if (state.prefs.showDuration) {
-                el.elapsedLabel.textContent = `Elapsed: ${formatElapsed(elapsed)}`;
-            } else {
-                el.elapsedLabel.textContent = 'Elapsed: hidden';
-            }
+            const durationVisible = state.prefs.showDuration;
+            el.elapsedLabel.textContent = durationVisible ? `Elapsed: ${formatElapsed(elapsed)}` : '';
+            el.elapsedLabel.classList.toggle('is-hidden', !durationVisible);
+            el.elapsedLabel.setAttribute('aria-hidden', durationVisible ? 'false' : 'true');
 
             const actionItems = (step.actions || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
             const noteItems = (step.notes || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
@@ -4829,6 +5017,15 @@
                             const releaseNotesBody = `
                                 <p><strong>Mass Companion ${escapeHtml(version)}</strong></p>
                                 <ul class="modal-list">
+                                    <li><strong>New in 0.5.0 &mdash; UX and accessibility</strong><ul class="schedule-day-list">
+                                        <li>Clarified landing-page purpose, selected-date context, offline status, and task-based menu navigation.</li>
+                                        <li>Added Parts of the Mass time estimates, auto-progress countdown and pause controls, guarded keyboard navigation, and clearer comment export behavior.</li>
+                                        <li>Improved contrast across all themes and added broader mobile, focus, recovery, and export failure coverage.</li>
+                                    </ul></li>
+                                    <li><strong>New in 0.5.0 &mdash; Content review</strong><ul class="schedule-day-list">
+                                        <li>Reviewed and corrected selected Mass-day citations and meaning-first reading summaries.</li>
+                                        <li>Preserved intentionally missing full texts as explicit content gaps rather than inventing readings.</li>
+                                    </ul></li>
                                     <li><strong>New in 0.4.0 &mdash; Glossary of Terms</strong><ul class="schedule-day-list">
                                         <li>Added "View Glossary of Terms" to the References menu: a searchable, alphabetically grouped glossary of Catholic Mass terminology.</li>
                                     </ul></li>
@@ -4985,19 +5182,30 @@
             };
 
             el.referencesList.innerHTML = [
-                '<li><button type="button" class="link-btn" data-detail-kind="about">About Mass Companion</button></li>',
+                '<li class="menu-group-label">Prepare</li>',
+                '<li><button type="button" class="link-btn" data-menu-action="premass">Start with pre-Mass prayers</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="schedules">View Schedule of Mass</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="churches">View Churches</button></li>',
+                '<li class="menu-group-label">Follow Mass</li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="about">About Mass Companion</button></li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="partsOfMass">View Parts of the Mass</button></li>',
+                '<li class="menu-group-label">Explore content</li>',
+                '<li><button type="button" class="link-btn" data-detail-kind="massDays">View Mass Days</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="prayers">View Prayers</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="hymns">View Hymns</button></li>',
-                '<li><button type="button" class="link-btn" data-detail-kind="massDays">View Mass Days</button></li>',
-                '<li><button type="button" class="link-btn" data-detail-kind="partsOfMass">View Parts of the Mass</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="glossary">View Glossary of Terms</button></li>',
                 '<li><button type="button" class="link-btn" data-detail-kind="links">View Links</button></li>'
             ].join('');
 
             el.referencesList.querySelectorAll('button[data-detail-kind]').forEach(btn => {
                 btn.addEventListener('click', () => openDetailFromMenu(btn.getAttribute('data-detail-kind')));
+            });
+            el.referencesList.querySelectorAll('button[data-menu-action="premass"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeMenu();
+                    showView('premass');
+                    renderPremass();
+                });
             });
             el.churchSelect.innerHTML = state.index.churches
                 .map(ch => `<option value="${escapeHtml(ch.id)}">${escapeHtml(ch.name || ch.id)}</option>`)
@@ -5027,6 +5235,9 @@
             }
             state.session.startedAt = Date.now();
             state.session.currentStepIndex = 0;
+            state.session.autoProgressPaused = false;
+            state.session.autoProgressRemainingMs = null;
+            state.session.autoProgressDueAt = null;
             state.session.navigationEvents = 0;
             state.session.stepDurations = {};
             state.session.currentStepEnteredAt = Date.now();
@@ -5040,6 +5251,7 @@
                     if (state.prefs.showDuration) {
                         el.elapsedLabel.textContent = `Elapsed: ${formatElapsed(getElapsedSeconds())}`;
                     }
+                    updateAutoProgressStatus(getCurrentStep());
                 }
             }, 1000);
         }
@@ -5048,6 +5260,9 @@
             recordTimeForCurrentStep();
             const clamped = Math.max(0, Math.min(state.index.steps.length - 1, index));
             state.session.currentStepIndex = clamped;
+            state.session.autoProgressPaused = false;
+            state.session.autoProgressRemainingMs = null;
+            state.session.autoProgressDueAt = null;
             state.session.navigationEvents += 1;
             renderSession();
             updateCommentPageIndicator();
@@ -5140,13 +5355,40 @@
             }
 
             const canAuto = state.prefs.autoProgress && step.allowAutoProgress && Number(step.estimatedSeconds) > 0;
-            if (!canAuto) return;
+            el.autoProgressPauseBtn.classList.toggle('hidden', !canAuto);
+            el.autoProgressPauseBtn.textContent = state.session.autoProgressPaused ? 'Resume auto-progress' : 'Pause auto-progress';
+            el.autoProgressPauseBtn.setAttribute('aria-pressed', state.session.autoProgressPaused ? 'true' : 'false');
+            if (!canAuto) {
+                el.autoProgressStatus.textContent = state.prefs.autoProgress ? 'Auto-progress unavailable for this step.' : '';
+                state.session.autoProgressRemainingMs = null;
+                state.session.autoProgressDueAt = null;
+                return;
+            }
+
+            if (state.session.autoProgressPaused) {
+                el.autoProgressStatus.textContent = 'Auto-progress paused.';
+                return;
+            }
+
+            if (!Number.isFinite(state.session.autoProgressRemainingMs)) {
+                state.session.autoProgressRemainingMs = Number(step.estimatedSeconds) * 1000;
+            }
+            state.session.autoProgressDueAt = Date.now() + state.session.autoProgressRemainingMs;
+            updateAutoProgressStatus(step);
 
             state.session.autoAdvanceTimerId = setTimeout(() => {
                 if (state.view === 'session' && getCurrentStep()?.id === step.id) {
+                    state.session.autoProgressRemainingMs = null;
+                    state.session.autoProgressDueAt = null;
                     nextStep();
                 }
-            }, Number(step.estimatedSeconds) * 1000);
+            }, state.session.autoProgressRemainingMs);
+        }
+
+        function updateAutoProgressStatus(step) {
+            if (!state.prefs.autoProgress || !step?.allowAutoProgress || state.session.autoProgressPaused) return;
+            const remainingMs = Math.max(0, state.session.autoProgressDueAt - Date.now());
+            el.autoProgressStatus.textContent = `Auto-progress in ${formatElapsed(Math.ceil(remainingMs / 1000))}`;
         }
 
         function bindEvents() {
@@ -5164,6 +5406,7 @@
             el.massDaySelect.addEventListener('change', () => {
                 const val = el.massDaySelect.value;
                 state.selectedMassDayDate = val;
+                    state.selectedMassDayExplicit = true;
                 renderHeader();
                 renderLanding();
             });
@@ -5171,6 +5414,7 @@
                 const defaultDate = getDefaultMassDayDate();
                 if (defaultDate) {
                     state.selectedMassDayDate = defaultDate;
+                    state.selectedMassDayExplicit = false;
                 }
                 renderHeader();
                 renderLanding();
@@ -5196,6 +5440,19 @@
             });
             el.alternativesBtn.addEventListener('click', openAltModal);
 
+            el.autoProgressPauseBtn.addEventListener('click', () => {
+                state.session.autoProgressPaused = !state.session.autoProgressPaused;
+                if (state.session.autoProgressPaused) {
+                    state.session.autoProgressRemainingMs = Math.max(0, state.session.autoProgressDueAt - Date.now());
+                    state.session.autoProgressDueAt = null;
+                    if (state.session.autoAdvanceTimerId) {
+                        clearTimeout(state.session.autoAdvanceTimerId);
+                        state.session.autoAdvanceTimerId = null;
+                    }
+                }
+                renderSession();
+            });
+
             el.endActionsToggleBtn.addEventListener('click', () => {
                 state.ui.endActionsExpanded = !state.ui.endActionsExpanded;
                 renderSession();
@@ -5219,7 +5476,10 @@
                 });
             });
 
-            el.confirmCancelBtn.addEventListener('click', closeConfirm);
+            el.confirmCancelBtn.addEventListener('click', () => {
+                state.ui.confirmingCommentClear = false;
+                closeConfirm();
+            });
             el.confirmOkBtn.addEventListener('click', () => {
                 const action = state.confirmAction;
                 closeConfirm();
@@ -5243,11 +5503,7 @@
 
             el.commentsSummaryCloseBtn.addEventListener('click', closeCommentsSummary);
             el.commentsSummaryCopyBtn.addEventListener('click', copyCommentsSummaryToClipboard);
-            el.commentsSummaryEmailBtn.addEventListener('click', () => {
-                const subject = encodeURIComponent('Mass Companion — Session Comments');
-                const body = encodeURIComponent(buildCommentsSummaryText());
-                window.location.href = `mailto:?subject=${subject}&body=${body}`;
-            });
+            el.commentsSummaryEmailBtn.addEventListener('click', emailCommentsSummary);
 
             el.commentingModeToggle.addEventListener('change', () => {
                 state.prefs.commentingMode = el.commentingModeToggle.checked;
@@ -5307,6 +5563,9 @@
             });
             el.autoProgressToggle.addEventListener('change', () => {
                 state.prefs.autoProgress = el.autoProgressToggle.checked;
+                state.session.autoProgressPaused = false;
+                state.session.autoProgressRemainingMs = null;
+                state.session.autoProgressDueAt = null;
                 renderSession();
                 savePreferences();
             });
@@ -5325,7 +5584,22 @@
             document.addEventListener('keydown', event => {
                 trapFocusInActiveModal(event);
 
+                const target = event.target;
+                const isEditable = target instanceof HTMLElement && (
+                    target.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName)
+                );
+                if (state.view === 'session' && !state.ui.activeModal && !isEditable && !event.altKey && !event.ctrlKey && !event.metaKey) {
+                    if (event.key === 'ArrowLeft') {
+                        event.preventDefault();
+                        previousStep();
+                    } else if (event.key === 'ArrowRight') {
+                        event.preventDefault();
+                        nextStep();
+                    }
+                }
+
                 if (event.key === 'Escape') {
+                    state.ui.confirmingCommentClear = false;
                     closeMenu();
                     closeConfirm();
                     closeAltModal();
