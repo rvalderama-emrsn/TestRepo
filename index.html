@@ -1148,7 +1148,10 @@
         .comment-entry-page-label {
             color: var(--muted);
             font-size: 0.84rem;
-            margin-bottom: 0.5rem;
+        }
+
+        .comment-entry-body {
+            align-content: start;
         }
 
         .comments-summary-status {
@@ -2189,8 +2192,10 @@
             <div class="detail-modal-header">
                 <h3 id="commentEntryTitle" class="detail-modal-title">Add a comment</h3>
             </div>
-            <p class="comment-entry-page-label">Page: <span id="commentEntryPageLabel"></span></p>
-            <textarea id="commentEntryText" placeholder="What did you notice on this page?"></textarea>
+            <div class="detail-modal-body comment-entry-body">
+                <p class="comment-entry-page-label">Page: <span id="commentEntryPageLabel"></span></p>
+                <textarea id="commentEntryText" placeholder="What did you notice on this page?"></textarea>
+            </div>
             <div class="modal-actions">
                 <button class="ghost-btn" type="button" id="commentEntryCancelBtn">Cancel</button>
                 <button class="btn" type="button" id="commentEntrySaveBtn">Save comment</button>
@@ -2886,6 +2891,10 @@
             const header = document.querySelector('.app-header');
             const headerHeight = header ? header.offsetHeight : 0;
             document.documentElement.style.setProperty('--app-header-height', `${headerHeight}px`);
+        }
+
+        function refreshResponsiveLayout() {
+            requestAnimationFrame(updateLayoutMetrics);
         }
 
         // Tracks nested dialogs (e.g. comment entry opened from within a song-detail modal) so closing one restores the modal beneath it instead of losing track of it.
@@ -5394,7 +5403,9 @@
         }
 
         function bindEvents() {
-            window.addEventListener('resize', updateLayoutMetrics);
+            window.addEventListener('resize', refreshResponsiveLayout);
+            window.addEventListener('orientationchange', refreshResponsiveLayout);
+            window.visualViewport?.addEventListener('resize', refreshResponsiveLayout);
             el.menuButton.addEventListener('click', openMenu);
             el.closeMenuBtn.addEventListener('click', closeMenu);
             el.menuOverlay.addEventListener('click', event => {
