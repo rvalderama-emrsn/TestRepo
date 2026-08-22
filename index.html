@@ -1180,6 +1180,8 @@
 
         .modal {
             width: min(680px, 100%);
+            /* 100% in a centred grid resolves to self-size; cap to viewport instead */
+            max-width: calc(100vw - 2rem);
             max-height: 90vh;
             max-height: 90dvh;
             overflow: hidden;
